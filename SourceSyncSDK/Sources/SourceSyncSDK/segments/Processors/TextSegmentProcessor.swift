@@ -8,6 +8,13 @@ import UIKit
 class TextSegmentProcessor: SegmentProcessor {
     let tag = "TextSegmentProcessor"
     
+    // Define platform-specific default font size
+    #if os(iOS)
+    private let defaultFontSize = UIFont.systemFontSize
+    #elseif os(tvOS)
+    private let defaultFontSize: CGFloat = 17.0 // Default size for tvOS
+    #endif
+    
     init() {}
     
     func processSegment(segment: [String: Any]) throws -> UIView {
@@ -66,12 +73,12 @@ class TextSegmentProcessor: SegmentProcessor {
         
         // Apply bold styling
         if let weight = attributes.weight, weight.lowercased() == "bold" {
-            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), range: range)
+            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: defaultFontSize), range: range)
         }
         
         // Apply italic styling
         if let style = attributes.style, style.lowercased() == "italic" {
-            attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: UIFont.systemFontSize), range: range)
+            attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: defaultFontSize), range: range)
         }
         
         // Apply underline
