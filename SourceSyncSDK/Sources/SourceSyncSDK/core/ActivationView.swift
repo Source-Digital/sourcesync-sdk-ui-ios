@@ -5,7 +5,7 @@
 import UIKit
 
 // A view representing an activation component with preview and detail views.
-class Activation: UIView {
+class ActivationView: UIView {
     
     private var previewView: ActivationPreview?
     private var detailView: ActivationDetail?
