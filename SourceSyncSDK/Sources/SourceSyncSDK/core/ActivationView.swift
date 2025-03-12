@@ -15,7 +15,7 @@ public class ActivationView: UIView {
     // - Parameters:
     //   - previewData: JSON data for preview.
     //   - onClick: Closure to execute on click.
-    func showPreview(previewData: [String: Any], onClick: @escaping () -> Void) {
+    public func showPreview(previewData: [String: Any], onClick: @escaping () -> Void) {
         if let previewView = previewView {
             previewView.removeFromSuperview()
         }
@@ -57,7 +57,7 @@ public class ActivationView: UIView {
     // - Parameters:
     //   - detailData: JSON data for detail.
     //   - onClose: Closure to execute on close.
-    func showDetail(detailData: [String: Any], onClose: @escaping () -> Void) {
+    public func showDetail(detailData: [String: Any], onClose: @escaping () -> Void) {
         if let detailView = detailView {
             detailView.removeFromSuperview()
         }
@@ -70,7 +70,7 @@ public class ActivationView: UIView {
     }
     
     // Hides the detail view and restores preview.
-    func hideDetail() {
+    public func hideDetail() {
         detailView?.removeFromSuperview()
         detailView = nil
         previewView?.isHidden = false
