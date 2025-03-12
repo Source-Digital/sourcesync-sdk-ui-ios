@@ -5,7 +5,7 @@
 import UIKit
 
 // A view representing activation details with a customizable template.
-class ActivationDetail: UIView {
+public class ActivationDetail: UIView {
     private let contentContainer = UIStackView()
     private let scrollView = UIScrollView()
     private let processorFactory: SegmentProcessorFactory
@@ -14,7 +14,7 @@ class ActivationDetail: UIView {
     // - Parameters:
     //   - template: JSON array representing the template structure.
     //   - onClose: Closure executed when the close button is pressed.
-    init(template: [[String: Any]], onClose: @escaping () -> Void) {
+   public init(template: [[String: Any]], onClose: @escaping () -> Void) {
         self.processorFactory = SegmentProcessorFactory(parentContainer: contentContainer)
         super.init(frame: .zero)
         initializeView(template: template, onClose: onClose)
@@ -56,13 +56,35 @@ class ActivationDetail: UIView {
             mainStack.topAnchor.constraint(equalTo: topAnchor),
             mainStack.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            scrollView.widthAnchor.constraint(equalTo: mainStack.widthAnchor),
+//            scrollView.widthAnchor.constraint(equalTo: mainStack.widthAnchor),
+//            contentContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+//            contentContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+//            contentContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//            contentContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+//            contentContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
+        // Add constraints for the content container inside the scroll view
+        NSLayoutConstraint.activate([
             contentContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            // Ensure the content container's width matches the scroll view's width
             contentContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
+        
+        let label = UILabel()
+        label.text = "This is a label"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        contentContainer.addArrangedSubview(label)
+
+        let button = UIButton(type: .system)
+        button.setTitle("Click Me", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        contentContainer.addArrangedSubview(button)
+        
         
         // Process and render template
         processTemplate(template)

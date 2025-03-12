@@ -2,7 +2,6 @@
 //  ButtonSegmentProcessor.swift
 //  sourcesync-sdk-ui-ios
 //
-//
 
 import UIKit
 

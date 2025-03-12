@@ -3,7 +3,7 @@
 //  sourcesync-sdk-ui-ios
 //
 
-import SwiftUI
+import UIKit
 
 // A view representing an activation header with a close button.
 class ActivationHeader: UIView {
@@ -29,7 +29,7 @@ class ActivationHeader: UIView {
         let closeButton = UIButton(type: .system)
         closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         closeButton.tintColor = .black
-        closeButton.backgroundColor = .clear
+        closeButton.backgroundColor = .orange
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
         addSubview(closeButton)
