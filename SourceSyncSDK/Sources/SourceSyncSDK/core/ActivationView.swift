@@ -5,7 +5,7 @@
 import UIKit
 
 // A view representing an activation component with preview and detail views.
-class ActivationView: UIView {
+public class ActivationView: UIView {
     
     private var previewView: ActivationPreview?
     private var detailView: ActivationDetail?
@@ -77,7 +77,7 @@ class ActivationView: UIView {
     }
     
     // Handle orientation changes to maintain proper sizing
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         // Update preview size if orientation changes

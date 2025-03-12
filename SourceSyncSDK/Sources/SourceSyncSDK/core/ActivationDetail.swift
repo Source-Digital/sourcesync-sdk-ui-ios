@@ -5,7 +5,7 @@
 import UIKit
 
 // A view representing activation details with a customizable template.
-public class ActivationDetail: UIView {
+class ActivationDetail: UIView {
     private let contentContainer = UIStackView()
     private let scrollView = UIScrollView()
     private let processorFactory: SegmentProcessorFactory
