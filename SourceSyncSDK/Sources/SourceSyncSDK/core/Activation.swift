@@ -19,9 +19,34 @@ class Activation: UIView {
         if let previewView = previewView {
             previewView.removeFromSuperview()
         }
+        
+        // Create the preview view
         previewView = ActivationPreview(data: previewData)
         previewView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(previewTapped)))
-        addSubview(previewView!)
+        
+        if let previewView = previewView {
+            addSubview(previewView)
+            
+            // Configure fixed size based on screen dimensions
+            // Assuming landscape orientation
+            let screenWidth = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
+                              UIScreen.main.bounds.width : UIScreen.main.bounds.height
+            let screenHeight = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
+                               UIScreen.main.bounds.height : UIScreen.main.bounds.width
+            
+            // Set fixed size (40% of width, 20% of height)
+            let previewWidth = screenWidth * 0.4
+            let previewHeight = screenHeight * 0.2
+            
+            // Position in the center of the view
+            previewView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                previewView.widthAnchor.constraint(equalToConstant: previewWidth),
+                previewView.heightAnchor.constraint(equalToConstant: previewHeight),
+                previewView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                previewView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
+        }
     }
     
     @objc private func previewTapped() {
@@ -49,5 +74,30 @@ class Activation: UIView {
         detailView?.removeFromSuperview()
         detailView = nil
         previewView?.isHidden = false
+    }
+    
+    // Handle orientation changes to maintain proper sizing
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Update preview size if orientation changes
+        if let previewView = previewView, !previewView.isHidden {
+            let screenWidth = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
+                              UIScreen.main.bounds.width : UIScreen.main.bounds.height
+            let screenHeight = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
+                               UIScreen.main.bounds.height : UIScreen.main.bounds.width
+            
+            let previewWidth = screenWidth * 0.4
+            let previewHeight = screenHeight * 0.2
+            
+            // Find and update the constraints
+            for constraint in previewView.constraints {
+                if constraint.firstAttribute == .width {
+                    constraint.constant = previewWidth
+                } else if constraint.firstAttribute == .height {
+                    constraint.constant = previewHeight
+                }
+            }
+        }
     }
 }
