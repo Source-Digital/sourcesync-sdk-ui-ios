@@ -8,7 +8,7 @@ import UIKit
 class TextSegmentProcessor: SegmentProcessor {
     let tag = "TextSegmentProcessor"
 
-    
+
     init() {}
     
     func processSegment(segment: [String: Any]) throws -> UIView {

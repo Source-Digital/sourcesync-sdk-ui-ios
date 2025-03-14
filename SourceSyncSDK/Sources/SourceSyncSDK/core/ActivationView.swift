@@ -9,6 +9,7 @@ public class ActivationView: UIView {
     
     private var previewView: ActivationPreview?
     private var detailView: ActivationDetail?
+    private var onPreviewClickHandler: (() -> Void)?
     
     // Shows the preview view with given data.
     
@@ -19,38 +20,22 @@ public class ActivationView: UIView {
         if let previewView = previewView {
             previewView.removeFromSuperview()
         }
-        
+
+        self.onPreviewClickHandler = onClick
         // Create the preview view
         previewView = ActivationPreview(data: previewData)
-        previewView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(previewTapped)))
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(previewTapped))
+        previewView?.addGestureRecognizer(tapGesture)
+        previewView?.isUserInteractionEnabled = true
+                
         if let previewView = previewView {
             addSubview(previewView)
-            
-            // Configure fixed size based on screen dimensions
-            // Assuming landscape orientation
-            let screenWidth = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
-                              UIScreen.main.bounds.width : UIScreen.main.bounds.height
-            let screenHeight = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
-                               UIScreen.main.bounds.height : UIScreen.main.bounds.width
-            
-            // Set fixed size (40% of width, 20% of height)
-            let previewWidth = screenWidth * 0.4
-            let previewHeight = screenHeight * 0.2
-            
-            // Position in the center of the view
-            previewView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                previewView.widthAnchor.constraint(equalToConstant: previewWidth),
-                previewView.heightAnchor.constraint(equalToConstant: previewHeight),
-                previewView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                previewView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-            ])
         }
     }
     
     @objc private func previewTapped() {
-        // Handle preview tap
+        onPreviewClickHandler?()
     }
     
     // Shows the detail view with given data.
@@ -65,7 +50,10 @@ public class ActivationView: UIView {
         
         if let template = detailData["template"] as? [[String: Any]] {
             detailView = ActivationDetail(template: template, onClose: onClose)
-            addSubview(detailView!)
+            // Guard against nil before adding as subview
+            if let detailView = detailView {
+                addSubview(detailView)
+            }
         }
     }
     
@@ -74,30 +62,5 @@ public class ActivationView: UIView {
         detailView?.removeFromSuperview()
         detailView = nil
         previewView?.isHidden = false
-    }
-    
-    // Handle orientation changes to maintain proper sizing
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // Update preview size if orientation changes
-        if let previewView = previewView, !previewView.isHidden {
-            let screenWidth = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
-                              UIScreen.main.bounds.width : UIScreen.main.bounds.height
-            let screenHeight = UIScreen.main.bounds.width > UIScreen.main.bounds.height ?
-                               UIScreen.main.bounds.height : UIScreen.main.bounds.width
-            
-            let previewWidth = screenWidth * 0.4
-            let previewHeight = screenHeight * 0.2
-            
-            // Find and update the constraints
-            for constraint in previewView.constraints {
-                if constraint.firstAttribute == .width {
-                    constraint.constant = previewWidth
-                } else if constraint.firstAttribute == .height {
-                    constraint.constant = previewHeight
-                }
-            }
-        }
     }
 }

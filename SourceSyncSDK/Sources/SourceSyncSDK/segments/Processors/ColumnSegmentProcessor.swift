@@ -75,7 +75,8 @@ class ColumnSegmentProcessor: SegmentProcessor {
                         let childAttributesJson = (childSegment["attributes"] as? [String: Any])!
                         let childAttrs = try SegmentAttributes.fromJson(json: childAttributesJson)
                         
-                        if (LayoutUtils.isValidPercentage(childAttrs.width!)) {
+                        // Use optional binding:
+                        if let width = childAttrs.width, LayoutUtils.isValidPercentage(width) {
                             // Assuming childView is a UIView, adjust its layout based on percentage width
                             var childFrame = childView.frame
                             _ = try LayoutUtils.percentageToDecimal(childAttrs.width!)

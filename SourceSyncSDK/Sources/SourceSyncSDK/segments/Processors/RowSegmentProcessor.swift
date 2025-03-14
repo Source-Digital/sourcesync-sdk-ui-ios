@@ -55,10 +55,10 @@ class RowSegmentProcessor: SegmentProcessor {
                         if let childWidth = childAttrs.width, LayoutUtils.isValidPercentage(childWidth) {
                             let weight = try LayoutUtils.percentageToDecimal(childWidth)
                             childView.translatesAutoresizingMaskIntoConstraints = false
+                            rowLayout.addArrangedSubview(childView)
                             childView.widthAnchor.constraint(equalTo: rowLayout.widthAnchor, multiplier: weight).isActive = true
                         }
                     }
-                    rowLayout.addArrangedSubview(childView)
                     
                 } else {
                     print("No processor found for child segment type: \(childType)")
