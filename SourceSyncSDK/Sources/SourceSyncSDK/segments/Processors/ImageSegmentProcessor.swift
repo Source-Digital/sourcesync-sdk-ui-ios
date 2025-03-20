@@ -15,54 +15,71 @@ class ImageSegmentProcessor: SegmentProcessor {
     }
     
     func processSegment(segment: [String: Any]) throws -> UIView {
+        // Create a container view that will hold the image view
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Default dimensions
-        var width: CGFloat = UIView.noIntrinsicMetric
-        var height: CGFloat = UIView.noIntrinsicMetric
+        // Add image view to container
+        containerView.addSubview(imageView)
         
+        // Make image view fill the container by default
+        NSLayoutConstraint.activate([
+            imageView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+            imageView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
         
         if let attributesJson = segment["attributes"] as? [String: Any] {
             do {
+                // Parse both standard and nested attributes
                 let attributes = try SegmentAttributes.fromJson(json: attributesJson)
                 
-                if let alignment = attributes.alignment{
+                // Handle contentMode
+                if let alignment = attributes.alignment {
                     imageView.contentMode = alignmentToContentMode(alignment: alignment)
+                } else if let contentMode = attributesJson["contentMode"] as? String {
+                    imageView.contentMode = contentModeFromString(contentMode)
                 }
                 
-                // Set size adjustments after layout
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                parentContainer.addSubview(imageView)
+                // Handle size attributes - check for nested structure first
+                var widthDecimal: CGFloat = 1.0
+                var heightDecimal: CGFloat = 1.0
                 
-                NSLayoutConstraint.activate([
-                    imageView.centerXAnchor.constraint(equalTo: parentContainer.centerXAnchor),
-                    imageView.centerYAnchor.constraint(equalTo: parentContainer.centerYAnchor)
-                ])
-                
-                if let widthPercent = attributes.width{
-                    let widthDecimal = try LayoutUtils.percentageToDecimal(widthPercent)
-                    width = parentContainer.frame.width * widthDecimal
-                    imageView.widthAnchor.constraint(equalToConstant: width).isActive = true
+                if let sizeDict = attributesJson["size"] as? [String: Any] {
+                    // Handle nested size structure: "size": {"width": "100%", "height": "100%"}
+                    if let widthPercent = sizeDict["width"] as? String {
+                        widthDecimal = try LayoutUtils.percentageToDecimal(widthPercent)
+                    }
+                    if let heightPercent = sizeDict["height"] as? String {
+                        heightDecimal = try LayoutUtils.percentageToDecimal(heightPercent)
+                    }
+                } else {
+                    // Handle flat structure: "width": "100%", "height": "100%"
+                    if let widthPercent = attributes.width {
+                        widthDecimal = try LayoutUtils.percentageToDecimal(widthPercent)
+                    }
+                    if let heightPercent = attributes.height {
+                        heightDecimal = try LayoutUtils.percentageToDecimal(heightPercent)
+                    }
                 }
-                if let heightPercent = attributes.height {
-                    let heightDecimal = try LayoutUtils.percentageToDecimal( heightPercent)
-                    height = parentContainer.frame.height * heightDecimal
-                    imageView.heightAnchor.constraint(equalToConstant: height).isActive = true
-                }
                 
+                // Load the image
                 if let imageUrl = segment["content"] as? String, !imageUrl.isEmpty {
                     Self.imageLoader.loadImage(urlString: imageUrl, imageView: imageView)
                 }
                 
-            }catch {
+            } catch {
                 // Handle the error, e.g., log it or show an alert
-                print("Error parsing SegmentAttributes: \(error)")
+                print("\(tag) Error parsing SegmentAttributes: \(error)")
             }
         }
         
-        return imageView
+        return containerView
     }
     
     func getSegmentType() -> String {
@@ -79,6 +96,24 @@ class ImageSegmentProcessor: SegmentProcessor {
         }
     }
     
+    // Converts contentMode string to UIView.ContentMode
+    private func contentModeFromString(_ contentMode: String) -> UIView.ContentMode {
+        switch contentMode.lowercased() {
+        case "scaleaspectfit": return .scaleAspectFit
+        case "scaleaspectfill": return .scaleAspectFill
+        case "scaletofill": return .scaleToFill
+        case "center": return .center
+        case "top": return .top
+        case "bottom": return .bottom
+        case "left": return .left
+        case "right": return .right
+        case "topleft": return .topLeft
+        case "topright": return .topRight
+        case "bottomleft": return .bottomLeft
+        case "bottomright": return .bottomRight
+        default: return .scaleAspectFit
+        }
+    }
 }
 
 class ImageLoader {

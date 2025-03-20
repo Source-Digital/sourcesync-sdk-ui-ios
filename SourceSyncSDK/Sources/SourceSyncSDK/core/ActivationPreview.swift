@@ -26,27 +26,33 @@ class ActivationPreview: UIView {
     // - Parameter data: JSON dictionary containing preview configuration.
     private func initializeView(data: [String: Any]) {
         translatesAutoresizingMaskIntoConstraints = false
-        
-        contentContainer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-//        contentContainer.layer.cornerRadius = 8
-        contentContainer.axis = .vertical
-        contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(contentContainer)
-        
-        // Content container wraps content with padding and minimum size
-        NSLayoutConstraint.activate([
-            // Position at top left with padding
-            contentContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-            contentContainer.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            
-            // Add padding from end and bottom
-            contentContainer.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -10),
-            contentContainer.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10),
-            
-            // Minimum dimensions
-            contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.9),
-            contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.8)
-        ])
+           
+           // Apply style from JSON
+           contentContainer.backgroundColor = UIColor.black.withAlphaComponent(0.8) // Using opacity: 0.8 from style
+           contentContainer.axis = .vertical
+           contentContainer.translatesAutoresizingMaskIntoConstraints = false
+           addSubview(contentContainer)
+           
+           // Get padding values from JSON contentStyle
+           let paddingTop: CGFloat = 16.0
+           let paddingLeft: CGFloat = 16.0
+           let paddingRight: CGFloat = 16.0
+           let paddingBottom: CGFloat = 16.0
+           
+           // Content container wraps content with padding and minimum size
+           NSLayoutConstraint.activate([
+               // Position at top left with padding
+               contentContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: paddingTop),
+               contentContainer.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: paddingLeft),
+               
+               // Add padding from end and bottom
+               contentContainer.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -paddingRight),
+               contentContainer.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -paddingBottom),
+               
+               // Minimum dimensions
+               contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.9),
+               contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.8)
+           ])
         // Apply background color and opacity
 //        let opacity = (data["backgroundOpacity"] as? Double) ?? 0.66
 //        let backgroundColor = UIColor(hex: data["backgroundColor"] as? String ?? "#000000")!.withAlphaComponent(CGFloat(opacity))
@@ -65,7 +71,7 @@ class ActivationPreview: UIView {
         for segment in template {
             if let segmentType = segment["type"] as? String {
                 // Only process if segment type is "text"
-                if segmentType == "text" {
+//                if segmentType == "text" {
                     if let processor = processorFactory.getProcessor(for: segmentType) {
                         do {
                             let segmentView = try processor.processSegment(segment: segment)
@@ -74,9 +80,9 @@ class ActivationPreview: UIView {
                             print("Error processing template: \(error.localizedDescription)")
                         }
                     }
-                } else {
-                    print("Skipping segment of type '\(segmentType)' - only 'text' segments are currently supported")
-                }
+//                } else {
+//                    print("Skipping segment of type '\(segmentType)' - only 'text' segments are currently supported")
+//                }
             }
         }
         

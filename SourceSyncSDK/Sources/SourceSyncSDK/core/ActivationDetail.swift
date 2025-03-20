@@ -27,57 +27,54 @@ class ActivationDetail: UIView {
     
     private func initializeView(template: [[String: Any]], onClose: @escaping () -> Void) {
         translatesAutoresizingMaskIntoConstraints = false
-        
-        // Create and configure header
-        let header = ActivationHeader(onClose: onClose)
-        header.translatesAutoresizingMaskIntoConstraints = false
-        
-        mainContainer.axis = .horizontal
-        mainContainer.spacing = 8
-        mainContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Configure content container
-        contentContainer.axis = .vertical
-        contentContainer.spacing = 8
-        contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        // 1. Set different background colors to debug layout issues
-//        scrollView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.5) // Semi-transparent to see layout
-        mainContainer.backgroundColor = UIColor.darkGray.withAlphaComponent(0.5)
-        
-        // First add all views to the hierarchy
-        mainContainer.addArrangedSubview(contentContainer)
-        mainContainer.addArrangedSubview(header)
-        addSubview(mainContainer)
-
-        NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: mainContainer.topAnchor),
-            header.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -10),
-        ])
-//
-        // Content container starts from top left with minimum size requirements
-        NSLayoutConstraint.activate([
-            // Position at top left with padding
-            contentContainer.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 10),
-            contentContainer.leadingAnchor.constraint(equalTo: mainContainer.leadingAnchor, constant: 10),
-            contentContainer.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -50),
-            contentContainer.bottomAnchor.constraint(equalTo: mainContainer.bottomAnchor, constant: -50),
-
-        ])
-        
-
-        NSLayoutConstraint.activate([
-            mainContainer.topAnchor.constraint(equalTo: topAnchor),
-            mainContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            mainContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            mainContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
             
+            // Create and configure header
+            let header = ActivationHeader(onClose: onClose)
+            header.translatesAutoresizingMaskIntoConstraints = false
             
-            // Ensure width is at least 90% of screen width
-            contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.9),
-            // Ensure height is at least 80% of screen height
-            contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.9)
-        ])
+            mainContainer.axis = .vertical // Changed to vertical for better layout
+            mainContainer.spacing = 0 // Remove spacing to have precise control
+            mainContainer.translatesAutoresizingMaskIntoConstraints = false
+            mainContainer.backgroundColor = UIColor.black.withAlphaComponent(0.8) // Consistent background
+            
+            // Configure content container
+            contentContainer.axis = .vertical
+            contentContainer.spacing = 8
+            contentContainer.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Add container and header to the view hierarchy
+            addSubview(mainContainer)
+            mainContainer.addSubview(contentContainer)
+            mainContainer.addSubview(header) // Add header directly to main container
+            
+            // Main container fills the entire view
+            NSLayoutConstraint.activate([
+                mainContainer.topAnchor.constraint(equalTo: topAnchor),
+                mainContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+                mainContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+                mainContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+            
+            // Position header at top right with 10pt margin
+            NSLayoutConstraint.activate([
+                header.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 10),
+                header.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -10),
+                header.widthAnchor.constraint(equalToConstant: 44), // Give it enough space
+                header.heightAnchor.constraint(equalToConstant: 44)
+            ])
+            
+            // Content container takes up most of the space with proper margins
+            NSLayoutConstraint.activate([
+                contentContainer.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 16),
+                contentContainer.leadingAnchor.constraint(equalTo: mainContainer.leadingAnchor, constant: 16),
+                contentContainer.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -16),
+                contentContainer.bottomAnchor.constraint(equalTo: mainContainer.bottomAnchor, constant: -16),
+                
+                // Ensure minimum dimensions
+                contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: mainContainer.widthAnchor, multiplier: 0.9),
+                contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: mainContainer.heightAnchor, multiplier: 0.9)
+            ])
+            
         
         // Process and render template
         processTemplate(template)
