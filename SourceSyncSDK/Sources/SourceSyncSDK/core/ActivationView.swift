@@ -11,6 +11,9 @@ public class ActivationView: UIView {
     private var detailView: ActivationDetail?
     private var onPreviewClickHandler: (() -> Void)?
     
+    // Animation configuration
+    private let animationDuration: TimeInterval = 1
+    
     // Shows the preview view with given data.
     
     // - Parameters:
@@ -30,7 +33,13 @@ public class ActivationView: UIView {
         previewView?.isUserInteractionEnabled = true
                 
         if let previewView = previewView {
+            previewView.alpha = 0.0 // Start fully transparent
+
             addSubview(previewView)
+            // Fade-in animation
+            UIView.animate(withDuration: animationDuration) {
+                previewView.alpha = 1.0
+            }
         }
     }
     
@@ -46,7 +55,15 @@ public class ActivationView: UIView {
         if let detailView = detailView {
             detailView.removeFromSuperview()
         }
-        previewView?.isHidden = true
+        // Hide preview with fade-out
+        if let previewView = previewView {
+            UIView.animate(withDuration: animationDuration, animations: {
+                previewView.alpha = 0.0
+            }) { _ in
+                previewView.isHidden = true
+            }
+        }
+//        previewView?.isHidden = true
         
         if let template = detailData["template"] as? [[String: Any]] {
             detailView = ActivationDetail(template: template, onClose: onClose)
