@@ -27,7 +27,14 @@ class ActivationHeader: UIView {
         
         // Create close button with improved styling
         let closeButton = UIButton(type: .system)
-        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        // Pre-load the system image on a background thread
+        DispatchQueue.global(qos: .userInitiated).async {
+            let xmarkImage = UIImage(systemName: "xmark")
+            
+            DispatchQueue.main.async {
+                closeButton.setImage(xmarkImage, for: .normal)
+            }
+        }
         closeButton.tintColor = .white // White X for better contrast
         closeButton.backgroundColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 0.75) // Semi-transparent dark gray
         closeButton.layer.cornerRadius = 12 // Rounded corners

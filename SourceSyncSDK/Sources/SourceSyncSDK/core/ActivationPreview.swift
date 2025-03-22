@@ -34,10 +34,9 @@ class ActivationPreview: UIView {
            addSubview(contentContainer)
            
            // Get padding values from JSON contentStyle
-           let paddingTop: CGFloat = 16.0
+           let paddingTop: CGFloat = 10.0
            let paddingLeft: CGFloat = 16.0
            let paddingRight: CGFloat = 16.0
-           let paddingBottom: CGFloat = 16.0
            
            // Content container wraps content with padding and minimum size
            NSLayoutConstraint.activate([
@@ -47,15 +46,11 @@ class ActivationPreview: UIView {
                
                // Add padding from end and bottom
                contentContainer.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -paddingRight),
-               contentContainer.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -paddingBottom),
                
                // Minimum dimensions
                contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.9),
                contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.8)
            ])
-        // Apply background color and opacity
-//        let opacity = (data["backgroundOpacity"] as? Double) ?? 0.66
-//        let backgroundColor = UIColor(hex: data["backgroundColor"] as? String ?? "#000000")!.withAlphaComponent(CGFloat(opacity))
         
         // Process template if provided, otherwise create default template
         if let template = data["template"] as? [[String: Any]] {
