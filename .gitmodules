@@ -1,3 +1,6 @@
 [submodule "MobileDemo"]
 	path = MobileDemo
 	url = /Volumes/MyWork/source-digital/code/iOS-UiSdk/sourcesync-sdk-ui-ios/MobileDemo
+[submodule "TVDemo"]
+	path = TVDemo
+	url = /Volumes/MyWork/source-digital/code/iOS-UiSdk/sourcesync-sdk-ui-ios/TVDemo
