@@ -21,28 +21,92 @@ class RowSegmentProcessor: SegmentProcessor {
         
         let attributes = try SegmentAttributes.fromJson(json: attributesJson)
         
-        // Create a horizontal stack view for the row
-        let rowLayout = UIStackView()
-        rowLayout.axis = .horizontal
-        rowLayout.distribution = .fill
-        rowLayout.translatesAutoresizingMaskIntoConstraints = false
+        // Create a main container view
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Set row alignment if specified
+        // Create a stack view with fixed layout
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fill
+        
+        // Set alignment if specified
         if let alignment = attributes.alignment {
-            rowLayout.alignment = getStackAlignment(from: alignment)
+            switch alignment.lowercased() {
+            case "top":
+                stackView.alignment = .top
+            case "bottom":
+                stackView.alignment = .bottom
+            case "center":
+                stackView.alignment = .center
+            case "fill":
+                stackView.alignment = .fill
+            case "leading", "left":
+                stackView.alignment = .leading
+            case "trailing", "right":
+                stackView.alignment = .trailing
+            default:
+                stackView.alignment = .center
+            }
         } else {
-            rowLayout.alignment = .center
+            stackView.alignment = .center
         }
         
-        // Apply spacing between children if specified
+        // Get spacing value
+        var spacing: CGFloat = 8 // Default spacing
         if let spacingValue = attributes.spacing {
-            rowLayout.spacing = getSpacingValue(from: spacingValue)
-        } else {
-            rowLayout.spacing = 8 // Default spacing
+            spacing = getSpacingValue(from: spacingValue)
         }
+        
+        // We'll use fixed spacing for safety
+        stackView.spacing = spacing
+        
+        // Add stack view to container
+        containerView.addSubview(stackView)
+        
+        // Pin stack view to container edges
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        ])
         
         // Process children
         if let children = segment["children"] as? [[String: Any]] {
+            // First, count how many children have explicit percentages and total those up
+            var explicitPercentageTotal: CGFloat = 0
+            var childrenWithExplicitPercentage = 0
+            
+            for childSegment in children {
+                if let childAttributes = childSegment["attributes"] as? [String: Any],
+                   let childAttrs = try? SegmentAttributes.fromJson(json: childAttributes),
+                   let childWidth = childAttrs.width,
+                   LayoutUtils.isValidPercentage(childWidth) {
+                    
+                    let percentage = try LayoutUtils.percentageToDecimal(childWidth)
+                    if percentage > 0 {
+                        explicitPercentageTotal += percentage
+                        childrenWithExplicitPercentage += 1
+                    }
+                }
+            }
+            
+            let totalChildren = children.count
+            let childrenWithoutPercentage = totalChildren - childrenWithExplicitPercentage
+            
+            // If total percentage is close to or exceeds 1.0, adjust to be safe
+            var adjustmentFactor: CGFloat = 1.0
+            if explicitPercentageTotal > 0.9 && childrenWithoutPercentage > 0 {
+                // Need to leave room for children without percentages
+                adjustmentFactor = 0.9 / explicitPercentageTotal
+            } else if explicitPercentageTotal > 0.98 {
+                // Tiny adjustment to prevent rounding/calculation issues
+                adjustmentFactor = 0.98 / explicitPercentageTotal
+            }
+            
+            // Process each child
             for childSegment in children {
                 guard let childType = childSegment["type"] as? String else { continue }
                 
@@ -52,19 +116,67 @@ class RowSegmentProcessor: SegmentProcessor {
                         let childView = try processor.processSegment(segment: childSegment)
                         childView.translatesAutoresizingMaskIntoConstraints = false
                         
-                        // Add the child to the row layout
-                        rowLayout.addArrangedSubview(childView)
+                        // Create a wrapper view to handle width constraints
+                        let wrapperView = UIView()
+                        wrapperView.translatesAutoresizingMaskIntoConstraints = false
+                        wrapperView.addSubview(childView)
                         
-                        // Handle child's width if specified
+                        // Make child fill wrapper
+                        NSLayoutConstraint.activate([
+                            childView.topAnchor.constraint(equalTo: wrapperView.topAnchor),
+                            childView.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor),
+                            childView.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor),
+                            childView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor)
+                        ])
+                        
+                        // Add wrapper to stack view
+                        stackView.addArrangedSubview(wrapperView)
+                        
+                        // Set width constraint based on attributes
                         if let childAttributes = childSegment["attributes"] as? [String: Any],
                            let childAttrs = try? SegmentAttributes.fromJson(json: childAttributes),
                            let childWidth = childAttrs.width,
                            LayoutUtils.isValidPercentage(childWidth) {
                             
-                            let weightDecimal = try LayoutUtils.percentageToDecimal(childWidth)
-                            // Apply width constraint based on percentage
-                            childView.widthAnchor.constraint(equalTo: rowLayout.widthAnchor, multiplier: weightDecimal).isActive = true
+                            let percentage = try LayoutUtils.percentageToDecimal(childWidth)
+                            if percentage > 0 {
+                                // Apply adjusted percentage with safety checks
+                                let safePercentage = percentage * adjustmentFactor
+                                
+                                // Verify value is valid to prevent NaN
+                                if safePercentage.isFinite && safePercentage > 0 && safePercentage <= 1.0 {
+                                    // Use lower priority to prevent conflicts
+                                    let constraint = wrapperView.widthAnchor.constraint(
+                                        equalTo: stackView.widthAnchor,
+                                        multiplier: safePercentage
+                                    )
+                                    constraint.priority = .defaultHigh - 1
+                                    constraint.isActive = true
+                                } else {
+                                    // Fallback for invalid percentages
+                                    let constraint = wrapperView.widthAnchor.constraint(
+                                        equalToConstant: 100
+                                    )
+                                    constraint.priority = .defaultHigh - 2
+                                    constraint.isActive = true
+                                }
+                            }
+                        } else if childrenWithoutPercentage > 0 && childrenWithExplicitPercentage > 0 {
+                            // For views without explicit percentages, calculate remaining space
+                            let remainingPercentage = max(0.01, (1.0 - (explicitPercentageTotal * adjustmentFactor)))
+                            let equalShare = remainingPercentage / CGFloat(childrenWithoutPercentage)
+                            
+                            // Verify value is valid to prevent NaN
+                            if equalShare.isFinite && equalShare > 0 {
+                                let constraint = wrapperView.widthAnchor.constraint(
+                                    equalTo: stackView.widthAnchor,
+                                    multiplier: equalShare
+                                )
+                                constraint.priority = .defaultHigh - 1
+                                constraint.isActive = true
+                            }
                         }
+                        
                     } catch {
                         print("Error processing child segment of type: \(childType), error: \(error)")
                     }
@@ -74,31 +186,11 @@ class RowSegmentProcessor: SegmentProcessor {
             }
         }
         
-        return rowLayout
+        return containerView
     }
     
     func getSegmentType() -> String {
         return "row"
-    }
-    
-    // Helper function to map alignment to UIStackView.Alignment
-    private func getStackAlignment(from alignment: String) -> UIStackView.Alignment {
-        switch alignment.lowercased() {
-        case "top":
-            return .top
-        case "bottom":
-            return .bottom
-        case "left", "leading":
-            return .leading
-        case "right", "trailing":
-            return .trailing
-        case "center":
-            return .center
-        case "fill":
-            return .fill
-        default:
-            return .center
-        }
     }
     
     // Helper function to convert spacing values to CGFloat
