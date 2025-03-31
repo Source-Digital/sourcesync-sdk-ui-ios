@@ -56,48 +56,30 @@ class TextSegmentProcessor: SegmentProcessor {
     private func applyTextAttributes(attributedString: NSMutableAttributedString,
                                     attributes: SegmentAttributes,
                                     range: NSRange) {
-        if attributes == nil { return }
-        
-        // Create base font
-        var font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         
         // Apply font size
         if let fontSize = attributes.fontSize {
             let dpSize = LayoutUtils.fontSizeToDP(fontSize: fontSize)
-            font = UIFont.systemFont(ofSize: CGFloat(dpSize))
+            attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: CGFloat(dpSize)), range: range)
         }
         
         // Apply text color
-        if let colorHex = attributes.color {
-            do {
-                if let color = UIColor(hex: colorHex) {
-                    attributedString.addAttribute(.foregroundColor, value: color, range: range)
-                } else {
-                    print("\(TextSegmentProcessor.TAG): Invalid color format: \(colorHex)")
-                }
-            } catch {
-                print("\(TextSegmentProcessor.TAG): Error parsing color: \(error)")
-            }
+        if let colorHex = attributes.color, let color = UIColor(hex: colorHex) {
+            attributedString.addAttribute(.foregroundColor, value: color, range: range)
         }
         
-        // Apply text style (bold)
-        if attributes.weight == "bold" {
-            if let boldFont = applyBoldToFont(font) {
-                attributedString.addAttribute(.font, value: boldFont, range: range)
-            }
-        } else {
-            attributedString.addAttribute(.font, value: font, range: range)
+        // Apply bold styling
+        if let weight = attributes.weight, weight.lowercased() == "bold" {
+            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: UIFont.universalSystemFontSize), range: range)
         }
         
-        // Apply text style (italic)
-        if attributes.style == "italic" {
-            if let italicFont = applyItalicToFont(font) {
-                attributedString.addAttribute(.font, value: italicFont, range: range)
-            }
+        // Apply italic styling
+        if let style = attributes.style, style.lowercased() == "italic" {
+            attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: UIFont.universalSystemFontSize), range: range)
         }
         
         // Apply underline
-        if attributes.underline == true {
+        if let underline = attributes.underline, underline {
             attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
         }
     }
