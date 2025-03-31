@@ -5,7 +5,8 @@
 import UIKit
 
 // A view representing activation details with a customizable template.
-public class ActivationDetail: UIView {
+class ActivationDetail: UIView {
+    private let mainContainer = UIStackView()
     private let contentContainer = UIStackView()
     private let scrollView = UIScrollView()
     private let processorFactory: SegmentProcessorFactory
@@ -24,67 +25,56 @@ public class ActivationDetail: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Sets up the view with provided template and close action.
     private func initializeView(template: [[String: Any]], onClose: @escaping () -> Void) {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        
-        // Create and configure header
-        let header = ActivationHeader(onClose: onClose)
-        
-        // Configure scroll view
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.alwaysBounceVertical = true
-        
-        // Configure content container
-        contentContainer.axis = .vertical
-        contentContainer.spacing = 8
-        contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Embed content container inside scroll view
-        scrollView.addSubview(contentContainer)
-        
-        // Main stack to hold header and scrollable content
-        let mainStack = UIStackView(arrangedSubviews: [header, scrollView])
-        mainStack.axis = .vertical
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(mainStack)
-        
-        NSLayoutConstraint.activate([
-            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            mainStack.topAnchor.constraint(equalTo: topAnchor),
-            mainStack.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-//            scrollView.widthAnchor.constraint(equalTo: mainStack.widthAnchor),
-//            contentContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            contentContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-//            contentContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//            contentContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//            contentContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-        ])
-        
-        // Add constraints for the content container inside the scroll view
-        NSLayoutConstraint.activate([
-            contentContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentContainer.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentContainer.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            // Create and configure header
+            let header = ActivationHeader(onClose: onClose)
+            header.translatesAutoresizingMaskIntoConstraints = false
             
-            // Ensure the content container's width matches the scroll view's width
-            contentContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-        ])
-        
-        let label = UILabel()
-        label.text = "This is a label"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.addArrangedSubview(label)
-
-        let button = UIButton(type: .system)
-        button.setTitle("Click Me", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.addArrangedSubview(button)
-        
+            mainContainer.axis = .vertical // Changed to vertical for better layout
+            mainContainer.spacing = 0 // Remove spacing to have precise control
+            mainContainer.translatesAutoresizingMaskIntoConstraints = false
+            mainContainer.backgroundColor = UIColor.black.withAlphaComponent(0.8) // Consistent background
+            
+            // Configure content container
+            contentContainer.axis = .vertical
+            contentContainer.spacing = 8
+            contentContainer.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Add container and header to the view hierarchy
+            addSubview(mainContainer)
+            mainContainer.addSubview(contentContainer)
+            mainContainer.addSubview(header) // Add header directly to main container
+            
+            // Main container fills the entire view
+            NSLayoutConstraint.activate([
+                mainContainer.topAnchor.constraint(equalTo: topAnchor),
+                mainContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+                mainContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+                mainContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+            
+            // Position header at top right with 10pt margin
+            NSLayoutConstraint.activate([
+                header.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 10),
+                header.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -10),
+                header.widthAnchor.constraint(equalToConstant: 44), // Give it enough space
+                header.heightAnchor.constraint(equalToConstant: 44)
+            ])
+            
+            // Content container takes up most of the space with proper margins
+            NSLayoutConstraint.activate([
+                contentContainer.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 16),
+                contentContainer.leadingAnchor.constraint(equalTo: mainContainer.leadingAnchor, constant: 16),
+                contentContainer.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -16),
+                contentContainer.bottomAnchor.constraint(equalTo: mainContainer.bottomAnchor, constant: -16),
+                
+                // Ensure minimum dimensions
+                contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: mainContainer.widthAnchor, multiplier: 0.9),
+                contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: mainContainer.heightAnchor, multiplier: 0.9)
+            ])
+            
         
         // Process and render template
         processTemplate(template)
@@ -104,5 +94,8 @@ public class ActivationDetail: UIView {
                 
             }
         }
+        // Force layout update
+        contentContainer.layoutIfNeeded()
+//        scrollView.layoutIfNeeded()
     }
 }

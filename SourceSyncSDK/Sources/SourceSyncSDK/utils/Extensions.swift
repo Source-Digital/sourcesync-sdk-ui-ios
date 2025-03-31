@@ -25,3 +25,13 @@ extension UIColor {
         }
     }
 }
+
+extension UIFont {
+    static var universalSystemFontSize: CGFloat {
+        #if os(iOS)
+            return systemFontSize
+        #else
+            return 17.0 // Default value for tvOS
+        #endif
+    }
+}
