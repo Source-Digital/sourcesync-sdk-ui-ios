@@ -6,9 +6,9 @@
 import UIKit
 
 class ImageSegmentProcessor: SegmentProcessor {
-    private let tag = "ImageSegmentProcessor"
-    private static var imageLoader = ImageLoader()
-    private let parentContainer: UIView
+    private static let TAG = "ImageSegmentProcessor"
+    private static let DEFAULT_CORNER_RADIUS_DP: Float = 12.0 // Same as Android
+    private weak var parentContainer: UIView?
     
     init(parentContainer: UIView) {
         self.parentContainer = parentContainer
@@ -18,15 +18,18 @@ class ImageSegmentProcessor: SegmentProcessor {
         // Create a container view that will hold the image view
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .clear // Changed from red to clear
         
+        // Create the image view
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFit // Default, equivalent to FIT_CENTER
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true // Needed for corner radius
         
         // Add image view to container
         containerView.addSubview(imageView)
         
-        // Make image view fill the container by default
+        // Make image view fill the container exactly with no padding
         NSLayoutConstraint.activate([
             imageView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
             imageView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
@@ -34,207 +37,183 @@ class ImageSegmentProcessor: SegmentProcessor {
             imageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
+        // Set default corner radius
+        let cornerRadiusPx = CGFloat(ImageSegmentProcessor.DEFAULT_CORNER_RADIUS_DP) * (UIScreen.main.bounds.width / 375.0)
+        imageView.layer.cornerRadius = cornerRadiusPx
+        
+        // Process attributes if available
         if let attributesJson = segment["attributes"] as? [String: Any] {
-            do {
-                // Parse both standard and nested attributes
-                let attributes = try SegmentAttributes.fromJson(json: attributesJson)
-                
-                // Handle contentMode
-                if let alignment = attributes.alignment {
-                    imageView.contentMode = alignmentToContentMode(alignment: alignment)
-                } else if let contentMode = attributesJson["contentMode"] as? String {
-                    imageView.contentMode = contentModeFromString(contentMode)
-                }
-                
-                // Handle size attributes
-                var hasFixedWidth = false
-                var hasFixedHeight = false
-                var isAutoHeight = false
-                
-                if let sizeDict = attributesJson["size"] as? [String: Any] {
-                    // Process width value
-                    if let widthValue = sizeDict["width"] {
-                        hasFixedWidth = processWidth(widthValue, for: containerView)
-                    }
-                    
-                    // Process height value
-                    if let heightValue = sizeDict["height"] {
-                        if let heightString = heightValue as? String, heightString == "auto" {
-                            isAutoHeight = true
-                            // For auto height, we'll let the image's aspect ratio determine the height
-                        } else {
-                            hasFixedHeight = processHeight(heightValue, for: containerView)
-                        }
-                    }
-                } else {
-                    // Handle width attribute directly
-                    if let width = attributes.width {
-                        hasFixedWidth = processWidth(width, for: containerView)
-                    }
-                    
-                    // Handle height attribute directly
-                    if let height = attributes.height {
-                        if height == "auto" {
-                            isAutoHeight = true
-                        } else {
-                            hasFixedHeight = processHeight(height, for: containerView)
-                        }
-                    }
-                }
-                
-                // Apply minimum height if needed
-                if isAutoHeight && !hasFixedHeight {
-                    // Set a minimum height to ensure visibility before image loads
-                    let minHeightConstraint = containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
-                    minHeightConstraint.priority = .defaultHigh - 10
-                    minHeightConstraint.isActive = true
-                }
-                
-                // Load the image
-                if let imageUrl = segment["content"] as? String, !imageUrl.isEmpty {
-                    Self.imageLoader.loadImage(urlString: imageUrl, imageView: imageView,
-                                              preserveAspectRatio: isAutoHeight && hasFixedWidth)
-                } else {
-                    // No image URL, provide a placeholder appearance
-                    imageView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
-                }
-                
-            } catch {
-                // Provide more detailed error information
-                print("\(tag) Error parsing SegmentAttributes: \(error)")
-                imageView.backgroundColor = UIColor.red.withAlphaComponent(0.3) // Error indicator
+            try processAttributes(attributesJson, containerView: containerView, imageView: imageView)
+        }
+        
+        // Set content hugging and compression resistance to ensure proper sizing
+        containerView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        containerView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        containerView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        containerView.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        // Load the image
+        if let imageUrl = segment["content"] as? String, !imageUrl.isEmpty {
+            print("\(ImageSegmentProcessor.TAG): Starting image load for URL: \(imageUrl)")
+            
+            if let url = URL(string: imageUrl) {
+                // Use a placeholder while loading
+                imageView.backgroundColor = .clear
+                loadImage(url: url, imageView: imageView)
             }
+        } else {
+            // No image URL, provide a placeholder appearance
+            imageView.backgroundColor = UIColor.lightGray
         }
         
         return containerView
     }
     
-    // Process width value and return true if it's a fixed width
-    private func processWidth(_ width: Any, for view: UIView) -> Bool {
-        if let widthInt = width as? Int {
-            let constraint = view.widthAnchor.constraint(equalToConstant: CGFloat(widthInt))
-            constraint.priority = .defaultHigh
-            constraint.isActive = true
-            return true
-        } else if let widthFloat = width as? CGFloat {
-            let constraint = view.widthAnchor.constraint(equalToConstant: widthFloat)
-            constraint.priority = .defaultHigh
-            constraint.isActive = true
-            return true
-        } else if let widthString = width as? String {
-            if widthString == "auto" {
-                return false
-            } else if LayoutUtils.isValidPercentage(widthString) {
-                do {
-                    let widthDecimal = try LayoutUtils.percentageToDecimal(widthString)
-                    if widthDecimal > 0 {
-                        // IMPORTANT: DO NOT create a constraint between view and parentContainer
-                        // Instead, we'll set a width constraint on this view that its parent
-                        // can use to determine appropriate layout
-                        
-                        // Return false to indicate this isn't a fixed width
-                        // The parent layout will handle the percentage constraints
-                        return false
-                    }
-                } catch {
-                    print("\(tag) Error processing width percentage: \(error)")
-                }
-                return false
-            } else {
-                // Try to parse as numeric value
-                if let widthValue = NumberFormatter().number(from: widthString)?.doubleValue {
-                    let constraint = view.widthAnchor.constraint(equalToConstant: CGFloat(widthValue))
-                    constraint.priority = .defaultHigh
-                    constraint.isActive = true
-                    return true
-                }
-            }
+    // Separate function for processing attributes
+    private func processAttributes(_ attributesJson: [String: Any], containerView: UIView, imageView: UIImageView) throws {
+        let attributes = try SegmentAttributes.fromJson(json: attributesJson)
+        
+        // Handle content mode / scale type
+        if let alignment = attributes.alignment {
+            imageView.contentMode = LayoutUtils.alignmentToContentMode(alignment: alignment)
+        } else if let contentMode = attributesJson["contentMode"] as? String {
+            // Process content mode from JSON
+            handleContentMode(contentMode, imageView: imageView)
         }
-        return false
+        
+        // Handle corner radius if specified in attributes
+        if let cornerRadiusValue = attributesJson["cornerRadius"] as? NSNumber {
+            let radiusPx = CGFloat(cornerRadiusValue.floatValue) * (UIScreen.main.bounds.width / 375.0)
+            imageView.layer.cornerRadius = radiusPx
+        }
+        
+        // Handle size attributes
+        processSizeAttributes(attributesJson: attributesJson, attributes: attributes, containerView: containerView)
     }
     
-    // Process height value and return true if it's a fixed height
-    private func processHeight(_ height: Any, for view: UIView) -> Bool {
-        if let heightInt = height as? Int {
-            let constraint = view.heightAnchor.constraint(equalToConstant: CGFloat(heightInt))
-            constraint.priority = .defaultHigh
-            constraint.isActive = true
-            return true
-        } else if let heightFloat = height as? CGFloat {
-            let constraint = view.heightAnchor.constraint(equalToConstant: heightFloat)
-            constraint.priority = .defaultHigh
-            constraint.isActive = true
-            return true
-        } else if let heightString = height as? String {
-            if heightString == "auto" {
-                return false
-            } else if LayoutUtils.isValidPercentage(heightString) {
-                do {
-                    let heightDecimal = try LayoutUtils.percentageToDecimal(heightString)
-                    if heightDecimal > 0 {
-                        // IMPORTANT: DO NOT create a constraint between view and parentContainer
-                        // Instead, we'll set a height constraint on this view that its parent
-                        // can use to determine appropriate layout
+    // Helper to process content mode
+    private func handleContentMode(_ contentModeStr: String, imageView: UIImageView) {
+        switch contentModeStr.lowercased() {
+        case "scaletofill":
+            imageView.contentMode = .scaleToFill
+        case "scaleaspectfit":
+            imageView.contentMode = .scaleAspectFit
+        case "scaleaspectfill":
+            imageView.contentMode = .scaleAspectFill
+        case "center":
+            imageView.contentMode = .center
+        default:
+            imageView.contentMode = .scaleAspectFit // Default
+        }
+    }
+    
+    // Process size attributes with special handling for percentages
+    private func processSizeAttributes(attributesJson: [String: Any], attributes: SegmentAttributes, containerView: UIView) {
+        // Get screen width as reference for percentage calculations
+        let screenWidth = UIScreen.main.bounds.width
+        
+        // Handle size attributes
+        if let sizeObj = attributesJson["size"] as? [String: Any] {
+            // Process width value
+            if let widthStr = sizeObj["width"] as? String {
+                if widthStr.hasSuffix("%") {
+                    // Handle percentage width
+                    if let percentStr = widthStr.components(separatedBy: "%").first,
+                       let percent = Double(percentStr) {
+                        // Calculate actual width based on screen width
+                        let widthValue = screenWidth * CGFloat(percent / 100.0)
                         
-                        // Return false to indicate this isn't a fixed height
-                        // The parent layout will handle the percentage constraints
-                        return false
+                        // Create width constraint
+                        let constraint = containerView.widthAnchor.constraint(equalToConstant: widthValue)
+                        constraint.priority = .defaultHigh
+                        constraint.isActive = true
                     }
-                } catch {
-                    print("\(tag) Error processing height percentage: \(error)")
+                } else if let widthValue = Int(widthStr) {
+                    // Handle numeric width
+                    containerView.widthAnchor.constraint(equalToConstant: CGFloat(widthValue)).isActive = true
                 }
-                return false
-            } else {
-                // Try to parse as numeric value
-                if let heightValue = NumberFormatter().number(from: heightString)?.doubleValue {
-                    let constraint = view.heightAnchor.constraint(equalToConstant: CGFloat(heightValue))
-                    constraint.priority = .defaultHigh
-                    constraint.isActive = true
-                    return true
+            } else if let widthValue = sizeObj["width"] as? Int {
+                containerView.widthAnchor.constraint(equalToConstant: CGFloat(widthValue)).isActive = true
+            }
+            
+            // Process height value
+            if let heightStr = sizeObj["height"] as? String {
+                if heightStr.hasSuffix("%") {
+                    // Handle percentage height
+                    if let percentStr = heightStr.components(separatedBy: "%").first,
+                       let percent = Double(percentStr) {
+                        // Calculate actual height based on screen width (for aspect ratio consistency)
+                        let heightValue = screenWidth * CGFloat(percent / 100.0)
+                        
+                        // Create height constraint
+                        let constraint = containerView.heightAnchor.constraint(equalToConstant: heightValue)
+                        constraint.priority = .defaultHigh
+                        constraint.isActive = true
+                    }
+                } else if heightStr == "auto" {
+                    // For auto height, set a minimum height
+                    let minHeight = 50.0 * (screenWidth / 375.0)
+                    containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight).isActive = true
+                } else if let heightValue = Int(heightStr) {
+                    // Handle numeric height
+                    containerView.heightAnchor.constraint(equalToConstant: CGFloat(heightValue)).isActive = true
+                }
+            } else if let heightValue = sizeObj["height"] as? Int {
+                containerView.heightAnchor.constraint(equalToConstant: CGFloat(heightValue)).isActive = true
+            }
+        } else {
+            // Handle width/height attributes directly if they exist
+            if let width = attributes.width {
+                if width.hasSuffix("%") {
+                    if let percentStr = width.components(separatedBy: "%").first,
+                       let percent = Double(percentStr) {
+                        let widthValue = screenWidth * CGFloat(percent / 100.0)
+                        containerView.widthAnchor.constraint(equalToConstant: widthValue).isActive = true
+                    }
+                } else if let widthValue = Int(width) {
+                    containerView.widthAnchor.constraint(equalToConstant: CGFloat(widthValue)).isActive = true
+                }
+            }
+            
+            if let height = attributes.height {
+                if height.hasSuffix("%") {
+                    if let percentStr = height.components(separatedBy: "%").first,
+                       let percent = Double(percentStr) {
+                        let heightValue = screenWidth * CGFloat(percent / 100.0)
+                        containerView.heightAnchor.constraint(equalToConstant: heightValue).isActive = true
+                    }
+                } else if height == "auto" {
+                    let minHeight = 50.0 * (screenWidth / 375.0)
+                    containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight).isActive = true
+                } else if let heightValue = Int(height) {
+                    containerView.heightAnchor.constraint(equalToConstant: CGFloat(heightValue)).isActive = true
                 }
             }
         }
-        return false
+    }
+    
+    private func loadImage(url: URL, imageView: UIImageView) {
+        URLSession.shared.dataTask(with: url) { [weak imageView] data, response, error in
+            guard let imageView = imageView else { return }
+            
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    imageView.image = image
+                    imageView.backgroundColor = .clear
+                    
+                    // Force layout to ensure the container resizes properly
+                    imageView.superview?.setNeedsLayout()
+                    imageView.superview?.layoutIfNeeded()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    imageView.backgroundColor = UIColor(white: 0.66, alpha: 1.0) // Error state
+                }
+            }
+        }.resume()
     }
     
     func getSegmentType() -> String {
         return "image"
-    }
-    
-    // Converts alignment string to appropriate content mode
-    private func alignmentToContentMode(alignment: String) -> UIView.ContentMode {
-        switch alignment.lowercased() {
-        case "left": return .left
-        case "right": return .right
-        case "center": return .scaleAspectFit
-        default: return .scaleAspectFit
-        }
-    }
-    
-    // Converts contentMode string to UIView.ContentMode
-    private func contentModeFromString(_ contentMode: String) -> UIView.ContentMode {
-        switch contentMode.lowercased() {
-        case "scaleaspectfit": return .scaleAspectFit
-        case "scaleaspectfill": return .scaleAspectFill
-        case "scaletofill": return .scaleToFill
-        case "center": return .center
-        case "top": return .top
-        case "bottom": return .bottom
-        case "left": return .left
-        case "right": return .right
-        case "topleft": return .topLeft
-        case "topright": return .topRight
-        case "bottomleft": return .bottomLeft
-        case "bottomright": return .bottomRight
-        default: return .scaleAspectFit
-        }
-    }
-}
-
-// Weak reference wrapper to prevent retain cycles
-class WeakRef<T: AnyObject> {
-    weak var value: T?
-    init(value: T?) {
-        self.value = value
     }
 }

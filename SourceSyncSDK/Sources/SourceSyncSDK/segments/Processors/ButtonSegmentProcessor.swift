@@ -49,10 +49,11 @@ class ButtonSegmentProcessor: SegmentProcessor {
                 button.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(dpSize))
             }
             
+            button.translatesAutoresizingMaskIntoConstraints = false
+
             // Handle width if specified as a percentage
             if let width = attributes.width, LayoutUtils.isValidPercentage(width){
                 let weight = try LayoutUtils.percentageToDecimal(width)
-                button.translatesAutoresizingMaskIntoConstraints = false
                 button.widthAnchor.constraint(equalTo: button.superview!.widthAnchor, multiplier: weight).isActive = true
             }
             
@@ -63,7 +64,8 @@ class ButtonSegmentProcessor: SegmentProcessor {
                 button.contentHorizontalAlignment = .center
             }
             
-            
+            // Add padding similar to the Android implementation
+            button.contentEdgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         }
         
         return button

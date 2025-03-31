@@ -7,115 +7,95 @@ import UIKit
 
 // A view representing an activation preview with customizable content.
 class ActivationPreview: UIView {
-    private let contentContainer = UIStackView()
-    private let processorFactory: SegmentProcessorFactory
+    private static let TAG = "ActivationPreview"
+    private var contentContainer: UIStackView!
+    private var processorFactory: SegmentProcessorFactory!
     
-    // Initializes the activation preview with provided data.
-    // - Parameter data: JSON data for the preview.
-    init(data: [String: Any]) {
-        self.processorFactory = SegmentProcessorFactory(parentContainer: contentContainer)
+    // Constructor for programmatic creation
+    init(previewData: [String: Any]) {
         super.init(frame: .zero)
-        initializeView(data: data)
+        initializeView(previewData: previewData)
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        initializeView(previewData: [:])
     }
     
-    // Sets up the view with provided preview data.
-    // - Parameter data: JSON dictionary containing preview configuration.
-    private func initializeView(data: [String: Any]) {
-        translatesAutoresizingMaskIntoConstraints = false
-           
-           // Apply style from JSON
-           contentContainer.backgroundColor = UIColor.black.withAlphaComponent(0.8) // Using opacity: 0.8 from style
-           contentContainer.axis = .vertical
-           contentContainer.translatesAutoresizingMaskIntoConstraints = false
-           addSubview(contentContainer)
-           
-           // Get padding values from JSON contentStyle
-           let paddingTop: CGFloat = 10.0
-           let paddingLeft: CGFloat = 16.0
-           let paddingRight: CGFloat = 16.0
-           
-           // Content container wraps content with padding and minimum size
-           NSLayoutConstraint.activate([
-               // Position at top left with padding
-               contentContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: paddingTop),
-               contentContainer.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: paddingLeft),
-               
-               // Add padding from end and bottom
-               contentContainer.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -paddingRight),
-               
-               // Minimum dimensions
-               contentContainer.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.9),
-               contentContainer.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor, multiplier: 0.8)
-           ])
+    private func initializeView(previewData: [String: Any]) {
+        // Set a sensible intrinsic content size
+        self.translatesAutoresizingMaskIntoConstraints = false
         
-        // Process template if provided, otherwise create default template
-        if let template = data["template"] as? [[String: Any]] {
+        // Create content container
+        contentContainer = UIStackView()
+        contentContainer.axis = .vertical
+        contentContainer.translatesAutoresizingMaskIntoConstraints = false
+        contentContainer.spacing = 8
+        
+        // Apply background color and opacity
+        contentContainer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 153/255)
+        contentContainer.layer.cornerRadius = 8
+        
+        // Initialize processor factory
+        processorFactory = SegmentProcessorFactory(parentContainer: contentContainer)
+        
+        // Add content container to view
+        addSubview(contentContainer)
+        
+        // Get padding values
+        let paddingTop = 10.0 * (UIScreen.main.bounds.width / 375.0) // Scale for device
+        let paddingBottom = 10.0 * (UIScreen.main.bounds.width / 375.0)
+        let paddingLeft = 16.0 * (UIScreen.main.bounds.width / 375.0)
+        let paddingRight = 16.0 * (UIScreen.main.bounds.width / 375.0)
+        
+        // Apply padding through layout margins
+        contentContainer.layoutMargins = UIEdgeInsets(
+            top: paddingTop,
+            left: paddingLeft,
+            bottom: paddingBottom,
+            right: paddingRight
+        )
+        contentContainer.isLayoutMarginsRelativeArrangement = true
+        
+        // Set layout constraints
+        NSLayoutConstraint.activate([
+            contentContainer.topAnchor.constraint(equalTo: topAnchor),
+            contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        setContentCompressionResistancePriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        // Process template if provided
+        if let previewDict = previewData as? [String: Any],
+           let template = previewDict["template"] as? [[String: Any]] {
             processTemplate(template)
-        } else {
-            processTemplate(createDefaultTemplate(from: data))
         }
     }
     
-    // Processes the template to generate UI components.
-    // - Parameter template: The array of segment data.
     private func processTemplate(_ template: [[String: Any]]) {
         for segment in template {
             if let segmentType = segment["type"] as? String {
-                // Only process if segment type is "text"
-//                if segmentType == "text" {
-                    if let processor = processorFactory.getProcessor(for: segmentType) {
-                        do {
-                            let segmentView = try processor.processSegment(segment: segment)
-                            contentContainer.addArrangedSubview(segmentView)
-                        } catch {
-                            print("Error processing template: \(error.localizedDescription)")
-                        }
+                if let processor = processorFactory.getProcessor(for: segmentType) {
+                    do {
+                        let segmentView = try processor.processSegment(segment: segment)
+                        contentContainer.addArrangedSubview(segmentView)
+                    } catch {
+                        print("\(ActivationPreview.TAG): Error processing template segments: \(error)")
                     }
-//                } else {
-//                    print("Skipping segment of type '\(segmentType)' - only 'text' segments are currently supported")
-//                }
+                } else {
+                    print("\(ActivationPreview.TAG): No processor found for segment type: \(segmentType)")
+                }
             }
         }
         
-        contentContainer.layoutIfNeeded()
+        // After all segments are added, set a reasonable size
+        invalidateIntrinsicContentSize()
     }
     
-    // Creates a default template if no template is provided in the JSON.
-    // - Parameter data: JSON data.
-    // - Returns: Default template as an array.
-    private func createDefaultTemplate(from data: [String: Any]) -> [[String: Any]] {
-        var template: [[String: Any]] = []
-        
-        if let title = data["title"] as? String {
-            template.append([
-                "type": "text",
-                "content": title,
-                "attributes": [
-                    "size": "lg",
-                    "color": "#FFFFFF",
-                    "weight": "bold",
-                    "alignment": "left"
-                ]
-            ])
-        }
-        
-        if let subtitle = data["subtitle"] as? String {
-            template.append([
-                "type": "text",
-                "content": subtitle,
-                "attributes": [
-                    "size": "md",
-                    "color": "#CCCCCC",
-                    "style": "italic",
-                    "alignment": "left"
-                ]
-            ])
-        }
-        
-        return template
+    override var intrinsicContentSize: CGSize {
+        return contentContainer.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
 }
