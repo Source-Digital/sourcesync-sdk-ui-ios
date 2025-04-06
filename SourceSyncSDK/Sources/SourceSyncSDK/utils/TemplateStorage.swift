@@ -41,7 +41,7 @@ struct TemplateStorage {
                 "content": "Full Content View",
                 "attributes": [
                     "font": "system",
-                    "size": "xl",
+                    "size": "lg",
                     "color": "#FFFFFF",
                     "weight": "bold",
                     "alignment": "center"
@@ -52,8 +52,8 @@ struct TemplateStorage {
                 "content": "https://storage.googleapis.com/source-uploads-production/uploads/user-media/bbb_image1_aee8ad527d.png",
                 "attributes": [
                     "size": [
-                        "width": "20%",
-                        "height": "20%"
+                        "width": "60%",
+                        "height": "40%"
                     ],
                     "contentMode": "scaletofill",
                     "alignment": "center"
@@ -64,7 +64,7 @@ struct TemplateStorage {
                 "content": "This is the main content that appears when the preview is clicked.",
                 "attributes": [
                     "font": "system",
-                    "size": "lg",
+                    "size": "xl",
                     "color": "#FFFFFF",
                     "alignment": "center"
                 ]

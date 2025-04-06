@@ -38,14 +38,6 @@ class ActivationHeader: UIView {
             
             DispatchQueue.main.async {
                 closeButton.setImage(closeImage, for: .normal)
-                
-                // Set content insets (padding) for the image
-                // Convert 2dp to points based on device scale factor
-                let padding = 10.0
-//                closeButton.contentEdgeInsets = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-                
-                // Ensure the button size adjusts to accommodate the padding
-//                closeButton.sizeToFit()
             }
         }
         

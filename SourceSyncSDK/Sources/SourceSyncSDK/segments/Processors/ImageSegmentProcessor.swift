@@ -7,7 +7,7 @@ import UIKit
 
 class ImageSegmentProcessor: SegmentProcessor {
     private static let TAG = "ImageSegmentProcessor"
-    private static let DEFAULT_CORNER_RADIUS_DP: Float = 12.0 // Same as Android
+    private static let DEFAULT_CORNER_RADIUS_DP: Float = 16.0 // Same as Android
     private weak var parentContainer: UIView?
     
     init(parentContainer: UIView) {
@@ -20,21 +20,33 @@ class ImageSegmentProcessor: SegmentProcessor {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = .clear // Changed from red to clear
         
-        // Create the image view
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit // Default, equivalent to FIT_CENTER
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.clipsToBounds = true // Needed for corner radius
+        // Create the image view and its masking container
+        let maskContainer = UIView()
+        maskContainer.translatesAutoresizingMaskIntoConstraints = false
+        maskContainer.clipsToBounds = true // This is crucial for corner masking
         
-        // Add image view to container
-        containerView.addSubview(imageView)
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Build the view hierarchy
+        containerView.addSubview(maskContainer)
+        maskContainer.addSubview(imageView)
         
         // Make image view fill the container exactly with no padding
         NSLayoutConstraint.activate([
-            imageView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
-            imageView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
-            imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            maskContainer.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+            maskContainer.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            maskContainer.topAnchor.constraint(equalTo: containerView.topAnchor),
+            maskContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        // Layout imageView to fill the maskContainer
+        NSLayoutConstraint.activate([
+            imageView.leftAnchor.constraint(equalTo: maskContainer.leftAnchor),
+            imageView.rightAnchor.constraint(equalTo: maskContainer.rightAnchor),
+            imageView.topAnchor.constraint(equalTo: maskContainer.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: maskContainer.bottomAnchor)
         ])
         
         // Set default corner radius
@@ -65,6 +77,9 @@ class ImageSegmentProcessor: SegmentProcessor {
             // No image URL, provide a placeholder appearance
             imageView.backgroundColor = UIColor.lightGray
         }
+        
+        // Final corner radius application - after layout
+        containerView.layoutIfNeeded()
         
         return containerView
     }
@@ -109,8 +124,9 @@ class ImageSegmentProcessor: SegmentProcessor {
     
     // Process size attributes with special handling for percentages
     private func processSizeAttributes(attributesJson: [String: Any], attributes: SegmentAttributes, containerView: UIView) {
-        // Get screen width as reference for percentage calculations
-        let screenWidth = UIScreen.main.bounds.width
+        // Get screen dimensions with respect to landscape orientation
+        let screenWidth = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        let screenHeight = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         
         // Handle size attributes
         if let sizeObj = attributesJson["size"] as? [String: Any] {
@@ -122,10 +138,10 @@ class ImageSegmentProcessor: SegmentProcessor {
                        let percent = Double(percentStr) {
                         // Calculate actual width based on screen width
                         let widthValue = screenWidth * CGFloat(percent / 100.0)
-                        
+
                         // Create width constraint
                         let constraint = containerView.widthAnchor.constraint(equalToConstant: widthValue)
-                        constraint.priority = .defaultHigh
+                        constraint.priority = .required
                         constraint.isActive = true
                     }
                 } else if let widthValue = Int(widthStr) {
@@ -135,7 +151,7 @@ class ImageSegmentProcessor: SegmentProcessor {
             } else if let widthValue = sizeObj["width"] as? Int {
                 containerView.widthAnchor.constraint(equalToConstant: CGFloat(widthValue)).isActive = true
             }
-            
+
             // Process height value
             if let heightStr = sizeObj["height"] as? String {
                 if heightStr.hasSuffix("%") {
@@ -143,11 +159,11 @@ class ImageSegmentProcessor: SegmentProcessor {
                     if let percentStr = heightStr.components(separatedBy: "%").first,
                        let percent = Double(percentStr) {
                         // Calculate actual height based on screen width (for aspect ratio consistency)
-                        let heightValue = screenWidth * CGFloat(percent / 100.0)
-                        
+                        let heightValue = screenHeight * CGFloat(percent / 100.0)
+
                         // Create height constraint
                         let constraint = containerView.heightAnchor.constraint(equalToConstant: heightValue)
-                        constraint.priority = .defaultHigh
+                        constraint.priority = .required
                         constraint.isActive = true
                     }
                 } else if heightStr == "auto" {
@@ -179,7 +195,7 @@ class ImageSegmentProcessor: SegmentProcessor {
                 if height.hasSuffix("%") {
                     if let percentStr = height.components(separatedBy: "%").first,
                        let percent = Double(percentStr) {
-                        let heightValue = screenWidth * CGFloat(percent / 100.0)
+                        let heightValue = screenHeight * CGFloat(percent / 100.0)
                         containerView.heightAnchor.constraint(equalToConstant: heightValue).isActive = true
                     }
                 } else if height == "auto" {

@@ -69,8 +69,7 @@ class ActivationPreview: UIView {
         setContentCompressionResistancePriority(.required, for: .vertical)
         
         // Process template if provided
-        if let previewDict = previewData as? [String: Any],
-           let template = previewDict["template"] as? [[String: Any]] {
+        if let template = previewData["template"] as? [[String: Any]] {
             processTemplate(template)
         }
     }

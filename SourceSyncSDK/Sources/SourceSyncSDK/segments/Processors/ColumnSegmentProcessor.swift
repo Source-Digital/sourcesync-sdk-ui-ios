@@ -19,7 +19,7 @@ class ColumnSegmentProcessor: SegmentProcessor {
         // Create a column container view
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .clear
+        containerView.backgroundColor = .clear // Changed from green to clear
         
         // Create a vertical stack view to hold items
         let stackView = UIStackView()
@@ -56,13 +56,33 @@ class ColumnSegmentProcessor: SegmentProcessor {
                 stackView.spacing = 10.0
             }
             
-            // Process width attribute - store it directly in the view's layer name for debugging
+            // Process width attribute - apply the width constraint
             if let width = attributes.width {
-                containerView.layer.name = "column-\(width)"
+                containerView.layer.name = "column-\(width)" // Keep this for debugging
                 
                 if width.hasSuffix("%") {
-                    // Just for debugging - you can see this in the view debugger
-                    print("\(ColumnSegmentProcessor.TAG): Column width set to \(width)")
+                    if let percentStr = width.components(separatedBy: "%").first,
+                       let percent = Double(percentStr) {
+                        // Get screen width in landscape orientation
+                        let screenWidth = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+                        
+                        // Calculate actual width based on percentage of screen width
+                        let widthValue = screenWidth * CGFloat(percent / 100.0)
+                        
+                        // Create width constraint with required priority
+                        let widthConstraint = containerView.widthAnchor.constraint(equalToConstant: widthValue)
+                        widthConstraint.priority = .required
+                        widthConstraint.isActive = true
+                        
+                        print("\(ColumnSegmentProcessor.TAG): Column width set to \(width) = \(widthValue) points")
+                    }
+                } else if let widthValue = Int(width) {
+                    // Handle absolute width in points
+                    let constraint = containerView.widthAnchor.constraint(equalToConstant: CGFloat(widthValue))
+                    constraint.priority = .required
+                    constraint.isActive = true
+                    
+                    print("\(ColumnSegmentProcessor.TAG): Column width set to \(widthValue) points")
                 }
             }
         } else {
@@ -70,6 +90,12 @@ class ColumnSegmentProcessor: SegmentProcessor {
             stackView.alignment = .fill
             stackView.spacing = 10.0
         }
+        
+        // Set content hugging and compression resistance priorities
+        containerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        containerView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        containerView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        containerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         
         // Process children elements
         if let children = segment["children"] as? [[String: Any]] {
