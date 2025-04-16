@@ -58,24 +58,31 @@ class TextSegmentProcessor: SegmentProcessor {
                                     range: NSRange) {
         
         // Apply font size
-        if let fontSize = attributes.fontSize {
-            let dpSize = LayoutUtils.fontSizeToDP(fontSize: fontSize)
-            attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: CGFloat(dpSize)), range: range)
+        var fontSize: CGFloat = CGFloat(LayoutUtils.fontSizeToDP(fontSize: "md")) // Default size
+
+        if let fontSizeStr = attributes.fontSize {
+            fontSize = CGFloat(LayoutUtils.fontSizeToDP(fontSize: fontSizeStr))
         }
         
-        // Apply text color
-        if let colorHex = attributes.color, let color = UIColor(hex: colorHex) {
-            attributedString.addAttribute(.foregroundColor, value: color, range: range)
-        }
+        // Start with a base font
+        var font = UIFont.systemFont(ofSize: fontSize)
         
         // Apply bold styling
         if let weight = attributes.weight, weight.lowercased() == "bold" {
-            attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: UIFont.universalSystemFontSize), range: range)
+            font = UIFont.boldSystemFont(ofSize: fontSize)
         }
         
         // Apply italic styling
         if let style = attributes.style, style.lowercased() == "italic" {
-            attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: UIFont.universalSystemFontSize), range: range)
+            font = UIFont.italicSystemFont(ofSize: fontSize)
+        }
+        
+        // Apply the font to the entire range
+        attributedString.addAttribute(.font, value: font, range: range)
+        
+        // Apply text color
+        if let colorHex = attributes.color, let color = UIColor(hex: colorHex) {
+            attributedString.addAttribute(.foregroundColor, value: color, range: range)
         }
         
         // Apply underline

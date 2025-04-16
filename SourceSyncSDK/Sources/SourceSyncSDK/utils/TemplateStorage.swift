@@ -14,7 +14,7 @@ struct TemplateStorage {
                 "content": "A very basic preview template",
                 "attributes": [
                     "font": "system",
-                    "size": "md",
+                    "size": "xl",
                     "color": "#EEEEEE",
                     "weight": "bold"
                 ]

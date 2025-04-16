@@ -33,16 +33,28 @@ class CircularProgressManager {
         
         guard let parentView = parentView else { return }
         
+        // Determine sizes based on platform
+        #if os(tvOS)
+        let containerSize: CGFloat = 175 // Larger for TV
+        let marginTop: CGFloat = 50
+        let marginRight: CGFloat = 50
+        let lineWidth: CGFloat = 20
+        #else
+        let containerSize: CGFloat = 70 // Original size for mobile
+        let marginTop: CGFloat = 20
+        let marginRight: CGFloat = 20
+        let lineWidth: CGFloat = 8
+        #endif
+        
         // Create container for progress
-        let containerSize: CGFloat = 70
         let container = UIView(frame: CGRect(x: 0, y: 0, width: containerSize, height: containerSize))
         container.translatesAutoresizingMaskIntoConstraints = false
         parentView.addSubview(container)
         
         // Position at top right
         NSLayoutConstraint.activate([
-            container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: 20),
-            container.trailingAnchor.constraint(equalTo: parentView.trailingAnchor, constant: -20),
+            container.topAnchor.constraint(equalTo: parentView.topAnchor, constant: marginTop),
+            container.trailingAnchor.constraint(equalTo: parentView.trailingAnchor, constant: -marginRight),
             container.widthAnchor.constraint(equalToConstant: containerSize),
             container.heightAnchor.constraint(equalToConstant: containerSize)
         ])
@@ -50,7 +62,7 @@ class CircularProgressManager {
         // Create circular progress
         let circularPath = UIBezierPath(
             arcCenter: CGPoint(x: containerSize/2, y: containerSize/2),
-            radius: containerSize/2 - 4, // Adjust for stroke width
+            radius: containerSize/2 - lineWidth/2, // Adjust for stroke width
             startAngle: -CGFloat.pi / 2,
             endAngle: 3 * CGFloat.pi / 2,
             clockwise: true
@@ -60,7 +72,7 @@ class CircularProgressManager {
         let trackLayer = CAShapeLayer()
         trackLayer.path = circularPath.cgPath
         trackLayer.strokeColor = UIColor.lightGray.withAlphaComponent(0.3).cgColor
-        trackLayer.lineWidth = 8
+        trackLayer.lineWidth = lineWidth
         trackLayer.fillColor = UIColor.clear.cgColor
         container.layer.addSublayer(trackLayer)
         
@@ -68,7 +80,7 @@ class CircularProgressManager {
         let progress = CAShapeLayer()
         progress.path = circularPath.cgPath
         progress.strokeColor = UIColor.green.cgColor
-        progress.lineWidth = 8
+        progress.lineWidth = lineWidth
         progress.fillColor = UIColor.clear.cgColor
         progress.strokeEnd = 1.0
         progress.lineCap = .round
@@ -81,11 +93,14 @@ class CircularProgressManager {
             imageView.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(imageView)
             
+            // Set image size relative to container size
+            let imageScale: CGFloat = 0.6
+            
             NSLayoutConstraint.activate([
                 imageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
                 imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-                imageView.widthAnchor.constraint(equalToConstant: containerSize * 0.6),
-                imageView.heightAnchor.constraint(equalToConstant: containerSize * 0.6)
+                imageView.widthAnchor.constraint(equalToConstant: containerSize * imageScale),
+                imageView.heightAnchor.constraint(equalToConstant: containerSize * imageScale)
             ])
             
             self.centerImageView = imageView
