@@ -22,6 +22,7 @@ class SegmentProcessorFactory {
         registerProcessor(TextSegmentProcessor())
         registerProcessor(ImageSegmentProcessor(parentContainer: parentContainer))
         registerProcessor(ButtonSegmentProcessor())
+        registerProcessor(WebViewSegmentProcessor())
         registerProcessor(RowSegmentProcessor(processorFactory: self, parentContainer: parentContainer))
         registerProcessor(ColumnSegmentProcessor(processorFactory: self, parentContainer: parentContainer))
     }
