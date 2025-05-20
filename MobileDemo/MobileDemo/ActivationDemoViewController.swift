@@ -43,8 +43,15 @@ class ActivationDemoViewController : UIViewController {
             return
         }
         
-        let previewData = try! Data(contentsOf: previewUrl)
-        let detailsData = try! Data(contentsOf: detailsUrl)
+        let previewData: Data
+        let detailsData: Data
+        do {
+            previewData = try Data(contentsOf: previewUrl)
+            detailsData = try Data(contentsOf: detailsUrl)
+        } catch {
+            print("\(TAG): Failed to load data from file - \(error.localizedDescription)")
+            return
+        }
 
 //        guard let previewTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.previewTemplate3),
 //              let detailsTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.detailsTemplate3) else {
