@@ -6,7 +6,7 @@
 import UIKit
 
 // A view representing an activation preview with customizable content.
-class ActivationPreview: UIView {
+class ActivationPreview_old: UIView {
     private static let TAG = "ActivationPreview"
     private var contentContainer: UIStackView!
     private var processorFactory: SegmentProcessorFactory!
@@ -82,10 +82,10 @@ class ActivationPreview: UIView {
                         let segmentView = try processor.processSegment(segment: segment)
                         contentContainer.addArrangedSubview(segmentView)
                     } catch {
-                        print("\(ActivationPreview.TAG): Error processing template segments: \(error)")
+                        print("\(ActivationPreview_old.TAG): Error processing template segments: \(error)")
                     }
                 } else {
-                    print("\(ActivationPreview.TAG): No processor found for segment type: \(segmentType)")
+                    print("\(ActivationPreview_old.TAG): No processor found for segment type: \(segmentType)")
                 }
             }
         }

@@ -1,0 +1,42 @@
+{
+  "originHash" : "94c4963ee566bf1a4971dd768aeff52b0c6a88a2bdfd1ad9cb794e27c0eac50f",
+  "pins" : [
+    {
+      "identity" : "divkit-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/divkit/divkit-ios.git",
+      "state" : {
+        "revision" : "e88e6f2936af70004f5da5a499072ca1dd7b589e",
+        "version" : "31.13.0"
+      }
+    },
+    {
+      "identity" : "swift-cmark",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-cmark.git",
+      "state" : {
+        "revision" : "b022b08312decdc46585e0b3440d97f6f22ef703",
+        "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "swift-markdown",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-markdown.git",
+      "state" : {
+        "revision" : "ea79e83c8744d2b50b0dc2d5bbd1e857e1253bf9",
+        "version" : "0.6.0"
+      }
+    },
+    {
+      "identity" : "vgsl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yandex/vgsl.git",
+      "state" : {
+        "revision" : "a2ffbfdb48f0e678e504f152bca4afca06a426c5",
+        "version" : "7.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

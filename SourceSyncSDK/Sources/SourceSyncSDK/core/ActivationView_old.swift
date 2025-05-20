@@ -7,12 +7,12 @@ import UIKit
 /**
  * A view representing an activation component with preview and detail views.
  */
-public class ActivationView: UIView {
+public class ActivationView_old: UIView {
     
     private static let TAG = "SDK:ActivationView"
     
-    private var previewView: ActivationPreview?
-    private var detailView: ActivationDetail?
+    private var previewView: ActivationPreview_old?
+    private var detailView: ActivationDetail_old?
     private var onPreviewClickHandler: (() -> Void)?
     private var progressManager: CircularProgressManager!
     
@@ -95,7 +95,7 @@ public class ActivationView: UIView {
             progressManager.setupCircularProgress(withImage: progressImage)
         }
         
-            previewView = ActivationPreview(previewData: templateToUse)
+            previewView = ActivationPreview_old(previewData: templateToUse)
             
             if let previewView = previewView {
                 previewView.alpha = 0 // Start fully transparent
@@ -146,15 +146,15 @@ public class ActivationView: UIView {
                         
                         self.layoutIfNeeded()
                         
-                        print("\(ActivationView.TAG): Positioned preview to the left of progress: right margin = \(newRightMargin)")
+                        print("\(ActivationView_old.TAG): Positioned preview to the left of progress: right margin = \(newRightMargin)")
                     } else {
                         // Position at the right edge if no progress
-                        print("\(ActivationView.TAG): Positioned preview at right edge, no progress indicator")
+                        print("\(ActivationView_old.TAG): Positioned preview at right edge, no progress indicator")
                     }
                 }
                 
                 // Fade-in animation
-                UIView.animate(withDuration: ActivationView.ANIMATION_DURATION, animations: {
+                UIView.animate(withDuration: ActivationView_old.ANIMATION_DURATION, animations: {
                     previewView.alpha = 1.0
                 }, completion: { _ in
                     // Start progress animation if needed
@@ -188,7 +188,7 @@ public class ActivationView: UIView {
         
         // Hide preview with fade-out
         if let previewView = previewView {
-            UIView.animate(withDuration: ActivationView.ANIMATION_DURATION, animations: {
+            UIView.animate(withDuration: ActivationView_old.ANIMATION_DURATION, animations: {
                 previewView.alpha = 0
             }, completion: { _ in
                 previewView.isHidden = true
@@ -204,17 +204,17 @@ public class ActivationView: UIView {
             }
        
             guard let templateArray = detailsTemplateToUse["template"] as? [[String: Any]] else {
-                print("\(ActivationView.TAG): Error: template is not an array")
+                print("\(ActivationView_old.TAG): Error: template is not an array")
                 return
             }
             
-            detailView = ActivationDetail(template: templateArray, onClose: onClose)
+            detailView = ActivationDetail_old(template: templateArray, onClose: onClose)
             
             if let detailView = detailView {
                 detailView.translatesAutoresizingMaskIntoConstraints = false
                 
                 // Calculate width based on percentage
-                let detailWidth = frame.width * ActivationView.DETAIL_WIDTH_PERCENTAGE
+                let detailWidth = frame.width * ActivationView_old.DETAIL_WIDTH_PERCENTAGE
                 
                 detailView.alpha = 0
                 addSubview(detailView)
@@ -228,7 +228,7 @@ public class ActivationView: UIView {
                 ])
                 
                 // Animate the detail view appearance
-                UIView.animate(withDuration: ActivationView.ANIMATION_DURATION) {
+                UIView.animate(withDuration: ActivationView_old.ANIMATION_DURATION) {
                     detailView.alpha = 1.0
                 }
             }

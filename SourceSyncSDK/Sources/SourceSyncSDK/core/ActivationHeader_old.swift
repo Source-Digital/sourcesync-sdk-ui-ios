@@ -6,7 +6,7 @@
 import UIKit
 
 // A view representing an activation header with a close button.
-class ActivationHeader: UIView {
+class ActivationHeader_old: UIView {
     
     private var onClose: (() -> Void)?
     

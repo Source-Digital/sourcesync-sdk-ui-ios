@@ -5,7 +5,7 @@
 import UIKit
 
 // A view representing activation details with a customizable template.
-class ActivationDetail: UIView {
+class ActivationDetail_old: UIView {
     private static let TAG = "ActivationDetail"
     private var processorFactory: SegmentProcessorFactory!
     private var contentContainer: UIStackView!
@@ -37,7 +37,7 @@ class ActivationDetail: UIView {
     }
     
     private func initializeView(template: [[String: Any]]?, onClose: (() -> Void)?) {
-        print("\(ActivationDetail.TAG): Initializing ActivationDetail view")
+        print("\(ActivationDetail_old.TAG): Initializing ActivationDetail view")
         
         translatesAutoresizingMaskIntoConstraints = false
 
@@ -65,7 +65,7 @@ class ActivationDetail: UIView {
             scrollView.addSubview(contentContainer)
             
             // Create header
-            let header = ActivationHeader(onClose: onClose ?? {})
+            let header = ActivationHeader_old(onClose: onClose ?? {})
             
             // Initialize processor factory
             processorFactory = SegmentProcessorFactory(parentContainer: contentContainer)
@@ -142,7 +142,7 @@ class ActivationDetail: UIView {
                 continue
             }
             
-            print("\(ActivationDetail.TAG): Processing segment type: \(segmentType)")
+            print("\(ActivationDetail_old.TAG): Processing segment type: \(segmentType)")
             
             if let processor = processorFactory.getProcessor(for: segmentType) {
                 do {
@@ -154,13 +154,13 @@ class ActivationDetail: UIView {
                         segmentView.setContentHuggingPriority(.defaultLow, for: .horizontal)
                         segmentView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                         
-                        print("\(ActivationDetail.TAG): Successfully added segment view to contentContainer")
+                        print("\(ActivationDetail_old.TAG): Successfully added segment view to contentContainer")
 
                 } catch {
-                    print("\(ActivationDetail.TAG): Error processing segment of type: \(segmentType): \(error)")
+                    print("\(ActivationDetail_old.TAG): Error processing segment of type: \(segmentType): \(error)")
                 }
             } else {
-                print("\(ActivationDetail.TAG): No processor found for segment type: \(segmentType)")
+                print("\(ActivationDetail_old.TAG): No processor found for segment type: \(segmentType)")
             }
         }
         
