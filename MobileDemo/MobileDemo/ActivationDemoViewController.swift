@@ -17,20 +17,6 @@ class ActivationDemoViewController : UIViewController {
     
     private let TAG = "ActivationDemoViewController"
     
-    // Template file names - store just the names of the files without extensions
-    private enum TemplateFiles {
-        static let previewTemplate1 = "preview_template_1"
-        static let detailsTemplate1 = "details_template_1"
-        static let previewTemplate2 = "preview_template_2"
-        static let detailsTemplate2 = "details_template_2"
-        static let previewTemplate3 = "preview_template_3"
-        static let detailsTemplate3 = "details_template_3"
-        static let previewTemplate4 = "preview_template_4"
-        static let detailsTemplate4 = "details_template_4"
-        static let previewTemplate5 = "preview_template_5"
-        static let detailsTemplate5 = "details_template_5"
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupActivation()
@@ -39,12 +25,19 @@ class ActivationDemoViewController : UIViewController {
     private func setupActivation() {
         // Load the template from the file
         
-        let previewUrl = Bundle.main.url(forResource: "div_preview2", withExtension: "json")!
-        let detailsUrl = Bundle.main.url(forResource: "div_details1", withExtension: "json")!
+        let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json")!
+        let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json")!
         
-        let previewData = try! Data(contentsOf: previewUrl)
-        let detailsData = try! Data(contentsOf: detailsUrl)
-        
+        let previewData: Data
+        let detailsData: Data
+        do {
+            previewData = try Data(contentsOf: previewUrl)
+            detailsData = try Data(contentsOf: detailsUrl)
+        } catch {
+            print("\(TAG): Failed to load data from file - \(error.localizedDescription)")
+            return
+        }
+    
         // Create activation view using the context initializer
         activation = ActivationView(context: self)
         

@@ -7,28 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		215BC6C22DD3500B001E59DA /* div_preview2.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6C12DD3500B001E59DA /* div_preview2.json */; };
-		215BC6C32DD3500B001E59DA /* div_details1.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6BF2DD3500B001E59DA /* div_details1.json */; };
-		215BC6C42DD3500B001E59DA /* div_preview1.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6C02DD3500B001E59DA /* div_preview1.json */; };
-		216CE3DD2DB11C240054083E /* details_template_5.json in Resources */ = {isa = PBXBuildFile; fileRef = 216CE3DC2DB11C240054083E /* details_template_5.json */; };
-		216CE3DF2DB11C2F0054083E /* preview_template_5.json in Resources */ = {isa = PBXBuildFile; fileRef = 216CE3DE2DB11C2F0054083E /* preview_template_5.json */; };
+		215BC6C22DD3500B001E59DA /* div_preview.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6C12DD3500B001E59DA /* div_preview.json */; };
+		215BC6C32DD3500B001E59DA /* div_details.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6BF2DD3500B001E59DA /* div_details.json */; };
 		2182A8512DB3ABEE006C7BBC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216CE3E12DB12BD00054083E /* WebKit.framework */; };
-		21A0F3AD2D8E75A200ED8A2F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A0F3AC2D8E759600ED8A2F /* Extensions.swift */; };
-		21A0F3AF2D8E78D900ED8A2F /* activation_img.gif in Resources */ = {isa = PBXBuildFile; fileRef = 21A0F3AE2D8E78D900ED8A2F /* activation_img.gif */; };
-		21AA4C552DD3472E0052571B /* DivKit in Frameworks */ = {isa = PBXBuildFile; productRef = 21AA4C542DD3472E0052571B /* DivKit */; };
-		21AA4C572DD3472E0052571B /* DivKitExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 21AA4C562DD3472E0052571B /* DivKitExtensions */; };
-		21AA4C592DD3472E0052571B /* DivKitMarkdownExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 21AA4C582DD3472E0052571B /* DivKitMarkdownExtension */; };
 		21AA4C5B2DD348420052571B /* Sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 21AA4C5A2DD348420052571B /* Sample.json */; };
 		21D1B5AC2DD660D30005BA00 /* SourceSyncSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */; };
-		21D5031B2D8B7FE300D7F75A /* TemplateLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D5031A2D8B7FDF00D7F75A /* TemplateLoader.swift */; };
-		21D5033F2D8B875800D7F75A /* preview_template_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D5033D2D8B875800D7F75A /* preview_template_2.json */; };
-		21D503402D8B875800D7F75A /* details_template_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D5033A2D8B875800D7F75A /* details_template_2.json */; };
-		21D503412D8B875800D7F75A /* preview_template_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D5033E2D8B875800D7F75A /* preview_template_3.json */; };
-		21D503422D8B875800D7F75A /* details_template_3.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D5033B2D8B875800D7F75A /* details_template_3.json */; };
-		21D503432D8B875800D7F75A /* preview_template_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D5033C2D8B875800D7F75A /* preview_template_1.json */; };
-		21D503442D8B875800D7F75A /* details_template_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D503392D8B875800D7F75A /* details_template_1.json */; };
-		21D503462D8B87E500D7F75A /* preview_template_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D503452D8B87E500D7F75A /* preview_template_4.json */; };
-		21D503482D8B880100D7F75A /* details_template_4.json in Resources */ = {isa = PBXBuildFile; fileRef = 21D503472D8B880100D7F75A /* details_template_4.json */; };
 		5B948B452D5E48A200AEBFE5 /* MobileDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B948B442D5E48A200AEBFE5 /* MobileDemoApp.swift */; };
 		5B948B492D5E48A400AEBFE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B948B482D5E48A400AEBFE5 /* Assets.xcassets */; };
 		5B948B4C2D5E48A400AEBFE5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B948B4B2D5E48A400AEBFE5 /* Preview Assets.xcassets */; };
@@ -63,26 +46,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		215BC6BF2DD3500B001E59DA /* div_details1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = div_details1.json; sourceTree = "<group>"; };
-		215BC6C02DD3500B001E59DA /* div_preview1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = div_preview1.json; sourceTree = "<group>"; };
-		215BC6C12DD3500B001E59DA /* div_preview2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = div_preview2.json; sourceTree = "<group>"; };
-		216CE3DC2DB11C240054083E /* details_template_5.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = details_template_5.json; sourceTree = "<group>"; };
-		216CE3DE2DB11C2F0054083E /* preview_template_5.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preview_template_5.json; sourceTree = "<group>"; };
+		215BC6BF2DD3500B001E59DA /* div_details.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = div_details.json; sourceTree = "<group>"; };
+		215BC6C12DD3500B001E59DA /* div_preview.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = div_preview.json; sourceTree = "<group>"; };
 		216CE3E02DB1222F0054083E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		216CE3E12DB12BD00054083E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		21A0F3AC2D8E759600ED8A2F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		21A0F3AE2D8E78D900ED8A2F /* activation_img.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = activation_img.gif; sourceTree = "<group>"; };
 		21AA4C5A2DD348420052571B /* Sample.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Sample.json; sourceTree = "<group>"; };
-		21D5031A2D8B7FDF00D7F75A /* TemplateLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateLoader.swift; sourceTree = "<group>"; };
 		21D5032C2D8B84D600D7F75A /* SourceSyncTemplates.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SourceSyncTemplates.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		21D503392D8B875800D7F75A /* details_template_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = details_template_1.json; sourceTree = "<group>"; };
-		21D5033A2D8B875800D7F75A /* details_template_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = details_template_2.json; sourceTree = "<group>"; };
-		21D5033B2D8B875800D7F75A /* details_template_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = details_template_3.json; sourceTree = "<group>"; };
-		21D5033C2D8B875800D7F75A /* preview_template_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preview_template_1.json; sourceTree = "<group>"; };
-		21D5033D2D8B875800D7F75A /* preview_template_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preview_template_2.json; sourceTree = "<group>"; };
-		21D5033E2D8B875800D7F75A /* preview_template_3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preview_template_3.json; sourceTree = "<group>"; };
-		21D503452D8B87E500D7F75A /* preview_template_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = preview_template_4.json; sourceTree = "<group>"; };
-		21D503472D8B880100D7F75A /* details_template_4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = details_template_4.json; sourceTree = "<group>"; };
 		5B948B412D5E48A200AEBFE5 /* MobileDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B948B442D5E48A200AEBFE5 /* MobileDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileDemoApp.swift; sourceTree = "<group>"; };
 		5B948B482D5E48A400AEBFE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -108,10 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21D1B5AC2DD660D30005BA00 /* SourceSyncSDK in Frameworks */,
-				21AA4C592DD3472E0052571B /* DivKitMarkdownExtension in Frameworks */,
 				2182A8512DB3ABEE006C7BBC /* WebKit.framework in Frameworks */,
-				21AA4C572DD3472E0052571B /* DivKitExtensions in Frameworks */,
-				21AA4C552DD3472E0052571B /* DivKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,17 +101,6 @@
 		5B948B382D5E48A200AEBFE5 = {
 			isa = PBXGroup;
 			children = (
-				21A0F3AE2D8E78D900ED8A2F /* activation_img.gif */,
-				21D503392D8B875800D7F75A /* details_template_1.json */,
-				21D5033A2D8B875800D7F75A /* details_template_2.json */,
-				21D5033B2D8B875800D7F75A /* details_template_3.json */,
-				21D503472D8B880100D7F75A /* details_template_4.json */,
-				216CE3DC2DB11C240054083E /* details_template_5.json */,
-				21D5033C2D8B875800D7F75A /* preview_template_1.json */,
-				21D5033D2D8B875800D7F75A /* preview_template_2.json */,
-				21D5033E2D8B875800D7F75A /* preview_template_3.json */,
-				21D503452D8B87E500D7F75A /* preview_template_4.json */,
-				216CE3DE2DB11C2F0054083E /* preview_template_5.json */,
 				5B948B432D5E48A200AEBFE5 /* MobileDemo */,
 				5B948B542D5E48A500AEBFE5 /* MobileDemoTests */,
 				5B948B5E2D5E48A500AEBFE5 /* MobileDemoUITests */,
@@ -168,13 +123,10 @@
 		5B948B432D5E48A200AEBFE5 /* MobileDemo */ = {
 			isa = PBXGroup;
 			children = (
-				215BC6BF2DD3500B001E59DA /* div_details1.json */,
-				215BC6C02DD3500B001E59DA /* div_preview1.json */,
-				215BC6C12DD3500B001E59DA /* div_preview2.json */,
+				215BC6BF2DD3500B001E59DA /* div_details.json */,
+				215BC6C12DD3500B001E59DA /* div_preview.json */,
 				21AA4C5A2DD348420052571B /* Sample.json */,
 				216CE3E02DB1222F0054083E /* Info.plist */,
-				21A0F3AC2D8E759600ED8A2F /* Extensions.swift */,
-				21D5031A2D8B7FDF00D7F75A /* TemplateLoader.swift */,
 				5B948B442D5E48A200AEBFE5 /* MobileDemoApp.swift */,
 				5B948B482D5E48A400AEBFE5 /* Assets.xcassets */,
 				5B948B4A2D5E48A400AEBFE5 /* Preview Content */,
@@ -251,9 +203,6 @@
 			);
 			name = MobileDemo;
 			packageProductDependencies = (
-				21AA4C542DD3472E0052571B /* DivKit */,
-				21AA4C562DD3472E0052571B /* DivKitExtensions */,
-				21AA4C582DD3472E0052571B /* DivKitMarkdownExtension */,
 				21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */,
 			);
 			productName = MobileDemo;
@@ -333,7 +282,6 @@
 			);
 			mainGroup = 5B948B382D5E48A200AEBFE5;
 			packageReferences = (
-				21AA4C532DD3472E0052571B /* XCRemoteSwiftPackageReference "divkit-ios" */,
 			);
 			productRefGroup = 5B948B422D5E48A200AEBFE5 /* Products */;
 			projectDirPath = "";
@@ -359,23 +307,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				216CE3DF2DB11C2F0054083E /* preview_template_5.json in Resources */,
-				21D503482D8B880100D7F75A /* details_template_4.json in Resources */,
-				21D503462D8B87E500D7F75A /* preview_template_4.json in Resources */,
 				5B948B4C2D5E48A400AEBFE5 /* Preview Assets.xcassets in Resources */,
 				5B948B492D5E48A400AEBFE5 /* Assets.xcassets in Resources */,
-				21A0F3AF2D8E78D900ED8A2F /* activation_img.gif in Resources */,
-				21D5033F2D8B875800D7F75A /* preview_template_2.json in Resources */,
 				21AA4C5B2DD348420052571B /* Sample.json in Resources */,
-				21D503402D8B875800D7F75A /* details_template_2.json in Resources */,
-				21D503412D8B875800D7F75A /* preview_template_3.json in Resources */,
-				21D503422D8B875800D7F75A /* details_template_3.json in Resources */,
-				21D503432D8B875800D7F75A /* preview_template_1.json in Resources */,
-				215BC6C22DD3500B001E59DA /* div_preview2.json in Resources */,
-				215BC6C32DD3500B001E59DA /* div_details1.json in Resources */,
-				215BC6C42DD3500B001E59DA /* div_preview1.json in Resources */,
-				21D503442D8B875800D7F75A /* details_template_1.json in Resources */,
-				216CE3DD2DB11C240054083E /* details_template_5.json in Resources */,
+				215BC6C22DD3500B001E59DA /* div_preview.json in Resources */,
+				215BC6C32DD3500B001E59DA /* div_details.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,9 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21A0F3AD2D8E75A200ED8A2F /* Extensions.swift in Sources */,
 				5B948B452D5E48A200AEBFE5 /* MobileDemoApp.swift in Sources */,
-				21D5031B2D8B7FE300D7F75A /* TemplateLoader.swift in Sources */,
 				5B948BEB2D5F118C00AEBFE5 /* ActivationDemoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -789,33 +723,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		21AA4C532DD3472E0052571B /* XCRemoteSwiftPackageReference "divkit-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/divkit/divkit-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 31.13.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		21AA4C542DD3472E0052571B /* DivKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21AA4C532DD3472E0052571B /* XCRemoteSwiftPackageReference "divkit-ios" */;
-			productName = DivKit;
-		};
-		21AA4C562DD3472E0052571B /* DivKitExtensions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21AA4C532DD3472E0052571B /* XCRemoteSwiftPackageReference "divkit-ios" */;
-			productName = DivKitExtensions;
-		};
-		21AA4C582DD3472E0052571B /* DivKitMarkdownExtension */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21AA4C532DD3472E0052571B /* XCRemoteSwiftPackageReference "divkit-ios" */;
-			productName = DivKitMarkdownExtension;
-		};
 		21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SourceSyncSDK;
