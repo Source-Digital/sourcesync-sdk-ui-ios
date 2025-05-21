@@ -110,7 +110,7 @@ public class ActivationView: UIView {
         detailsView?.removeFromSuperview()
         
         // Create and configure the detail view
-        detailsView = ActivationDetails(detailsData: detailsData, parentViewController: parentViewController)
+        detailsView = ActivationDetails(detailsData: detailsData, parentViewController: parentViewController, onClose: onClose)
         
         if let detailsView = detailsView {
             detailsView.translatesAutoresizingMaskIntoConstraints = false
@@ -139,7 +139,7 @@ public class ActivationView: UIView {
         }
         
         // Show the preview again
-        previewView?.isHidden = false
+        previewView?.isHidden = true
     }
     
     /**

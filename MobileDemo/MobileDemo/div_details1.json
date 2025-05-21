@@ -1,119 +1,307 @@
- {
-    "templates": {
-      "text_block": {
-        "type": "text",
-        "font_size": 12,
-        "line_height": 15,
-        "text_alignment_horizontal": "center",
-        "text_alignment_vertical": "center",
-        "alignment_horizontal": "center",
-        "text_color": "#000000",
-        "paddings": {
-          "top": 4,
-          "bottom": 4,
-          "left": 8,
-          "right": 8
-        },
-        "width": {
-          "type": "fixed",
-          "value": 80
-        },
-        "height": {
-          "type": "fixed",
-          "value": 104
-        },
-        "background": [
-          {
-            "type": "solid",
-            "color": "#0E000000"
-          }
-        ],
-        "border": {
-          "corner_radius": 16
-        }
-      },
-      "title": {
-        "type": "text",
-        "font_size": 20,
-        "line_height": 24,
-        "font_weight": "bold",
-        "paddings": {
-          "left": 24,
-          "right": 24,
-          "bottom": 16
-        }
-      },
-      "subtitle": {
-        "font_size": 15,
-        "line_height": 20,
-        "type": "text",
-        "paddings": {
-          "left": 24,
-          "right": 24
-        }
-      }
-    },
-    "card": {
-      "log_id": "sample_card",
+{
+  "templates": {},
+  "card": {
+      "log_id": "full_screen_activation",
       "states": [
-        {
-          "state_id": 0,
-          "div": {
-            "type": "container",
-            "orientation": "vertical",
-            "margins": {
-              "top": 24,
-              "bottom": 24
-            },
-            "items": [
-              {
-                "type": "title",
-                "text": "Gallery"
-              },
-              {
-                "type": "subtitle",
-                "text": "Displays elements with any content, not just images. It lets you set the distance between adjacent elements.",
-                "margins": {
-                  "bottom": 24
-                }
-              },
-              {
-                "type": "gallery",
-                "height": {
-                  "type": "fixed",
-                  "value": 104
-                },
-                "paddings": {
-                  "left": 16,
-                  "right": 16
-                },
-                "item_spacing": 16,
-                "items": [
-                  {
-                    "type": "text_block",
-                    "text": "Item 0"
+          {
+              "state_id": 0,
+              "div": {
+                  "type": "container",
+                  "width": {
+                      "type": "fixed",
+                      "value": 500
                   },
-                  {
-                    "type": "text_block",
-                    "text": "Item 1"
+                  "height": {
+                      "type": "match_parent"
                   },
-                  {
-                    "type": "text_block",
-                    "text": "Item 2"
+                  "orientation": "vertical",
+                  "alignment_horizontal": "end",
+                  "background": [
+                      {
+                          "type": "solid",
+                          "color": "#F8F8F8"
+                      }
+                  ],
+                  "border": {
+                      "corner_radius": 0
                   },
-                  {
-                    "type": "text_block",
-                    "text": "Item 3"
-                  },
-                  {
-                    "type": "text_block",
-                    "text": "Item 4"
-                  }
-                ]
+                  "items": [
+                      {
+                          "type": "container",
+                          "orientation": "horizontal",
+                          "width": {
+                              "type": "match_parent"
+                          },
+                          "height": {
+                              "type": "wrap_content"
+                          },
+                          "margins": {
+                              "top": 20
+                          },
+                          "items": [
+                              {
+                                  "type": "container",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 32
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 32
+                                  },
+                                  "alignment_horizontal": "center",
+                                  "alignment_vertical": "center",
+                                  "background": [
+                                      {
+                                          "type": "solid",
+                                          "color": "#000000",
+                                          "alpha": 0.7
+                                      }
+                                  ],
+                                  "border": {
+                                      "corner_radius": 16
+                                  },
+                                  "margins": {
+                                      "left": 20
+                                  },
+                                  "items": [
+                                      {
+                                          "type": "text",
+                                          "text": "✕",
+                                          "font_size": 18,
+                                          "font_weight": "bold",
+                                          "text_color": "#FFFFFF",
+                                          "alignment_horizontal": "center",
+                                          "alignment_vertical": "center",
+                                          "text_alignment_horizontal": "center",
+                                          "text_alignment_vertical": "center"
+                                      }
+                                  ],
+                                  "action": {
+                                      "log_id": "close_button_click",
+                                      "url": "div-action://close"
+                                  }
+                              },
+                              {
+                                  "type": "text",
+                                  "text": "City Exploration",
+                                  "font_size": 28,
+                                  "font_weight": "bold",
+                                  "text_alignment_horizontal": "center",
+                                  "text_color": "#333333",
+                                  "width": {
+                                      "type": "match_parent"
+                                  },
+                                  "margins": {
+                                      "right": 52
+                                  },
+                                  "paddings": {
+                                      "bottom": 24
+                                  }
+                              }
+                          ]
+                      },
+                      {
+                          "type": "container",
+                          "orientation": "horizontal",
+                          "content_alignment_horizontal": "center",
+                          "margins": {
+                              "left": 16,
+                              "right": 16,
+                              "bottom": 24
+                          },
+                          "height": {
+                              "type": "wrap_content"
+                          },
+                          "items": [
+                              {
+                                  "type": "image",
+                                  "image_url": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 220
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 220
+                                  },
+                                  "scale": "fill",
+                                  "border": {
+                                      "corner_radius": 12,
+                                      "stroke": {
+                                          "color": "#FFFFFF",
+                                          "width": 2
+                                      }
+                                  },
+                                  "margins": {
+                                      "right": 12
+                                  }
+                              },
+                              {
+                                  "type": "image",
+                                  "image_url": "https://images.unsplash.com/photo-1444723121867-7a241cacace9",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 220
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 220
+                                  },
+                                  "scale": "fill",
+                                  "border": {
+                                      "corner_radius": 12,
+                                      "stroke": {
+                                          "color": "#FFFFFF",
+                                          "width": 2
+                                      }
+                                  }
+                              }
+                          ]
+                      },
+                      {
+                          "type": "container",
+                          "orientation": "vertical",
+                          "height": {
+                              "type": "match_parent",
+                              "weight": 1
+                          }
+                      },
+                      {
+                          "type": "container",
+                          "orientation": "horizontal",
+                          "width": {
+                              "type": "match_parent"
+                          },
+                          "margins": {
+                              "left": 16,
+                              "right": 16,
+                              "bottom": 32
+                          },
+                          "content_alignment_horizontal": "space-between",
+                          "items": [
+                              {
+                                  "type": "container",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 150
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 48
+                                  },
+                                  "alignment_vertical": "center",
+                                  "alignment_horizontal": "center",
+                                  "background": [
+                                      {
+                                          "type": "solid",
+                                          "color": "#4285F4"
+                                      }
+                                  ],
+                                  "border": {
+                                      "corner_radius": 8
+                                  },
+                                  "items": [
+                                      {
+                                          "type": "text",
+                                          "text": "Explore",
+                                          "font_size": 16,
+                                          "font_weight": "medium",
+                                          "text_color": "#FFFFFF",
+                                          "alignment_horizontal": "center",
+                                          "alignment_vertical": "center",
+                                          "text_alignment_horizontal": "center",
+                                          "text_alignment_vertical": "center"
+                                      }
+                                  ],
+                                  "action": {
+                                      "log_id": "explore_button",
+                                      "url": "div-action://explore"
+                                  }
+                              },
+                              {
+                                  "type": "container",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 150
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 48
+                                  },
+                                  "alignment_vertical": "center",
+                                  "alignment_horizontal": "center",
+                                  "background": [
+                                      {
+                                          "type": "solid",
+                                          "color": "#0F9D58"
+                                      }
+                                  ],
+                                  "border": {
+                                      "corner_radius": 8
+                                  },
+                                  "items": [
+                                      {
+                                          "type": "text",
+                                          "text": "Discover",
+                                          "font_size": 16,
+                                          "font_weight": "medium",
+                                          "text_color": "#FFFFFF",
+                                          "alignment_horizontal": "center",
+                                          "alignment_vertical": "center",
+                                          "text_alignment_horizontal": "center",
+                                          "text_alignment_vertical": "center"
+                                      }
+                                  ],
+                                  "action": {
+                                      "log_id": "discover_button",
+                                      "url": "div-action://discover"
+                                  }
+                              },
+                              {
+                                  "type": "container",
+                                  "width": {
+                                      "type": "fixed",
+                                      "value": 150
+                                  },
+                                  "height": {
+                                      "type": "fixed",
+                                      "value": 48
+                                  },
+                                  "alignment_vertical": "center",
+                                  "alignment_horizontal": "center",
+                                  "background": [
+                                      {
+                                          "type": "solid",
+                                          "color": "#DB4437"
+                                      }
+                                  ],
+                                  "border": {
+                                      "corner_radius": 8
+                                  },
+                                  "items": [
+                                      {
+                                          "type": "text",
+                                          "text": "Book Now",
+                                          "font_size": 16,
+                                          "font_weight": "medium",
+                                          "text_color": "#FFFFFF",
+                                          "alignment_horizontal": "center",
+                                          "alignment_vertical": "center",
+                                          "text_alignment_horizontal": "center",
+                                          "text_alignment_vertical": "center"
+                                      }
+                                  ],
+                                  "action": {
+                                      "log_id": "book_button",
+                                      "url": "div-action://book"
+                                  }
+                              }
+                          ]
+                      }
+                  ]
               }
-            ]
           }
-        }
       ]
-    }
   }
+}

@@ -37,7 +37,6 @@ class ActivationPreview: UIView {
 
     init(previewData: Data) {
         super.init(frame: .zero)
-        
         addSubview(divView)
         
         // Setup proper constraints for divView
@@ -83,7 +82,7 @@ class ActivationPreview: UIView {
      */
     private func makeDivKitComponents() -> DivKitComponents {
         let customBlockFactory = SampleDivCustomBlockFactory()
-                return DivKitComponents(
+        return DivKitComponents(
             divCustomBlockFactory: customBlockFactory
         )
     }

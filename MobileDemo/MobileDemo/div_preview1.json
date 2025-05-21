@@ -1,5 +1,5 @@
 {
-  "templates": {
+  "template": {
     "text_block": {
       "type": "text",
       "font_size": 28,

@@ -6,6 +6,12 @@ import SourceSyncSDK
 import AVFoundation
 import UIKit
 
+/**
+ * ActivationDemoViewController
+ *
+ * A demonstration view controller that showcases the usage of the Activation System.
+ * This controller manages an overlays activation UI components.
+ */
 class ActivationDemoViewController : UIViewController {
     private var activation: ActivationView?
     
@@ -38,12 +44,6 @@ class ActivationDemoViewController : UIViewController {
         
         let previewData = try! Data(contentsOf: previewUrl)
         let detailsData = try! Data(contentsOf: detailsUrl)
-
-//        guard let previewTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.previewTemplate3),
-//              let detailsTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.detailsTemplate3) else {
-//            print("\(TAG): Failed to load templates")
-//            return
-//        }
         
         // Create activation view using the context initializer
         activation = ActivationView(context: self)
