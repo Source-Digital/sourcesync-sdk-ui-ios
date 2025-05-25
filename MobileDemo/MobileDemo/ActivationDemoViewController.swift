@@ -10,7 +10,7 @@ import UIKit
  * ActivationDemoViewController
  *
  * A demonstration view controller that showcases the usage of the Activation System.
- * This controller manages an overlays activation UI components.
+ * This controller manages overlay activation UI components.
  */
 class ActivationDemoViewController : UIViewController {
     private var activation: ActivationView?
