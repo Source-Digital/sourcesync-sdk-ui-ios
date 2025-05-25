@@ -41,11 +41,21 @@ class ActivationDetails: UIView {
      * The template data should follow DivKit's JSON format and will be rendered by the DivKit engine.
      */
     init(detailsData: Data, parentViewController: UIViewController?, onClose: @escaping () -> Void) {
+        super.init(frame: .zero)
         self.parentViewController = parentViewController
         self.onCloseHandler = onClose
-        super.init(frame: .zero)
         
-        setupDivView()
+        addSubview(divView)
+        
+        // Setup proper constraints for divView
+        divView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            divView.topAnchor.constraint(equalTo: topAnchor),
+            divView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            divView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            divView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
         
         Task {
             await configureDivView(detailsData: detailsData)
@@ -57,23 +67,6 @@ class ActivationDetails: UIView {
      */
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    /**
-     * Sets up the DivKit view with proper constraints.
-     * The DivKit view will fill the entire bounds of this view.
-     */
-    private func setupDivView() {
-        addSubview(divView)
-        
-        // Setup proper constraints for divView
-        divView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            divView.topAnchor.constraint(equalTo: topAnchor),
-            divView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            divView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            divView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
     }
     
     /**
@@ -99,7 +92,6 @@ class ActivationDetails: UIView {
     private func makeDivKitComponents() -> DivKitComponents {
         
         let customBlockFactory = SampleDivCustomBlockFactory()
-        
         // Create a custom action handler that will handle the close action
         let urlHandler = ActivationCloseActionHandler(onCloseAction: {[weak self] in self?.onCloseHandler?()})
         
