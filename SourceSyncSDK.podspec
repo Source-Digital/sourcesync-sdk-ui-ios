@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "SourceSyncSDK"
-  spec.version      = "0.3.10"
+  spec.version      = "0.3.12"
   spec.summary      = "A framework for handling activation details in iOS apps."
   spec.description  = "SourceSyncSDK provides UI components for activation templates, including headers, previews, and detailed views. This SDK helps developers integrate Source Digital's platform features into their iOS applications."
   spec.homepage     = "https://github.com/Source-Digital/sourcesync-sdk-ui-ios"
@@ -19,16 +19,21 @@ Pod::Spec.new do |spec|
   # Explicitly exclude Package.swift
   spec.exclude_files = "SourceSyncSDK/**/Package.swift", "Example/**/*", "Tests/**/*"
   
-  # Enable support for both arm64 and x86_64 architectures
+  # DivKit dependencies
+  spec.dependency "DivKit", "~> 31.14.0"
+  spec.dependency "DivKitExtensions", "~> 31.14.0"
+
   spec.pod_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => '',
-    'VALID_ARCHS' => 'arm64 arm64e x86_64',
-    'SUPPORTS_MACCATALYST' => 'NO'
+  # Explicitly exclude x86_64 for simulator builds
+  'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
+  # Only include architectures that DivKit supports
+  'VALID_ARCHS' => 'arm64 arm64e',
+  'SUPPORTS_MACCATALYST' => 'NO'
   }
-  
-  # Ensure user_target_xcconfig doesn't override architecture settings
+
+ # This ensures consumers of your pod don't build for x86_64 simulator
   spec.user_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => ''
+  'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64'
   }
 
   # iOS framework
@@ -39,4 +44,6 @@ Pod::Spec.new do |spec|
   
   # Add build settings to ensure multi-architecture support
   spec.ios.pod_target_xcconfig = { 'ONLY_ACTIVE_ARCH' => 'NO' }
+
+  spec.module_name = "SourceSyncSDK"
 end

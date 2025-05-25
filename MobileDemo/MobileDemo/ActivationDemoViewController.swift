@@ -6,24 +6,16 @@ import SourceSyncSDK
 import AVFoundation
 import UIKit
 
+/**
+ * ActivationDemoViewController
+ *
+ * A demonstration view controller that showcases the usage of the Activation System.
+ * This controller manages overlay activation UI components.
+ */
 class ActivationDemoViewController : UIViewController {
     private var activation: ActivationView?
     
     private let TAG = "ActivationDemoViewController"
-    
-    // Template file names - store just the names of the files without extensions
-    private enum TemplateFiles {
-        static let previewTemplate1 = "preview_template_1"
-        static let detailsTemplate1 = "details_template_1"
-        static let previewTemplate2 = "preview_template_2"
-        static let detailsTemplate2 = "details_template_2"
-        static let previewTemplate3 = "preview_template_3"
-        static let detailsTemplate3 = "details_template_3"
-        static let previewTemplate4 = "preview_template_4"
-        static let detailsTemplate4 = "details_template_4"
-        static let previewTemplate5 = "preview_template_5"
-        static let detailsTemplate5 = "details_template_5"
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,12 +25,13 @@ class ActivationDemoViewController : UIViewController {
     private func setupActivation() {
         // Load the template from the file
         
-        guard let previewUrl = Bundle.main.url(forResource: "div_preview2", withExtension: "json") else {
+
+        guard let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json") else {
             print("\(TAG): Failed to load preview resource 'div_preview2.json'")
             return
         }
         
-        guard let detailsUrl = Bundle.main.url(forResource: "div_details1", withExtension: "json") else {
+        guard let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json") else {
             print("\(TAG): Failed to load details resource 'div_details1.json'")
             return
         }
@@ -52,13 +45,7 @@ class ActivationDemoViewController : UIViewController {
             print("\(TAG): Failed to load data from file - \(error.localizedDescription)")
             return
         }
-
-//        guard let previewTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.previewTemplate3),
-//              let detailsTemplate = TemplateLoader.loadTemplate(fileName: TemplateFiles.detailsTemplate3) else {
-//            print("\(TAG): Failed to load templates")
-//            return
-//        }
-        
+    
         // Create activation view using the context initializer
         activation = ActivationView(context: self)
         

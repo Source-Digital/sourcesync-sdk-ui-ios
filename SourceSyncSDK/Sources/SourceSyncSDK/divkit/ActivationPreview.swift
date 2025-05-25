@@ -37,20 +37,20 @@ class ActivationPreview: UIView {
 
     init(previewData: Data) {
         super.init(frame: .zero)
-        
         addSubview(divView)
         
         // Setup proper constraints for divView
         divView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             divView.topAnchor.constraint(equalTo: topAnchor),
             divView.bottomAnchor.constraint(equalTo: bottomAnchor),
             divView.leadingAnchor.constraint(equalTo: leadingAnchor),
             divView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-
+        
         Task {
-                await configureDivView(previewData: previewData)
+          await configureDivView(previewData: previewData)
         }
     }
     
@@ -68,7 +68,7 @@ class ActivationPreview: UIView {
      */
     private func configureDivView(previewData: Data) async {
         await divView.setSource(
-            .init(kind: .data(previewData), cardId: "div_preview1"),
+            .init(kind: .data(previewData), cardId: "div_preview"),
             debugParams: DebugParams(isDebugInfoEnabled: false)
         )
     }
@@ -83,7 +83,7 @@ class ActivationPreview: UIView {
      */
     private func makeDivKitComponents() -> DivKitComponents {
         let customBlockFactory = SampleDivCustomBlockFactory()
-                return DivKitComponents(
+        return DivKitComponents(
             divCustomBlockFactory: customBlockFactory
         )
     }
