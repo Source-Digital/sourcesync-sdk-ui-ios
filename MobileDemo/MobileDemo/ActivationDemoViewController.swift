@@ -27,12 +27,12 @@ class ActivationDemoViewController : UIViewController {
         
 
         guard let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json") else {
-            print("\(TAG): Failed to load preview resource 'div_preview2.json'")
+            print("\(TAG): Failed to load preview resource 'div_preview.json'")
             return
         }
         
         guard let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json") else {
-            print("\(TAG): Failed to load details resource 'div_details1.json'")
+            print("\(TAG): Failed to load details resource 'div_details.json'")
             return
         }
         
