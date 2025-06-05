@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		215BC6C22DD3500B001E59DA /* div_preview.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6C12DD3500B001E59DA /* div_preview.json */; };
 		215BC6C32DD3500B001E59DA /* div_details.json in Resources */ = {isa = PBXBuildFile; fileRef = 215BC6BF2DD3500B001E59DA /* div_details.json */; };
+		217C74442DED943C002D78BC /* SourceSyncSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 217C74432DED943C002D78BC /* SourceSyncSDK */; };
 		2182A8512DB3ABEE006C7BBC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216CE3E12DB12BD00054083E /* WebKit.framework */; };
 		21AA4C5B2DD348420052571B /* Sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 21AA4C5A2DD348420052571B /* Sample.json */; };
-		21D1B5AC2DD660D30005BA00 /* SourceSyncSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */; };
 		5B948B452D5E48A200AEBFE5 /* MobileDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B948B442D5E48A200AEBFE5 /* MobileDemoApp.swift */; };
 		5B948B492D5E48A400AEBFE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B948B482D5E48A400AEBFE5 /* Assets.xcassets */; };
 		5B948B4C2D5E48A400AEBFE5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B948B4B2D5E48A400AEBFE5 /* Preview Assets.xcassets */; };
@@ -76,8 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21D1B5AC2DD660D30005BA00 /* SourceSyncSDK in Frameworks */,
 				2182A8512DB3ABEE006C7BBC /* WebKit.framework in Frameworks */,
+				217C74442DED943C002D78BC /* SourceSyncSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +203,7 @@
 			);
 			name = MobileDemo;
 			packageProductDependencies = (
-				21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */,
+				217C74432DED943C002D78BC /* SourceSyncSDK */,
 			);
 			productName = MobileDemo;
 			productReference = 5B948B412D5E48A200AEBFE5 /* MobileDemo.app */;
@@ -555,6 +555,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MobileDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = HNVNUWHYF6;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -567,6 +569,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = io.sourcesync.sdk.ui.MobileDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -585,6 +588,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MobileDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = HNVNUWHYF6;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -724,7 +729,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		21D1B5AB2DD660D30005BA00 /* SourceSyncSDK */ = {
+		217C74432DED943C002D78BC /* SourceSyncSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SourceSyncSDK;
 		};

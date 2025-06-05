@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/divkit/divkit-ios.git",
       "state" : {
-        "revision" : "f5c4fbd7af34fbcf79197abcc14010e45b45036d",
-        "version" : "31.14.0"
+        "revision" : "5eede387ed5258d47b09bb6ec93d224fbd7f7a26",
+        "version" : "32.1.0"
       }
     },
     {
