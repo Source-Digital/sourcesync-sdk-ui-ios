@@ -46,19 +46,23 @@ Pod::Spec.new do |spec|
   
   # Universal build configuration
   spec.pod_target_xcconfig = { 
-    'ARCHS' => '$(ARCHS_STANDARD)',
+    'ARCHS' => 'arm64 x86_64',
     'VALID_ARCHS' => 'arm64 x86_64',
     'ONLY_ACTIVE_ARCH' => 'NO',
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => '',
+    # MATCH BKFC: Exclude arm64 simulator to force x86_64 simulator usage
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
     'SWIFT_VERSION' => '5.7',
     'DEFINES_MODULE' => 'YES',
     'CLANG_ENABLE_MODULES' => 'YES',
     'SWIFT_COMPILATION_MODE' => 'wholemodule',
+    'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'NO',  # Keep disabled for DivKit compatibility
     'IPHONEOS_DEPLOYMENT_TARGET' => '13.0'
   }
   
+  # CRITICAL: User target should also exclude arm64 simulator
   spec.user_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => '',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',  # Match BKFC exclusion
+    'VALID_ARCHS' => 'arm64 x86_64',
     'FRAMEWORK_SEARCH_PATHS' => '$(inherited)'
   }
   
