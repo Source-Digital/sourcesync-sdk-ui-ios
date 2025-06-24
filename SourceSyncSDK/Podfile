@@ -1,0 +1,28 @@
+# SourceSyncSDK/Podfile
+platform :ios, '13.0'
+use_frameworks!
+
+# Specify the Xcode project explicitly
+project 'SourceSyncSDK.xcodeproj'
+
+target 'SourceSyncSDK' do
+  # DivKit dependencies
+  pod 'DivKit', '~> 32.1.0'
+  pod 'DivKitExtensions', '~> 32.1.0'
+end
+
+# If you have a test target
+target 'SourceSyncSDKTests' do
+  pod 'DivKit', '~> 32.1.0'
+  pod 'DivKitExtensions', '~> 32.1.0'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['VALID_ARCHS'] = 'arm64 x86_64'
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = ''
+    end
+  end
+end

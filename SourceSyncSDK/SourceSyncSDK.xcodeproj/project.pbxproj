@@ -1,0 +1,592 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3AEABC73B345F623BB67698D /* Pods_SourceSyncSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB7974DF0221592FD1E2A135 /* Pods_SourceSyncSDK.framework */; };
+		63D5EC304B571143629CEF54 /* ActivationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752295C122D75603BFDA872D /* ActivationDetails.swift */; };
+		80E8068C06C5A2CFEE25A174 /* ActivationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEA2F12F333F2817E5070F1 /* ActivationView.swift */; };
+		9B9809BAAA9E2F539EDC30F8 /* SourceSyncSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 898DDBCF731BE1BF61ABC8DE /* SourceSyncSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CB58EFAC703BAE67AAAE6679 /* Pods_SourceSyncSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5077E3F37E59F3E7699C9C /* Pods_SourceSyncSDKTests.framework */; };
+		DB34AB083804093901A06003 /* SourceSyncSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95C5FDE3B129E42E516031F9 /* SourceSyncSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCB1899E28A48A792C6C6308 /* SampleDivCustomBlockFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D4B71964D327602ED6C2D4 /* SampleDivCustomBlockFactory.swift */; };
+		DEBE6A27BF95AB1D976FA4E6 /* SourceSyncSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95C5FDE3B129E42E516031F9 /* SourceSyncSDK.framework */; };
+		F639FB46F75B26651AA717C2 /* ActivationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C499E3959E690B3BF173E4 /* ActivationPreview.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E9A9DA61D7AEBAA93F86E79C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 244CB3B26F19034B7CE480F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 73349D448E9F21C580819685;
+			remoteInfo = SourceSyncSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AADAF2EB9D044EED7FF35875 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DB34AB083804093901A06003 /* SourceSyncSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2C25029631F0C237EEC06C57 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		41D4B71964D327602ED6C2D4 /* SampleDivCustomBlockFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDivCustomBlockFactory.swift; sourceTree = "<group>"; };
+		476661F98340B159C55FEF12 /* Pods-SourceSyncSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SourceSyncSDKTests.release.xcconfig"; path = "Target Support Files/Pods-SourceSyncSDKTests/Pods-SourceSyncSDKTests.release.xcconfig"; sourceTree = "<group>"; };
+		752295C122D75603BFDA872D /* ActivationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationDetails.swift; sourceTree = "<group>"; };
+		7646109AA94248D2B6BCC4D2 /* Pods-SourceSyncSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SourceSyncSDK.debug.xcconfig"; path = "Target Support Files/Pods-SourceSyncSDK/Pods-SourceSyncSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		7AEA2F12F333F2817E5070F1 /* ActivationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationView.swift; sourceTree = "<group>"; };
+		88BE38130A70D4BFC770647A /* Pods-SourceSyncSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SourceSyncSDKTests.debug.xcconfig"; path = "Target Support Files/Pods-SourceSyncSDKTests/Pods-SourceSyncSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		898DDBCF731BE1BF61ABC8DE /* SourceSyncSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SourceSyncSDK.h; sourceTree = "<group>"; };
+		95C5FDE3B129E42E516031F9 /* SourceSyncSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SourceSyncSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B5077E3F37E59F3E7699C9C /* Pods_SourceSyncSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SourceSyncSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1C499E3959E690B3BF173E4 /* ActivationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationPreview.swift; sourceTree = "<group>"; };
+		D3F355E14C018081FC043FEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		EB7974DF0221592FD1E2A135 /* Pods_SourceSyncSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SourceSyncSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3CC8862F4294B535F5E1427 /* SourceSyncSDKTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SourceSyncSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F49B994FFD0CBEBE57AF3172 /* Pods-SourceSyncSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SourceSyncSDK.release.xcconfig"; path = "Target Support Files/Pods-SourceSyncSDK/Pods-SourceSyncSDK.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		35C5A6F346232C3DC7CCC0E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3AEABC73B345F623BB67698D /* Pods_SourceSyncSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5F257927B065E89E83460292 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEBE6A27BF95AB1D976FA4E6 /* SourceSyncSDK.framework in Frameworks */,
+				CB58EFAC703BAE67AAAE6679 /* Pods_SourceSyncSDKTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4E188D9D4FDA668DE99A0DFE /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A5DCBE80DA024EDA2F6D7174 /* SourceSyncSDK */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		8425E3E538A8A39402EC599E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EB7974DF0221592FD1E2A135 /* Pods_SourceSyncSDK.framework */,
+				9B5077E3F37E59F3E7699C9C /* Pods_SourceSyncSDKTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A0B3E8C6225A6930DD9D796F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				95C5FDE3B129E42E516031F9 /* SourceSyncSDK.framework */,
+				F3CC8862F4294B535F5E1427 /* SourceSyncSDKTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A15E0050131CB7A6E90C886C /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				41D4B71964D327602ED6C2D4 /* SampleDivCustomBlockFactory.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		A5DCBE80DA024EDA2F6D7174 /* SourceSyncSDK */ = {
+			isa = PBXGroup;
+			children = (
+				D3F355E14C018081FC043FEB /* Info.plist */,
+				2C25029631F0C237EEC06C57 /* module.modulemap */,
+				898DDBCF731BE1BF61ABC8DE /* SourceSyncSDK.h */,
+				F05FCF038E8F0F2206808F74 /* divkit */,
+				A15E0050131CB7A6E90C886C /* utils */,
+			);
+			path = SourceSyncSDK;
+			sourceTree = "<group>";
+		};
+		A7EC63FEA0C645346AC4037E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7646109AA94248D2B6BCC4D2 /* Pods-SourceSyncSDK.debug.xcconfig */,
+				F49B994FFD0CBEBE57AF3172 /* Pods-SourceSyncSDK.release.xcconfig */,
+				88BE38130A70D4BFC770647A /* Pods-SourceSyncSDKTests.debug.xcconfig */,
+				476661F98340B159C55FEF12 /* Pods-SourceSyncSDKTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C758AC63D732F3C4AEB74A5F = {
+			isa = PBXGroup;
+			children = (
+				4E188D9D4FDA668DE99A0DFE /* Sources */,
+				E24622F19B3F1A34D4953006 /* Tests */,
+				A0B3E8C6225A6930DD9D796F /* Products */,
+				A7EC63FEA0C645346AC4037E /* Pods */,
+				8425E3E538A8A39402EC599E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E24622F19B3F1A34D4953006 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		F05FCF038E8F0F2206808F74 /* divkit */ = {
+			isa = PBXGroup;
+			children = (
+				752295C122D75603BFDA872D /* ActivationDetails.swift */,
+				D1C499E3959E690B3BF173E4 /* ActivationPreview.swift */,
+				7AEA2F12F333F2817E5070F1 /* ActivationView.swift */,
+			);
+			path = divkit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7BA776EB7DE0F8856EB04057 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B9809BAAA9E2F539EDC30F8 /* SourceSyncSDK.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		73349D448E9F21C580819685 /* SourceSyncSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CAC7260B373B54FCEC0D53B /* Build configuration list for PBXNativeTarget "SourceSyncSDK" */;
+			buildPhases = (
+				1D0C9E2D34DBE92FEA70ADB2 /* [CP] Check Pods Manifest.lock */,
+				7BA776EB7DE0F8856EB04057 /* Headers */,
+				4B4FA24BC2395D2FF6F075EC /* Sources */,
+				35C5A6F346232C3DC7CCC0E1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SourceSyncSDK;
+			productName = SourceSyncSDK;
+			productReference = 95C5FDE3B129E42E516031F9 /* SourceSyncSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C9AF77AD72CF2D6A91FBB0C4 /* SourceSyncSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4F56427B814A2235BB5DDA3 /* Build configuration list for PBXNativeTarget "SourceSyncSDKTests" */;
+			buildPhases = (
+				6D29058A15C81F099666F91C /* [CP] Check Pods Manifest.lock */,
+				66FEF26DE555E6BFAEA2C321 /* Sources */,
+				5F257927B065E89E83460292 /* Frameworks */,
+				AADAF2EB9D044EED7FF35875 /* Embed Frameworks */,
+				7B79D1B54A2866C00DFB5777 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				90458460AEA43014232A9AA5 /* PBXTargetDependency */,
+			);
+			name = SourceSyncSDKTests;
+			productName = SourceSyncSDKTests;
+			productReference = F3CC8862F4294B535F5E1427 /* SourceSyncSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		244CB3B26F19034B7CE480F1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 895F8BB0B0AE0695A78BD9E6 /* Build configuration list for PBXProject "SourceSyncSDK" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C758AC63D732F3C4AEB74A5F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 54;
+			productRefGroup = A0B3E8C6225A6930DD9D796F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				73349D448E9F21C580819685 /* SourceSyncSDK */,
+				C9AF77AD72CF2D6A91FBB0C4 /* SourceSyncSDKTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1D0C9E2D34DBE92FEA70ADB2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SourceSyncSDK-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D29058A15C81F099666F91C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SourceSyncSDKTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B79D1B54A2866C00DFB5777 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SourceSyncSDKTests/Pods-SourceSyncSDKTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SourceSyncSDKTests/Pods-SourceSyncSDKTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SourceSyncSDKTests/Pods-SourceSyncSDKTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4B4FA24BC2395D2FF6F075EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63D5EC304B571143629CEF54 /* ActivationDetails.swift in Sources */,
+				F639FB46F75B26651AA717C2 /* ActivationPreview.swift in Sources */,
+				80E8068C06C5A2CFEE25A174 /* ActivationView.swift in Sources */,
+				DCB1899E28A48A792C6C6308 /* SampleDivCustomBlockFactory.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66FEF26DE555E6BFAEA2C321 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		90458460AEA43014232A9AA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 73349D448E9F21C580819685 /* SourceSyncSDK */;
+			targetProxy = E9A9DA61D7AEBAA93F86E79C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0D1BCEF4CC9B9B04E214D67C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F49B994FFD0CBEBE57AF3172 /* Pods-SourceSyncSDK.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Sources/SourceSyncSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sourcedigital.sourcesync;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		5508AA71CC652EB3A96F782E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		74D111D949649D8CC7BE97BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7646109AA94248D2B6BCC4D2 /* Pods-SourceSyncSDK.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Sources/SourceSyncSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sourcedigital.sourcesync;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		8DAEBF602654FD782D6E2756 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 476661F98340B159C55FEF12 /* Pods-SourceSyncSDKTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sourcedigital.SourceSyncSDKTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SourceSyncSDK.framework/SourceSyncSDK";
+			};
+			name = Release;
+		};
+		9D89C237630243635E5F403B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FF2CD936D897604F21342BF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 88BE38130A70D4BFC770647A /* Pods-SourceSyncSDKTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sourcedigital.SourceSyncSDKTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SourceSyncSDK.framework/SourceSyncSDK";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0CAC7260B373B54FCEC0D53B /* Build configuration list for PBXNativeTarget "SourceSyncSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74D111D949649D8CC7BE97BD /* Debug */,
+				0D1BCEF4CC9B9B04E214D67C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		895F8BB0B0AE0695A78BD9E6 /* Build configuration list for PBXProject "SourceSyncSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5508AA71CC652EB3A96F782E /* Debug */,
+				9D89C237630243635E5F403B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A4F56427B814A2235BB5DDA3 /* Build configuration list for PBXNativeTarget "SourceSyncSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF2CD936D897604F21342BF7 /* Debug */,
+				8DAEBF602654FD782D6E2756 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 244CB3B26F19034B7CE480F1 /* Project object */;
+}

@@ -33,4 +33,5 @@ DerivedData/
 !default.perspectivev3
 
 # Do NOT ignore shared Xcode schemes
-!xcshareddata/
+!xcshareddata/Pods/
+Podfile.lock
