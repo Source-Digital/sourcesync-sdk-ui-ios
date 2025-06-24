@@ -24,8 +24,9 @@
               {
                 "type": "gallery",
                 "orientation": "horizontal",
+                "alignment_horizontal": "right",
                 "width": {
-                  "type": "match_parent"
+                  "type": "wrap_content"
                 },
                 "height": {
                   "type": "match_parent"
@@ -40,7 +41,7 @@
                       "value": 400
                     },
                     "height": {
-                      "type": "match_parent"
+                      "type": "wrap_content"
                     },
                     "paddings": {
                       "left": 16,
@@ -64,6 +65,9 @@
                         "height": {
                           "type": "wrap_content"
                         },
+                        
+                        "alignment_horizontal": "center",
+                        "alignment_vertical": "center",
                         "paddings": {
                           "left": 16,
                           "right": 16,
