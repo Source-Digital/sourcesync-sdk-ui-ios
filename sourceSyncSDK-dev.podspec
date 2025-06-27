@@ -31,11 +31,5 @@ Pod::Spec.new do |spec|
     'FRAMEWORK_SEARCH_PATHS' => '$(inherited)'
   }
   
-  # Build XCFramework
-  spec.prepare_command = <<-CMD
-    echo "🔨 Building universal XCFramework..."
-    ./gradlew clean :SourceSyncSDK:assembleSourceSyncCoreReleaseXCFramework
-  CMD
-  
   spec.requires_arc = true
 end
