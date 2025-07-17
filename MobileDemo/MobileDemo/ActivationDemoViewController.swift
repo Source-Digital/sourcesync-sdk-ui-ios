@@ -26,12 +26,12 @@ class ActivationDemoViewController : UIViewController {
         // Load the template from the file
         
 
-        guard let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json") else {
+        guard let previewUrl = Bundle.main.url(forResource: "div_preview1", withExtension: "json") else {
             print("\(TAG): Failed to load preview resource 'div_preview.json'")
             return
         }
         
-        guard let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json") else {
+        guard let detailsUrl = Bundle.main.url(forResource: "div_details1", withExtension: "json") else {
             print("\(TAG): Failed to load details resource 'div_details.json'")
             return
         }
