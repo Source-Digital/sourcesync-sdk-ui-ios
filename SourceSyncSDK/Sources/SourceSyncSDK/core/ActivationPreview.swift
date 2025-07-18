@@ -44,8 +44,8 @@ class ActivationPreview: UIView {
 
         NSLayoutConstraint.activate([
             divView.topAnchor.constraint(equalTo: topAnchor),
-            divView.bottomAnchor.constraint(equalTo: bottomAnchor),
             divView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            divView.bottomAnchor.constraint(equalTo: bottomAnchor),
             divView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
         
