@@ -26,12 +26,12 @@ class ActivationDemoViewController : UIViewController {
         // Load the template from the file
         
 
-        guard let previewUrl = Bundle.main.url(forResource: "div_preview1", withExtension: "json") else {
+        guard let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json") else {
             print("\(TAG): Failed to load preview resource 'div_preview.json'")
             return
         }
         
-        guard let detailsUrl = Bundle.main.url(forResource: "div_details1", withExtension: "json") else {
+        guard let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json") else {
             print("\(TAG): Failed to load details resource 'div_details.json'")
             return
         }
@@ -51,14 +51,13 @@ class ActivationDemoViewController : UIViewController {
         
         // Add to view controller's view
         if let activation = activation {
-            activation.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(activation)
             
+            activation.translatesAutoresizingMaskIntoConstraints = false
+
             NSLayoutConstraint.activate([
                 activation.topAnchor.constraint(equalTo: view.topAnchor),
-                activation.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                activation.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                activation.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                activation.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
             
             // Show the preview
@@ -66,7 +65,7 @@ class ActivationDemoViewController : UIViewController {
                 previewData: previewData
             ) {
                 // When clicked, show activation detail
-                activation.showDetail(detailsData: detailsData) {
+                activation.showDetail(detailsData: detailsData, widthPercentage: 0.5) {
                     activation.hideDetail()
                 }
             }

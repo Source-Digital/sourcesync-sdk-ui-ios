@@ -3,7 +3,6 @@
 //  sourcesync-sdk-ui-ios
 //
 import UIKit
-
 /**
  * ActivationView
  *
@@ -17,21 +16,19 @@ import UIKit
  */
 public class ActivationView: UIView {
     
-    /// Tag for logging purposes
+    // Tag for logging purposes
     private static let TAG = "SDK:ActivationView"
     
-    /// The view that displays the activation preview
+    // The view that displays the activation preview
     private var previewView: ActivationPreview?
     
-    /// The view that displays the activation details
+    // The view that displays the activation details
     private var detailsView: ActivationDetails?
     
-    /// Handler for when the preview is clicked
+    // Handler for when the preview is clicked
     private var onPreviewClickHandler: (() -> Void)?
     
-    /// Parent view controller for showing alerts or handling navigation
-    private weak var parentViewController: UIViewController?
-    
+    private var previewData:Data?
     /**
      * Creates an ActivationView with a reference to the parent view controller.
      *
@@ -40,7 +37,6 @@ public class ActivationView: UIView {
      *                reference cycles.
      */
     public init(context: UIViewController) {
-        self.parentViewController = context
         super.init(frame: .zero)
     }
     
@@ -71,6 +67,7 @@ public class ActivationView: UIView {
         detailsView = nil
         
         self.onPreviewClickHandler = onClick
+        self.previewData = previewData
         
         previewView = ActivationPreview(previewData: previewData)
         
@@ -102,15 +99,14 @@ public class ActivationView: UIView {
      * It creates a new ActivationDetails view with the provided JSON data and adds it to the view
      * hierarchy with appropriate constraints.
      */
-    public func showDetail(detailsData: Data, onClose: @escaping ()->Void) {
-        // Hide the preview instead of removing it
-        previewView?.isHidden = true
-        
-        // Remove any existing detail view
+    public func showDetail(detailsData: Data, widthPercentage:CGFloat, onClose: @escaping ()->Void) {
+        // Remove previous preview view and detail view if they exist
+        previewView?.removeFromSuperview()
         detailsView?.removeFromSuperview()
+        detailsView = nil
         
         // Create and configure the detail view
-        detailsView = ActivationDetails(detailsData: detailsData, parentViewController: parentViewController, onClose: onClose)
+        detailsView = ActivationDetails(detailsData: detailsData,widthPercentage: widthPercentage, onClose: onClose)
         
         if let detailsView = detailsView {
             detailsView.translatesAutoresizingMaskIntoConstraints = false
@@ -119,8 +115,8 @@ public class ActivationView: UIView {
             // Setup constraints
             NSLayoutConstraint.activate([
                 detailsView.topAnchor.constraint(equalTo: topAnchor),
-                detailsView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 detailsView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                detailsView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 detailsView.trailingAnchor.constraint(equalTo: trailingAnchor)
             ])
         }
@@ -136,10 +132,15 @@ public class ActivationView: UIView {
         if let detailsView = detailsView {
             detailsView.removeFromSuperview()
             self.detailsView = nil
+            guard let previewData = previewData, let onPreviewClickHandler = onPreviewClickHandler else {
+                return
+            }
+            showPreview(previewData: previewData, onClick: onPreviewClickHandler)
+
         }
         
-        // Show the preview again
-        previewView?.isHidden = true
+        // Show the preview agai
+        previewView?.isHidden = false
     }
     
     /**

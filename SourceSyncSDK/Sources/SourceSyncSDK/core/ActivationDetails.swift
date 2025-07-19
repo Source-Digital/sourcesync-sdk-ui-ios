@@ -17,33 +17,32 @@ import DivKitExtensions
  *
  **/
 class ActivationDetails: UIView {
-    /// Tag for logging purposes
+    // Tag for logging purposes
     private static let TAG = "ActivationDetails"
     
-    /// The DivKit components used to render the template
+    // The DivKit components used to render the template
     lazy var divKitComponents = makeDivKitComponents()
     
-    /// The DivKit view that renders the template
+    // The DivKit view that renders the template
     lazy var divView = DivView(divKitComponents: divKitComponents)
-    
-    /// The parent view controller, used for handling actions like showing alerts or navigation
-    private weak var parentViewController: UIViewController?
     
     // Closure to execute when the details view is closed via the close action
     private var onCloseHandler: (() -> Void)?
+    
+    private var widthPercentage:CGFloat = 0.5
     /**
+     *
      * Creates an ActivationDetails view with the specified template data.
      *
      * @param detailsData The JSON data containing the DivKit template for the details view.
-     * @param parentViewController The parent view controller, used for handling actions.
      * @param onClose Closure to execute when the close action is triggered.
      *
      * The template data should follow DivKit's JSON format and will be rendered by the DivKit engine.
      */
-    init(detailsData: Data, parentViewController: UIViewController?, onClose: @escaping () -> Void) {
+    init(detailsData: Data, widthPercentage: CGFloat, onClose: @escaping () -> Void) {
         super.init(frame: .zero)
-        self.parentViewController = parentViewController
         self.onCloseHandler = onClose
+        self.widthPercentage = widthPercentage
         
         addSubview(divView)
         
@@ -53,13 +52,23 @@ class ActivationDetails: UIView {
         NSLayoutConstraint.activate([
             divView.topAnchor.constraint(equalTo: topAnchor),
             divView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            divView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            divView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            
+            // 50% width on right side
+            divView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            divView.widthAnchor.constraint(equalTo: widthAnchor)
         ])
         
         Task {
             await configureDivView(detailsData: detailsData)
         }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        let screenSize = UIScreen.main.bounds.size
+        return CGSize(
+            width: screenSize.width * widthPercentage ,  // initially 50% of screen width
+            height: screenSize.height     // Full screen height
+        )
     }
     
     /**
@@ -77,7 +86,7 @@ class ActivationDetails: UIView {
     private func configureDivView(detailsData: Data) async {
         await divView.setSource(
             .init(kind: .data(detailsData), cardId: "div_detail"),
-            debugParams: DebugParams(isDebugInfoEnabled: false)
+            debugParams: DebugParams(isDebugInfoEnabled: true)
         )
     }
     
