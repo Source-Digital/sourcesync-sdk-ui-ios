@@ -30,6 +30,7 @@ class ActivationDetails: UIView {
     private var onCloseHandler: (() -> Void)?
     
     private var widthPercentage:CGFloat = 0.5
+    
     /**
      *
      * Creates an ActivationDetails view with the specified template data.
@@ -39,6 +40,7 @@ class ActivationDetails: UIView {
      *
      * The template data should follow DivKit's JSON format and will be rendered by the DivKit engine.
      */
+    
     init(detailsData: Data, widthPercentage: CGFloat, onClose: @escaping () -> Void) {
         super.init(frame: .zero)
         self.onCloseHandler = onClose
@@ -102,34 +104,23 @@ class ActivationDetails: UIView {
         
         let customBlockFactory = SampleDivCustomBlockFactory()
         // Create a custom action handler that will handle the close action
-        let urlHandler = ActivationCloseActionHandler(onCloseAction: {[weak self] in self?.onCloseHandler?()})
+        let urlHandler = EnhancedDivUrlHandler(
+            onCloseAction: {[weak self] in self?.onCloseHandler?()},
+            onExternalUrlAction: { url in
+                // Optional: Custom handling for external URLs
+                // For example, open in in-app browser instead of Safari
+                print("Opening external URL: \(url)")
+            },
+            onCustomSchemeAction: { url in
+                // Optional: Handle custom schemes not covered by default implementation
+                print("Handling custom scheme: \(url)")
+            }
+        )
         
         // Create a proper component with all required parameters
         return DivKitComponents(
             divCustomBlockFactory: customBlockFactory,
             urlHandler: urlHandler
         )
-    }
-}
-
-
-/**
- * ActivationCloseActionHandler
- *
- * A custom DivKit URL handler that specifically handles the close action from the activation details view.
- * This handler looks for a specific URL scheme ('div-action://close') and executes the close handler
- * when that URL is encountered.
- */
-class ActivationCloseActionHandler: DivUrlHandler{
-    var onCloseAction: (() -> Void)?
-    
-    init(onCloseAction: @escaping () -> Void){
-        self.onCloseAction = onCloseAction
-    }
-    
-    func handle(_ url: URL, info _: DivActionInfo, sender _: AnyObject?) {
-        if url.absoluteString.hasPrefix("div-action://close"){
-            onCloseAction?()
-        }
     }
 }
