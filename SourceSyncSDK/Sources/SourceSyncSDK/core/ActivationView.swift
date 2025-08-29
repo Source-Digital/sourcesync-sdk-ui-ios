@@ -2,72 +2,113 @@
 //  ActivationView.swift
 //  sourcesync-sdk-ui-ios
 //
-import UIKit
-/**
- * ActivationView
- *
- * A container view that manages the activation flow, handling both preview and detail states.
- * This view serves as the main public interface for the activation system, coordinating
- * between the preview and detail views and managing user interactions.
- *
- * The ActivationView handles the lifecycle of activation UI components, including showing
- * the initial preview, transitioning to the detailed view when the user interacts with the
- * preview, and hiding the detail view when the user dismisses it.
- */
+
+#if os(iOS)
+    // iOS-specific code
+    import UIKit
+#elseif os(tvOS)
+    // tvOS-specific code
+    import TVUIKit
+#endif
+
 public class ActivationView: UIView {
     
-    // Tag for logging purposes
     private static let TAG = "SDK:ActivationView"
     
-    // The view that displays the activation preview
+    private var onDetailsCloseClicked: (() -> Void)?
     private var previewView: ActivationPreview?
-    
-    // The view that displays the activation details
-    private var detailsView: ActivationDetails?
-    
-    // Handler for when the preview is clicked
+    private var detailView: ActivationDetails?
     private var onPreviewClickHandler: (() -> Void)?
+    private var onDetailsActionTriggered: (() -> Void)?
+    private var onDetailsOutsideClicked: (() -> Void)?
     
-    private var previewData:Data?
-    /**
-     * Creates an ActivationView with a reference to the parent view controller.
-     *
-     * @param context The UIViewController that will be used for handling actions such as
-     *                showing alerts or navigation. This is weakly referenced to avoid
-     *                reference cycles.
-     */
+    // Screen dimensions
+    private let screenWidth: CGFloat
+    private let screenHeight: CGFloat
+    
+    // Store preview data for restoration
+    private var currentPreviewData: Data?
+    private var currentPreviewWidthPercentage: CGFloat = 0
+    private var currentPreviewHeightPercentage: CGFloat = 0
+    
     public init(context: UIViewController) {
+        // Get screen dimensions
+        let screenBounds = UIScreen.main.bounds
+        self.screenWidth = screenBounds.width
+        self.screenHeight = screenBounds.height
+        
         super.init(frame: .zero)
+        
+        print("\(Self.TAG): Screen dimensions: \(screenWidth)x\(screenHeight)")
+        setupOutsideClickOverlay()
     }
     
-    /**
-     * Required initializer for NSCoding, implemented to support Interface Builder.
-     */
     required init?(coder: NSCoder) {
+        // Get screen dimensions
+        let screenBounds = UIScreen.main.bounds
+        self.screenWidth = screenBounds.width
+        self.screenHeight = screenBounds.height
+        
         super.init(coder: coder)
+        setupOutsideClickOverlay()
+    }
+    
+    private func setupOutsideClickOverlay() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let parentView = self.superview else { return }
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.parentTapped(_:)))
+            tapGesture.cancelsTouchesInView = false
+            tapGesture.delegate = self
+            parentView.addGestureRecognizer(tapGesture)
+        }
+    }
+    
+    @objc private func parentTapped(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: gesture.view)
+        
+        // Check if touch is outside our bounds
+        if !frame.contains(location) {
+            // Check if this touch would hit video controls (bottom area)
+            if !isVideoControlArea(location: location, in: gesture.view!) {
+                print("\(Self.TAG): Valid outside click detected")
+                if detailView != nil {
+                    onDetailsOutsideClicked?()
+                    hideDetails()
+                }
+            }
+        }
+    }
+    
+    private func isVideoControlArea(location: CGPoint, in parentView: UIView) -> Bool {
+        // Define video control areas (bottom area typically)
+        let controlHeight: CGFloat = 100 // points
+        let bottomControlArea = parentView.bounds.height - controlHeight
+        
+        // If touch is in control area, let it pass through
+        return location.y > bottomControlArea
     }
     
     /**
-     * Shows the preview view with the given JSON data.
-     *
-     * @param previewData JSON data containing the DivKit template for the preview.
-     * @param onClick Closure to execute when the preview is tapped.
-     *
-     * This method removes any existing preview or detail views before creating and displaying
-     * the new preview. It also attaches a tap gesture recognizer to the preview to handle user
-     * interaction.
+     * Shows the preview view with given data
      */
     public func showPreview(
         previewData: Data,
+        widthPercentage: CGFloat = 0.0,
+        heightPercentage: CGFloat = 0.0,
         onClick: @escaping () -> Void
     ) {
-        // Remove previous preview view and detail view if they exist
-        previewView?.removeFromSuperview()
-        detailsView?.removeFromSuperview()
-        detailsView = nil
+        // Clean up existing preview
+        if let existingPreview = previewView {
+            existingPreview.safeCleanup()
+            existingPreview.removeFromSuperview()
+        }
         
         self.onPreviewClickHandler = onClick
-        self.previewData = previewData
+        self.currentPreviewData = previewData
+        self.currentPreviewWidthPercentage = widthPercentage
+        self.currentPreviewHeightPercentage = heightPercentage
         
         previewView = ActivationPreview(previewData: previewData)
         
@@ -76,82 +117,187 @@ public class ActivationView: UIView {
             previewView.addGestureRecognizer(tapGesture)
             previewView.isUserInteractionEnabled = true
             
-            previewView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(previewView)
-            
-            // Setup constraints
-            NSLayoutConstraint.activate([
-                previewView.topAnchor.constraint(equalTo: topAnchor),
-                previewView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                previewView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                previewView.trailingAnchor.constraint(equalTo: trailingAnchor)
-            ])
+            addSubviewWithPercentageLayout(
+                view: previewView,
+                widthPercentage: widthPercentage,
+                heightPercentage: heightPercentage
+            )
         }
     }
     
     /**
-     * Shows the detail view with the given JSON data.
-     *
-     * @param detailsData JSON data containing the DivKit template for the details.
-     * @param onClose Closure to execute when the detail view is closed.
-     *
-     * This method hides the preview view (rather than removing it) and displays the detail view.
-     * It creates a new ActivationDetails view with the provided JSON data and adds it to the view
-     * hierarchy with appropriate constraints.
+     * Convenience method for showPreview without percentage parameters
      */
-    public func showDetail(detailsData: Data, widthPercentage:CGFloat, onClose: @escaping ()->Void) {
-        // Remove previous preview view and detail view if they exist
-        previewView?.removeFromSuperview()
-        detailsView?.removeFromSuperview()
-        detailsView = nil
-        
-        // Create and configure the detail view
-        detailsView = ActivationDetails(detailsData: detailsData,widthPercentage: widthPercentage, onClose: onClose)
-        
-        if let detailsView = detailsView {
-            detailsView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(detailsView)
-            
-            // Setup constraints
-            NSLayoutConstraint.activate([
-                detailsView.topAnchor.constraint(equalTo: topAnchor),
-                detailsView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                detailsView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                detailsView.trailingAnchor.constraint(equalTo: trailingAnchor)
-            ])
-        }
+    public func showPreview(previewData: Data, onClick: @escaping () -> Void) {
+        showPreview(previewData: previewData, widthPercentage: 0, heightPercentage: 0, onClick: onClick)
     }
     
     /**
-     * Hides the detail view and restores the preview view.
-     *
-     * This method removes the detail view from the view hierarchy and shows the preview view
-     * again. It's typically called when the user dismisses the detail view.
+     * Shows the detail view with given data
      */
-    public func hideDetail() {
-        if let detailsView = detailsView {
-            detailsView.removeFromSuperview()
-            self.detailsView = nil
-            guard let previewData = previewData, let onPreviewClickHandler = onPreviewClickHandler else {
-                return
+    public func showDetail(
+        detailsData: Data,
+        widthPercentage: CGFloat = 1.0,
+        heightPercentage: CGFloat = 1.0,
+        onActionTriggered: @escaping () -> Void,
+        onOutsideClicked: @escaping () -> Void,
+        onClose: (() -> Void)?
+    ) {
+        // Clean up existing detail
+        if let existingDetail = detailView {
+            existingDetail.safeCleanup()
+            existingDetail.removeFromSuperview()
+        }
+        
+        self.onDetailsCloseClicked = onClose
+        self.onDetailsOutsideClicked = onOutsideClicked
+        self.onDetailsActionTriggered = onActionTriggered
+        
+        detailView = ActivationDetails(
+            detailsData: detailsData,
+            widthPercentage: widthPercentage,
+            onClose: { [weak self] in
+                self?.onDetailsCloseClicked?()
             }
-            showPreview(previewData: previewData, onClick: onPreviewClickHandler)
-
-        }
+        )
         
-        // Show the preview agai
+        if let detailView = detailView {
+            addSubviewWithPercentageLayout(
+                view: detailView,
+                widthPercentage: widthPercentage,
+                heightPercentage: heightPercentage
+            )
+        }
+    }
+    
+    /**
+     * Convenience method for showDetail without percentage parameters
+     */
+    public func showDetail(
+        detailsData: Data,
+        onActionTriggered: @escaping () -> Void,
+        onOutsideClicked: @escaping () -> Void,
+        onClose: (() -> Void)?
+    ) {
+        showDetail(
+            detailsData: detailsData,
+            widthPercentage: 0,
+            heightPercentage: 0,
+            onActionTriggered: onActionTriggered,
+            onOutsideClicked: onOutsideClicked,
+            onClose: onClose
+        )
+    }
+    
+    /**
+     * Hides the detail view and restores preview
+     */
+    public func hideDetails() {
+        cleanupDetails()
         previewView?.isHidden = false
     }
     
-    /**
-     * Handles tap events on the preview view.
-     *
-     * This method is called when the user taps on the preview view. It executes the
-     * onPreviewClickHandler closure if one has been set.
-     */
-    @objc private func previewTapped() {
-        if let handler = onPreviewClickHandler {
-            handler()
+    // Clean up detail view
+    private func cleanupDetails() {
+        if let detail = detailView {
+            detail.safeCleanup()
+            detail.removeFromSuperview()
         }
+        detailView = nil
+    }
+    
+    // Clean up preview view
+    private func cleanupPreview() {
+        if let preview = previewView {
+            preview.safeCleanup()
+            preview.removeFromSuperview()
+        }
+        previewView = nil
+    }
+    
+    /**
+     * Safely cleanup all views
+     */
+    private func safeCleanupAll() {
+        // Clean up detail view
+        cleanupDetails()
+        
+        // Clean up preview view
+        cleanupPreview()
+        
+        // Clear handlers
+        onDetailsCloseClicked = nil
+        onPreviewClickHandler = nil
+        onDetailsOutsideClicked = nil
+        onDetailsActionTriggered = nil
+    }
+    
+    @objc private func previewTapped() {
+        previewView?.isHidden = true
+        onPreviewClickHandler?()
+    }
+    
+    private func addSubviewWithPercentageLayout(view: UIView, widthPercentage: CGFloat, heightPercentage: CGFloat) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(view)
+        
+        // Calculate dimensions
+        let width = widthPercentage > 0 ? screenWidth * widthPercentage : screenWidth
+        let height = heightPercentage > 0 ? screenHeight * heightPercentage : screenHeight
+        
+        if widthPercentage > 0 || heightPercentage > 0 {
+            // Use specific dimensions
+            NSLayoutConstraint.activate([
+                view.centerXAnchor.constraint(equalTo: centerXAnchor),
+                view.centerYAnchor.constraint(equalTo: centerYAnchor),
+                view.widthAnchor.constraint(equalToConstant: width),
+                view.heightAnchor.constraint(equalToConstant: height)
+            ])
+        } else {
+            // Fill parent
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: topAnchor),
+                view.leadingAnchor.constraint(equalTo: leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: trailingAnchor),
+                view.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+        }
+    }
+    
+    override public func removeFromSuperview() {
+        // Clean up parent gesture recognizer
+        if let parentView = superview {
+            parentView.gestureRecognizers?.forEach { gesture in
+                if gesture.delegate === self {
+                    parentView.removeGestureRecognizer(gesture)
+                }
+            }
+        }
+        
+        safeCleanupAll()
+        super.removeFromSuperview()
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension ActivationView: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        // Allow gesture to be received for outside detection
+        return true
+    }
+}
+
+// MARK: - Helper extensions for cleanup
+extension ActivationPreview {
+    func safeCleanup() {
+        // Add any cleanup logic specific to ActivationPreview
+        removeFromSuperview()
+    }
+}
+
+extension ActivationDetails {
+    func safeCleanup() {
+        // Add any cleanup logic specific to ActivationDetails
+        removeFromSuperview()
     }
 }

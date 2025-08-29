@@ -1,7 +1,13 @@
 import DivKit
 import Foundation
 import LayoutKit
-import UIKit
+#if os(iOS)
+    // iOS-specific code
+    import UIKit
+#elseif os(tvOS)
+    // tvOS-specific code
+    import TVUIKit
+#endif
 import VGSL
 
 struct SampleDivCustomBlockFactory: DivCustomBlockFactory {
