@@ -6,13 +6,7 @@
 //
 
 import Foundation
-#if os(iOS)
-    // iOS-specific code
-    import UIKit
-#elseif os(tvOS)
-    // tvOS-specific code
-    import TVUIKit
-#endif
+import UIKit
 import DivKit
 
 /**

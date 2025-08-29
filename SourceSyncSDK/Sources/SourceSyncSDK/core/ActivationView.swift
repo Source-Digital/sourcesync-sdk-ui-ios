@@ -3,13 +3,9 @@
 //  sourcesync-sdk-ui-ios
 //
 
-#if os(iOS)
-    // iOS-specific code
-    import UIKit
-#elseif os(tvOS)
-    // tvOS-specific code
-    import TVUIKit
-#endif
+
+// iOS-specific code
+import UIKit
 
 public class ActivationView: UIView {
     
