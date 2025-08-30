@@ -3,7 +3,6 @@
 //  sourcesync-sdk-ui-ios
 //
 
-
 // iOS-specific code
 import UIKit
 
@@ -36,54 +35,50 @@ public class ActivationView: UIView {
         super.init(frame: .zero)
         
         print("\(Self.TAG): Screen dimensions: \(screenWidth)x\(screenHeight)")
-        setupOutsideClickOverlay()
     }
     
     required init?(coder: NSCoder) {
-        // Get screen dimensions
-        let screenBounds = UIScreen.main.bounds
-        self.screenWidth = screenBounds.width
-        self.screenHeight = screenBounds.height
-        
-        super.init(coder: coder)
-        setupOutsideClickOverlay()
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupOutsideClickOverlay() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                  let parentView = self.superview else { return }
-            
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.parentTapped(_:)))
-            tapGesture.cancelsTouchesInView = false
-            tapGesture.delegate = self
-            parentView.addGestureRecognizer(tapGesture)
-        }
-    }
-    
-    @objc private func parentTapped(_ gesture: UITapGestureRecognizer) {
-        let location = gesture.location(in: gesture.view)
+    // Override hitTest to detect outside clicks
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
         
-        // Check if touch is outside our bounds
-        if !frame.contains(location) {
-            // Check if this touch would hit video controls (bottom area)
-            if !isVideoControlArea(location: location, in: gesture.view!) {
-                print("\(Self.TAG): Valid outside click detected")
-                if detailView != nil {
-                    onDetailsOutsideClicked?()
-                    hideDetails()
+        // If detail view is showing and touch is outside of it
+        if let detailView = detailView {
+            // Check if the touch point is within the detail view
+            let pointInDetail = convert(point, to: detailView)
+            if !detailView.bounds.contains(pointInDetail) {
+                // Touch is outside detail view
+                print("\(Self.TAG): Touch detected outside detail view")
+                
+                // Don't trigger for video control area
+                if !isVideoControlArea(location: point) {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.onDetailsOutsideClicked?()
+                        self?.hideDetails()
+                    }
                 }
+                return nil // Consume the touch
             }
         }
+        
+        return hitView
     }
     
-    private func isVideoControlArea(location: CGPoint, in parentView: UIView) -> Bool {
+    private func isVideoControlArea(location: CGPoint) -> Bool {
         // Define video control areas (bottom area typically)
-        let controlHeight: CGFloat = 100 // points
-        let bottomControlArea = parentView.bounds.height - controlHeight
+        let controlHeight: CGFloat = 10 // points
         
-        // If touch is in control area, let it pass through
-        return location.y > bottomControlArea
+        // Get the parent view bounds
+        if let parentView = superview {
+            let pointInParent = convert(location, to: parentView)
+            let bottomControlArea = parentView.bounds.height - controlHeight
+            return pointInParent.y > bottomControlArea
+        }
+        
+        return false
     }
     
     /**
@@ -133,8 +128,8 @@ public class ActivationView: UIView {
      */
     public func showDetail(
         detailsData: Data,
-        widthPercentage: CGFloat = 1.0,
-        heightPercentage: CGFloat = 1.0,
+        widthPercentage: CGFloat = 0,
+        heightPercentage: CGFloat = 0,
         onActionTriggered: @escaping () -> Void,
         onOutsideClicked: @escaping () -> Void,
         onClose: (() -> Void)?
@@ -157,12 +152,17 @@ public class ActivationView: UIView {
             }
         )
         
-        if let detailView = detailView {
-            addSubviewWithPercentageLayout(
-                view: detailView,
-                widthPercentage: widthPercentage,
-                heightPercentage: heightPercentage
-            )
+        if let detailsView = detailView {
+            detailsView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(detailsView)
+            
+            // Setup constraints
+            NSLayoutConstraint.activate([
+                detailsView.topAnchor.constraint(equalTo: topAnchor),
+                detailsView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                detailsView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                detailsView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            ])
         }
     }
     
@@ -259,7 +259,6 @@ public class ActivationView: UIView {
             ])
         }
     }
-    
     override public func removeFromSuperview() {
         // Clean up parent gesture recognizer
         if let parentView = superview {
