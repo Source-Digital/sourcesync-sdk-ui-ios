@@ -1,253 +1,70 @@
 {
-    "templates":
+  "templates": {},
+  "card": {
+    "log_id": "onlyfans_preview_card",
+    "states": [
       {
-        "name": "DivKitBlock",
-        "settings": {
-          "version": "1.0"
-        }
-      },
-      "card": {
-          "log_id": "travel_ad_trending_cities",
-          "states": [
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "orientation": "vertical",
+          "width": {
+            "type": "fixed",
+            "value":350
+          },
+          "height": {
+            "type": "fixed",
+            "value": 180
+          },
+          "border": {
+            "corner_radius": 20
+          },
+          "background": [
             {
-              "state_id": 0,
-              "div": {
-                "type": "container",
-                "orientation": "vertical",
-                "width": {
-                  "type": "match_parent"
-                },
-                "height": {
-                  "type": "match_parent"
-                },
-                "content_alignment_horizontal": "end",
-                "content_alignment_vertical": "top",
-                "items": [
-                  {
-                    "type": "container",
-                    "orientation": "overlap",
-                    "width": {
-                      "type": "fixed",
-                      "value": 350
-                    },
-                    "height": {
-                      "type": "fixed",
-                      "value": 200
-                    },
-                    "border": {
-                      "corner_radius": 20
-                    },
-                    "items": [
-                      {
-                        "type": "image",
-                        "image_url": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b",
-                        "width": {
-                          "type": "match_parent"
-                        },
-                        "height": {
-                          "type": "match_parent"
-                        },
-                        "scale": "fill",
-                        "border": {
-                          "corner_radius": 20
-                        }
-                      },
-                      {
-                        "type": "container",
-                        "width": {
-                          "type": "match_parent"
-                        },
-                        "height": {
-                          "type": "match_parent"
-                        },
-                        "background": [
-                          {
-                            "type": "gradient",
-                            "colors": ["#00000000", "#80000000", "#CC000000"],
-                            "angle": 135
-                          }
-                        ],
-                        "border": {
-                          "corner_radius": 20
-                        }
-                      },
-                      {
-                        "type": "container",
-                        "orientation": "horizontal",
-                        "alignment_vertical": "top",
-                        "margins": {
-                          "top": 16,
-                          "left": 20,
-                          "right": 20
-                        },
-                        "items": [
-                          {
-                            "type": "container",
-                            "orientation": "vertical",
-                            "width": {
-                              "type": "match_parent",
-                              "weight": 1
-                            },
-                            "items": [
-                              {
-                                "type": "container",
-                                "orientation": "horizontal",
-                                "background": [
-                                  {
-                                    "type": "solid",
-                                    "color": "#FF6B35",
-                                    "alpha": 0.9
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 12
-                                },
-                                "paddings": {
-                                  "left": 8,
-                                  "right": 8,
-                                  "top": 4,
-                                  "bottom": 4
-                                },
-                                "width": {
-                                  "type": "wrap_content"
-                                },
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "🔥 TRENDING",
-                                    "font_size": 11,
-                                    "font_weight": "bold",
-                                    "text_color": "#FFFFFF"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "image",
-                            "image_url": "https://images.unsplash.com/photo-1444723121867-7a241cacace9",
-                            "width": {
-                              "type": "fixed",
-                              "value": 40
-                            },
-                            "height": {
-                              "type": "fixed",
-                              "value": 40
-                            },
-                            "scale": "fill",
-                            "border": {
-                              "corner_radius": 20,
-                              "stroke": {
-                                "color": "#FFFFFF",
-                                "width": 2
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "orientation": "vertical",
-                        "alignment_vertical": "bottom",
-                        "paddings": {
-                          "left": 20,
-                          "right": 20,
-                          "bottom": 20
-                        },
-                        "items": [
-                          {
-                            "type": "text",
-                            "text": "Discover Tokyo",
-                            "font_size": 28,
-                            "font_weight": "bold",
-                            "text_color": "#FFFFFF",
-                            "margins": {
-                              "bottom": 4
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "Experience the perfect blend of tradition and modernity",
-                            "font_size": 14,
-                            "text_color": "#FFFFFF",
-                            "alpha": 0.9,
-                            "margins": {
-                              "bottom": 16
-                            }
-                          },
-                          {
-                            "type": "container",
-                            "orientation": "horizontal",
-                            "content_alignment_horizontal": "space-between",
-                            "items": [
-                              {
-                                "type": "container",
-                                "orientation": "horizontal",
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "From $899",
-                                    "font_size": 12,
-                                    "text_color": "#FFFFFF",
-                                    "alpha": 0.7,
-                                    "margins": {
-                                      "right": 8
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "$699",
-                                    "font_size": 18,
-                                    "font_weight": "bold",
-                                    "text_color": "#FFD700"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "container",
-                                "background": [
-                                  {
-                                    "type": "gradient",
-                                    "colors": ["#FF6B35", "#F7931E"],
-                                    "angle": 45
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 25
-                                },
-                                "paddings": {
-                                  "left": 20,
-                                  "right": 20,
-                                  "top": 10,
-                                  "bottom": 10
-                                },
-                                "alignment_horizontal": "center",
-                                "alignment_vertical": "center",
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "Book Now",
-                                    "font_size": 14,
-                                    "font_weight": "bold",
-                                    "text_color": "#FFFFFF",
-                                    "text_alignment_horizontal": "center",
-                                    "text_alignment_vertical": "center"
-                                  }
-                                ],
-                                "action": {
-                                  "log_id": "book_tokyo_trip",
-                                  "url": "div-action://book_trip?destination=tokyo"
-                                }
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+              "type": "image",
+              "image_url": "https://api2-dev.sourcesync.io/assets/54f9294c-bbf0-482f-8850-dd53ed9383e7",
+              "scale": "fill"
+            },
+            {
+              "type": "solid",
+              "color": "#9c000000"
+            }
+          ],
+          "content_alignment_vertical": "center",
+          "content_alignment_horizontal": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "Inside access to BKFC Creators",
+              "font_size": 28,
+              "font_weight": "bold",
+              "text_color": "#00AEEF",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 8
               }
+            },
+            {
+              "type": "text",
+              "text": "Exclusive posts • Direct access",
+              "font_size": 14,
+              "text_color": "#FFFFFF",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 12
+              }
+            },
+            {
+              "type": "text",
+              "text": "ONLYFANS.COM",
+              "font_size": 16,
+              "font_weight": "bold",
+              "text_color": "#00AEEF",
+              "text_alignment_horizontal": "center"
             }
           ]
         }
+      }
+    ]
+  }
 }

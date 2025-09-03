@@ -2,6 +2,7 @@
 //  ActivationDetail.swift
 //  sourcesync-sdk-ui-ios
 //
+
 import UIKit
 import DivKit
 import DivKitExtensions

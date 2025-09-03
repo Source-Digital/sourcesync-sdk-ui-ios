@@ -26,12 +26,12 @@ class ActivationDemoViewController : UIViewController {
         // Load the template from the file
         
 
-        guard let previewUrl = Bundle.main.url(forResource: "div_preview", withExtension: "json") else {
-            print("\(TAG): Failed to load preview resource 'div_preview.json'")
+        guard let previewUrl = Bundle.main.url(forResource: "div_preview1", withExtension: "json") else {
+            print("\(TAG): Failed to load preview resource 'div_preview1.json'")
             return
         }
         
-        guard let detailsUrl = Bundle.main.url(forResource: "div_details", withExtension: "json") else {
+        guard let detailsUrl = Bundle.main.url(forResource: "div_details1", withExtension: "json") else {
             print("\(TAG): Failed to load details resource 'div_details.json'")
             return
         }
@@ -65,9 +65,21 @@ class ActivationDemoViewController : UIViewController {
                 previewData: previewData
             ) {
                 // When clicked, show activation detail
-                activation.showDetail(detailsData: detailsData, widthPercentage: 0.5) {
-                    activation.hideDetail()
-                }
+                activation.showDetail(
+                    detailsData: detailsData,
+                    widthPercentage: 0.5,
+                    onActionTriggered: {
+                        // Handle any action triggered from detail view
+                    },
+                    onOutsideClicked: {
+                        // This is called when user taps outside
+                        // The hideDetails() is already called internally in ActivationView
+                    },
+                    onClose: {
+                        // Handle close button if there is one in the detail view
+                        activation.hideDetails()
+                    }
+                )
             }
         }
     }
