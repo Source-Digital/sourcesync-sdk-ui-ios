@@ -5,6 +5,7 @@
 
 // iOS-specific code
 import UIKit
+import DivKit
 
 public class ActivationView: UIView {
     
@@ -25,7 +26,8 @@ public class ActivationView: UIView {
     private var currentPreviewData: Data?
     private var currentPreviewWidthPercentage: CGFloat = 0
     private var currentPreviewHeightPercentage: CGFloat = 0
-    
+    private let errorHandler = CustomDivReporter()
+
     public init(context: UIViewController) {
         // Get screen dimensions
         let screenBounds = UIScreen.main.bounds
@@ -35,6 +37,9 @@ public class ActivationView: UIView {
         super.init(frame: .zero)
         
         print("\(Self.TAG): Screen dimensions: \(screenWidth)x\(screenHeight)")
+        
+        // Set error delegate
+        self.errorHandler.errorDelegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -149,7 +154,8 @@ public class ActivationView: UIView {
             widthPercentage: widthPercentage,
             onClose: { [weak self] in
                 self?.onDetailsCloseClicked?()
-            }
+            },
+            errorHandler: self.errorHandler
         )
         
         if let detailsView = detailView {
@@ -279,6 +285,44 @@ extension ActivationView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // Allow gesture to be received for outside detection
         return true
+    }
+}
+
+extension ActivationView: DivKitErrorDelegate {
+    func handleDivKitError(_ error: any DivKit.DivError, cardId: DivKit.DivCardID) {
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.removeDebugBlockViews()
+        }
+    }
+    
+    private func removeDebugBlockViews() {
+        for subview in self.subviews {
+            let viewType = String(describing: type(of: subview))
+            
+            // Check if it's a DebugBlockView
+            if viewType.contains("DebugBlockView") ||
+               viewType.contains("DivKit.DebugBlockView") {
+                subview.removeFromSuperview()
+                continue
+            }
+            
+            // Also check recursively in case it's nested
+            removeDebugBlockViewsRecursively(from: subview)
+        }
+    }
+    
+    private func removeDebugBlockViewsRecursively(from view: UIView) {
+        for subview in view.subviews {
+            let viewType = String(describing: type(of: subview))
+            
+            if viewType.contains("DebugBlockView") {
+                subview.removeFromSuperview()
+            } else {
+                // Continue searching in subviews
+                removeDebugBlockViewsRecursively(from: subview)
+            }
+        }
     }
 }
 
