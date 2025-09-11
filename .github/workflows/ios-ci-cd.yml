@@ -2,7 +2,7 @@ name: iOS CI/CD with CocoaPods
 
 on:
   push:
-    branches: [ main, dev. cicd ]
+    branches: [ main, dev, cicd ]
   pull_request:
     branches: [ main, dev ]
   release:
