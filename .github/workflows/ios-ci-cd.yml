@@ -1,0 +1,167 @@
+name: iOS CI/CD with CocoaPods
+
+on:
+  push:
+    branches: [ main, dev. cicd ]
+  pull_request:
+    branches: [ main, dev ]
+  release:
+    types: [published]
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
+
+jobs:
+  test:
+    name: Test iOS SDK
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0'
+        
+    - name: Cache CocoaPods
+      uses: actions/cache@v3
+      with:
+        path: Pods
+        key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pods-
+          
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod --version
+        
+    - name: Validate Podspec (Production)
+      run: |
+        echo "Validating production podspec..."
+        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --quick
+        
+    - name: Validate Podspec (Development)
+      run: |
+        echo "Validating development podspec..."
+        pod spec lint sourceSyncSDK-dev.podspec --allow-warnings --quick
+        
+    - name: Build Framework
+      run: |
+        echo "Building iOS framework..."
+        xcodebuild clean build \
+          -workspace sourcesync-sdk-ui-ios.xcworkspace \
+          -scheme SourceSyncSDK \
+          -destination 'generic/platform=iOS' \
+          -configuration Release \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+
+  publish-cocoapods:
+    name: Publish to CocoaPods
+    runs-on: macos-14
+    needs: test
+    if: github.event_name == 'release' && github.event.action == 'published'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0'
+        
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod --version
+        
+    - name: Setup CocoaPods Trunk
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Setting up CocoaPods trunk authentication..."
+        pod trunk register ${{ secrets.COCOAPODS_EMAIL }} '${{ secrets.COCOAPODS_NAME }}' --description='GitHub Actions'
+        
+    - name: Get Release Version
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Release version: $VERSION"
+        
+    - name: Update Podspec Version
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        echo "Updating podspec version to $VERSION"
+        sed -i '' "s/spec.version.*=.*/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+        
+    - name: Validate Updated Podspec
+      run: |
+        echo "Validating updated podspec before publishing..."
+        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings
+        
+    - name: Publish to CocoaPods
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Publishing SourceSyncSDK to CocoaPods..."
+        pod trunk push SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings
+        
+    - name: Verify Publication
+      run: |
+        echo "Verifying publication..."
+        sleep 30  # Wait for CocoaPods to process
+        pod search SourceSyncSDK
+
+  publish-development:
+    name: Publish Development Version
+    runs-on: macos-14
+    needs: test
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0'
+        
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod --version
+        
+    - name: Setup CocoaPods Trunk
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Setting up CocoaPods trunk authentication..."
+        pod trunk register ${{ secrets.COCOAPODS_EMAIL }} '${{ secrets.COCOAPODS_NAME }}' --description='GitHub Actions'
+        
+    - name: Update Development Podspec
+      run: |
+        # Update version with commit hash for development builds
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        TIMESTAMP=$(date +%Y%m%d%H%M)
+        DEV_VERSION="1.0.1-dev-$TIMESTAMP-$COMMIT_HASH"
+        echo "Updating development podspec version to $DEV_VERSION"
+        sed -i '' "s/spec.version.*=.*/spec.version = \"$DEV_VERSION\"/" sourceSyncSDK-dev.podspec
+        
+    - name: Validate Development Podspec
+      run: |
+        echo "Validating development podspec..."
+        pod spec lint sourceSyncSDK-dev.podspec --allow-warnings
+        
+    - name: Publish Development Version
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Publishing development version to CocoaPods..."
+        pod trunk push sourceSyncSDK-dev.podspec --allow-warnings || true
+        echo "Development version published (if no conflicts)"
