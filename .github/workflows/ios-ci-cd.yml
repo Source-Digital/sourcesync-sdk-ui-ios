@@ -41,12 +41,12 @@ jobs:
     - name: Validate Podspec (Production)
       run: |
         echo "Validating production podspec..."
-        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --quick
+        pod lib lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --quick
         
     - name: Validate Podspec (Development)
       run: |
         echo "Validating development podspec..."
-        pod spec lint sourceSyncSDK-dev.podspec --allow-warnings --quick
+        pod lib lint sourceSyncSDK-dev.podspec --allow-warnings --quick
         
     - name: Build Framework
       run: |
