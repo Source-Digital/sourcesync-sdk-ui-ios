@@ -42,13 +42,26 @@ jobs:
         
     - name: Install Dependencies
       run: |
-        echo "Installing pod dependencies..."
-        pod install --repo-update
+        if [ -f "Podfile" ]; then
+          echo "Installing pod dependencies..."
+          pod install --repo-update
+        else
+          echo "No Podfile found - project doesn't use CocoaPods dependencies"
+        fi
         
     - name: List Available Schemes
       run: |
-        echo "Listing all available schemes in the workspace..."
-        xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list
+        echo "Listing all available schemes..."
+        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
+          echo "Using workspace file"
+          xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list
+        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
+          echo "Using project file"
+          xcodebuild -project sourcesync-sdk-ui-ios.xcodeproj -list
+        else
+          echo "Error: No workspace or project file found"
+          exit 1
+        fi
         
     - name: Detect Scheme Name
       id: detect_scheme
@@ -80,19 +93,44 @@ jobs:
     - name: Validate Podspec
       run: |
         echo "Validating podspec..."
-        pod lib lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --quick
+        # Use the correct podspec file name from your project structure
+        if [ -f "SourceSyncSDK.podspec" ]; then
+          pod lib lint SourceSyncSDK.podspec --allow-warnings --quick
+        elif [ -f "SourceSyncSDK/SourceSyncSDK.podspec" ]; then
+          pod lib lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --quick
+        else
+          echo "Error: SourceSyncSDK.podspec not found"
+          exit 1
+        fi
         
     - name: Build Framework
       run: |
         SCHEME_NAME="${{ steps.detect_scheme.outputs.scheme_name }}"
         echo "Building iOS framework with scheme: $SCHEME_NAME"
-        xcodebuild clean build \
-          -workspace sourcesync-sdk-ui-ios.xcworkspace \
-          -scheme "$SCHEME_NAME" \
-          -destination 'generic/platform=iOS' \
-          -configuration Release \
-          CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGNING_ALLOWED=NO
+        
+        # Check if workspace exists, otherwise use project file
+        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
+          echo "Using workspace file"
+          xcodebuild clean build \
+            -workspace sourcesync-sdk-ui-ios.xcworkspace \
+            -scheme "$SCHEME_NAME" \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
+          echo "Using project file"
+          xcodebuild clean build \
+            -project sourcesync-sdk-ui-ios.xcodeproj \
+            -scheme "$SCHEME_NAME" \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+        else
+          echo "Error: No workspace or project file found"
+          exit 1
+        fi
 
   publish-cocoapods:
     name: Publish SourceSyncSDK to CocoaPods
@@ -128,24 +166,48 @@ jobs:
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
         echo "Updating podspec version to $VERSION"
-        if [[ "$RUNNER_OS" == "macOS" ]]; then
-          sed -i '' "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+        
+        # Find the correct podspec file location
+        if [ -f "SourceSyncSDK.podspec" ]; then
+          PODSPEC_FILE="SourceSyncSDK.podspec"
+        elif [ -f "SourceSyncSDK/SourceSyncSDK.podspec" ]; then
+          PODSPEC_FILE="SourceSyncSDK/SourceSyncSDK.podspec"
         else
-          sed -i "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+          echo "Error: SourceSyncSDK.podspec not found"
+          exit 1
+        fi
+        
+        echo "Updating podspec file: $PODSPEC_FILE"
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
+          sed -i '' "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" "$PODSPEC_FILE"
+        else
+          sed -i "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" "$PODSPEC_FILE"
         fi
         
         echo "Updated podspec content:"
-        grep "spec.version" SourceSyncSDK/SourceSyncSDK.podspec
+        grep "spec.version" "$PODSPEC_FILE"
         
     - name: Install Dependencies for Validation
       run: |
-        echo "Installing pod dependencies for validation..."
-        pod install --repo-update
+        if [ -f "Podfile" ]; then
+          echo "Installing pod dependencies for validation..."
+          pod install --repo-update
+        else
+          echo "No Podfile found - skipping pod install for validation"
+        fi
         
     - name: Validate Updated Podspec
       run: |
         echo "Validating updated podspec before publishing..."
-        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
+        # Find the correct podspec file location
+        if [ -f "SourceSyncSDK.podspec" ]; then
+          pod spec lint SourceSyncSDK.podspec --allow-warnings --verbose
+        elif [ -f "SourceSyncSDK/SourceSyncSDK.podspec" ]; then
+          pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
+        else
+          echo "Error: SourceSyncSDK.podspec not found"
+          exit 1
+        fi
         
     - name: Setup CocoaPods Trunk Authentication
       env:
