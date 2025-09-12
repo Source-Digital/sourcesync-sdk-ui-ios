@@ -26,9 +26,11 @@ jobs:
         xcode-version: '15.0'
         
     - name: Cache CocoaPods
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
-        path: Pods
+        path: |
+          Pods
+          ~/.cocoapods/repos
         key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-pods-
@@ -38,6 +40,35 @@ jobs:
         sudo gem install cocoapods
         pod --version
         
+    - name: Install Dependencies
+      run: |
+        echo "Installing pod dependencies..."
+        pod install --repo-update
+        
+    - name: List Available Schemes
+      run: |
+        echo "Listing all available schemes in the workspace..."
+        xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list
+        
+    - name: Detect Scheme Name
+      id: detect_scheme
+      run: |
+        # List schemes and try to find the correct one
+        SCHEMES=$(xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        echo "Available schemes:"
+        echo "$SCHEMES"
+        
+        # Try to find a scheme that contains "SourceSync" or "SDK"
+        SCHEME_NAME=$(echo "$SCHEMES" | grep -i "sourcesync\|sdk" | head -1 | xargs)
+        
+        if [ -z "$SCHEME_NAME" ]; then
+          # If no SDK scheme found, use the first available scheme
+          SCHEME_NAME=$(echo "$SCHEMES" | head -1 | xargs)
+        fi
+        
+        echo "Selected scheme: $SCHEME_NAME"
+        echo "scheme_name=$SCHEME_NAME" >> $GITHUB_OUTPUT
+        
     - name: Validate Podspec
       run: |
         echo "Validating podspec..."
@@ -45,17 +76,18 @@ jobs:
         
     - name: Build Framework
       run: |
-        echo "Building iOS framework..."
+        SCHEME_NAME="${{ steps.detect_scheme.outputs.scheme_name }}"
+        echo "Building iOS framework with scheme: $SCHEME_NAME"
         xcodebuild clean build \
           -workspace sourcesync-sdk-ui-ios.xcworkspace \
-          -scheme SourceSyncSDK \
+          -scheme "$SCHEME_NAME" \
           -destination 'generic/platform=iOS' \
           -configuration Release \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
 
   publish-cocoapods:
-    name: Publish to CocoaPods
+    name: Publish SourceSyncSDK to CocoaPods
     runs-on: macos-14
     needs: test
     if: github.event_name == 'release' && github.event.action == 'published'
@@ -63,6 +95,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -74,17 +108,11 @@ jobs:
         sudo gem install cocoapods
         pod --version
         
-    - name: Setup CocoaPods Trunk
-      env:
-        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      run: |
-        echo "Setting up CocoaPods trunk authentication..."
-        pod trunk register ${{ secrets.COCOAPODS_EMAIL }} '${{ secrets.COCOAPODS_NAME }}' --description='GitHub Actions'
-        
     - name: Get Release Version
       id: get_version
       run: |
         VERSION=${GITHUB_REF#refs/tags/}
+        VERSION=${VERSION#v}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Release version: $VERSION"
         
@@ -92,23 +120,47 @@ jobs:
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
         echo "Updating podspec version to $VERSION"
-        sed -i '' "s/spec.version.*=.*/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
+          sed -i '' "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+        else
+          sed -i "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" SourceSyncSDK/SourceSyncSDK.podspec
+        fi
+        
+        echo "Updated podspec content:"
+        grep "spec.version" SourceSyncSDK/SourceSyncSDK.podspec
+        
+    - name: Install Dependencies for Validation
+      run: |
+        echo "Installing pod dependencies for validation..."
+        pod install --repo-update
         
     - name: Validate Updated Podspec
       run: |
         echo "Validating updated podspec before publishing..."
-        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings
+        pod spec lint SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
+        
+    - name: Setup CocoaPods Trunk Authentication
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Setting up CocoaPods trunk authentication..."
+        if [ -n "$COCOAPODS_TRUNK_TOKEN" ]; then
+          echo "Using COCOAPODS_TRUNK_TOKEN for authentication"
+        else
+          echo "Error: COCOAPODS_TRUNK_TOKEN not found"
+          exit 1
+        fi
         
     - name: Publish to CocoaPods
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
         echo "Publishing SourceSyncSDK to CocoaPods..."
-        pod trunk push SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings
+        pod trunk push SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
         
     - name: Verify Publication
       run: |
-        echo "Verifying publication..."
-        sleep 30  # Wait for CocoaPods to process
-        pod search SourceSyncSDK
-
+        echo "Waiting for CocoaPods to process the publication..."
+        sleep 60
+        echo "Attempting to search for the published pod..."
+        pod search SourceSyncSDK || echo "Pod search failed, but this is expected immediately after publishing"
