@@ -38,15 +38,18 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/}
           VERSION=${VERSION#v}
           echo "Using release tag version: $VERSION"
+          echo "is_test=false" >> $GITHUB_OUTPUT
         else
-          # For testing (push events), use a test version
-          VERSION="0.0.1-test-$(date +%s)"
-          echo "Using test version: $VERSION"
+          # For testing (push events), use current commit SHA and don't update version
+          VERSION="test"
+          echo "Using test mode - will not update version in podspec"
           echo "⚠️  THIS IS A TEST RUN - NOT PUBLISHING TO COCOAPODS"
+          echo "is_test=true" >> $GITHUB_OUTPUT
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         
     - name: Find and Update Podspec Version
+      if: steps.get_version.outputs.is_test != 'true'
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
         echo "Updating podspec version to $VERSION"
@@ -71,6 +74,14 @@ jobs:
       run: |
         # Find the podspec file
         PODSPEC_FILE=$(find . -name "SourceSyncSDK.podspec" | head -1)
+        echo "Found podspec file: $PODSPEC_FILE"
+        echo "Current podspec version:"
+        grep "spec.version" "$PODSPEC_FILE"
+        
+        if [ "${{ steps.get_version.outputs.is_test }}" = "true" ]; then
+          echo "🧪 Testing podspec validation with current version (no changes made)"
+        fi
+        
         echo "Validating podspec: $PODSPEC_FILE"
         pod spec lint "$PODSPEC_FILE" --allow-warnings --verbose
         
