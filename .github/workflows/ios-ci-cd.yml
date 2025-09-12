@@ -54,7 +54,15 @@ jobs:
       id: detect_scheme
       run: |
         # List schemes and try to find the correct one
-        SCHEMES=$(xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
+          SCHEMES=$(xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
+          SCHEMES=$(xcodebuild -project sourcesync-sdk-ui-ios.xcodeproj -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        else
+          echo "Error: No workspace or project file found"
+          exit 1
+        fi
+        
         echo "Available schemes:"
         echo "$SCHEMES"
         
@@ -156,7 +164,15 @@ jobs:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
         echo "Publishing SourceSyncSDK to CocoaPods..."
-        pod trunk push SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
+        # Find the correct podspec file location
+        if [ -f "SourceSyncSDK.podspec" ]; then
+          pod trunk push SourceSyncSDK.podspec --allow-warnings --verbose
+        elif [ -f "SourceSyncSDK/SourceSyncSDK.podspec" ]; then
+          pod trunk push SourceSyncSDK/SourceSyncSDK.podspec --allow-warnings --verbose
+        else
+          echo "Error: SourceSyncSDK.podspec not found"
+          exit 1
+        fi
         
     - name: Verify Publication
       run: |
