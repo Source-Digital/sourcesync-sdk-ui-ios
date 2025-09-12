@@ -49,19 +49,32 @@ jobs:
           echo "No Podfile found - project doesn't use CocoaPods dependencies"
         fi
         
-    - name: List Available Schemes
-      run: |
-        echo "Listing all available schemes..."
-        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
-          echo "Using workspace file"
-          xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list
-        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
-          echo "Using project file"
-          xcodebuild -project sourcesync-sdk-ui-ios.xcodeproj -list
-        else
-          echo "Error: No workspace or project file found"
-          exit 1
-        fi
+- name: Debug Project Structure
+  run: |
+    echo "=== Current directory contents ==="
+    ls -la
+    echo "=== Looking for Xcode files ==="
+    find . -name "*.xcworkspace" -o -name "*.xcodeproj" | head -10
+    echo "=== End debug info ==="
+    
+- name: List Available Schemes
+  run: |
+    echo "Listing all available schemes..."
+    
+    # Find workspace files
+    WORKSPACE_FILE=$(find . -name "*.xcworkspace" | head -1)
+    PROJECT_FILE=$(find . -name "*.xcodeproj" | head -1)
+    
+    if [ -n "$WORKSPACE_FILE" ]; then
+      echo "Using workspace file: $WORKSPACE_FILE"
+      xcodebuild -workspace "$WORKSPACE_FILE" -list
+    elif [ -n "$PROJECT_FILE" ]; then
+      echo "Using project file: $PROJECT_FILE"
+      xcodebuild -project "$PROJECT_FILE" -list
+    else
+      echo "Error: No workspace or project file found"
+      exit 1
+    fi
         
     - name: Detect Scheme Name
       id: detect_scheme
