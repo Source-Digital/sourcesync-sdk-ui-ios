@@ -49,41 +49,47 @@ jobs:
           echo "No Podfile found - project doesn't use CocoaPods dependencies"
         fi
         
-- name: Debug Project Structure
-  run: |
-    echo "=== Current directory contents ==="
-    ls -la
-    echo "=== Looking for Xcode files ==="
-    find . -name "*.xcworkspace" -o -name "*.xcodeproj" | head -10
-    echo "=== End debug info ==="
-    
-- name: List Available Schemes
-  run: |
-    echo "Listing all available schemes..."
-    
-    # Find workspace files
-    WORKSPACE_FILE=$(find . -name "*.xcworkspace" | head -1)
-    PROJECT_FILE=$(find . -name "*.xcodeproj" | head -1)
-    
-    if [ -n "$WORKSPACE_FILE" ]; then
-      echo "Using workspace file: $WORKSPACE_FILE"
-      xcodebuild -workspace "$WORKSPACE_FILE" -list
-    elif [ -n "$PROJECT_FILE" ]; then
-      echo "Using project file: $PROJECT_FILE"
-      xcodebuild -project "$PROJECT_FILE" -list
-    else
-      echo "Error: No workspace or project file found"
-      exit 1
-    fi
+    - name: Debug Project Structure
+      run: |
+        echo "=== Current directory contents ==="
+        ls -la
+        echo "=== Looking for Xcode files ==="
+        find . -name "*.xcworkspace" -o -name "*.xcodeproj" | head -10
+        echo "=== End debug info ==="
+        
+    - name: List Available Schemes
+      run: |
+        echo "Listing all available schemes..."
+        
+        # Find workspace files
+        WORKSPACE_FILE=$(find . -name "*.xcworkspace" | head -1)
+        PROJECT_FILE=$(find . -name "*.xcodeproj" | head -1)
+        
+        if [ -n "$WORKSPACE_FILE" ]; then
+          echo "Using workspace file: $WORKSPACE_FILE"
+          xcodebuild -workspace "$WORKSPACE_FILE" -list
+        elif [ -n "$PROJECT_FILE" ]; then
+          echo "Using project file: $PROJECT_FILE"
+          xcodebuild -project "$PROJECT_FILE" -list
+        else
+          echo "Error: No workspace or project file found"
+          exit 1
+        fi
         
     - name: Detect Scheme Name
       id: detect_scheme
       run: |
+        # Find workspace and project files dynamically
+        WORKSPACE_FILE=$(find . -name "*.xcworkspace" | head -1)
+        PROJECT_FILE=$(find . -name "*.xcodeproj" | head -1)
+        
         # List schemes and try to find the correct one
-        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
-          SCHEMES=$(xcodebuild -workspace sourcesync-sdk-ui-ios.xcworkspace -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
-        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
-          SCHEMES=$(xcodebuild -project sourcesync-sdk-ui-ios.xcodeproj -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        if [ -n "$WORKSPACE_FILE" ]; then
+          echo "Using workspace: $WORKSPACE_FILE"
+          SCHEMES=$(xcodebuild -workspace "$WORKSPACE_FILE" -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
+        elif [ -n "$PROJECT_FILE" ]; then
+          echo "Using project: $PROJECT_FILE"
+          SCHEMES=$(xcodebuild -project "$PROJECT_FILE" -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed 's/^[[:space:]]*//' | head -20)
         else
           echo "Error: No workspace or project file found"
           exit 1
@@ -102,6 +108,10 @@ jobs:
         
         echo "Selected scheme: $SCHEME_NAME"
         echo "scheme_name=$SCHEME_NAME" >> $GITHUB_OUTPUT
+        
+        # Also save the file paths for later use
+        echo "workspace_file=$WORKSPACE_FILE" >> $GITHUB_OUTPUT
+        echo "project_file=$PROJECT_FILE" >> $GITHUB_OUTPUT
         
     - name: Validate Podspec
       run: |
