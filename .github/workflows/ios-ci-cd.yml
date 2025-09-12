@@ -106,22 +106,25 @@ jobs:
     - name: Build Framework
       run: |
         SCHEME_NAME="${{ steps.detect_scheme.outputs.scheme_name }}"
+        WORKSPACE_FILE="${{ steps.detect_scheme.outputs.workspace_file }}"
+        PROJECT_FILE="${{ steps.detect_scheme.outputs.project_file }}"
+        
         echo "Building iOS framework with scheme: $SCHEME_NAME"
         
-        # Check if workspace exists, otherwise use project file
-        if [ -f "sourcesync-sdk-ui-ios.xcworkspace" ]; then
-          echo "Using workspace file"
+        # Use the detected files
+        if [ -n "$WORKSPACE_FILE" ]; then
+          echo "Using workspace file: $WORKSPACE_FILE"
           xcodebuild clean build \
-            -workspace sourcesync-sdk-ui-ios.xcworkspace \
+            -workspace "$WORKSPACE_FILE" \
             -scheme "$SCHEME_NAME" \
             -destination 'generic/platform=iOS' \
             -configuration Release \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
-        elif [ -f "sourcesync-sdk-ui-ios.xcodeproj" ]; then
-          echo "Using project file"
+        elif [ -n "$PROJECT_FILE" ]; then
+          echo "Using project file: $PROJECT_FILE"
           xcodebuild clean build \
-            -project sourcesync-sdk-ui-ios.xcodeproj \
+            -project "$PROJECT_FILE" \
             -scheme "$SCHEME_NAME" \
             -destination 'generic/platform=iOS' \
             -configuration Release \
