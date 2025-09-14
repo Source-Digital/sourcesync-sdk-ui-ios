@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.author       = { "Source Digital" => "dev@sourcedigital.net" }
   
   spec.ios.deployment_target = "17.0"
-  spec.swift_version = "5.9"
+  spec.swift_version = "6.0"
   spec.source = { :git => "https://github.com/Source-Digital/sourcesync-sdk-ui-ios.git", :tag => "#{spec.version}" }
   
   # Source files
@@ -15,8 +15,8 @@ Pod::Spec.new do |spec|
   spec.exclude_files = "Package.swift", "TestApp/**/*", "Tests/**/*", "Example/**/*"
   
   # Dependencies
-  spec.dependency "DivKit", "~> 32.1.0"
-  spec.dependency "DivKitExtensions", "~> 32.1.0"
+  spec.dependency "DivKit", "~> 31.13.0"
+  spec.dependency "DivKitExtensions", "~> 31.13.0"
   spec.frameworks = "UIKit", "Foundation"
   
   # Universal binary support
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
     'VALID_ARCHS' => 'arm64 x86_64 arm64e',
     'EXCLUDED_ARCHS' => '',
     'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'NO',
-    'SWIFT_VERSION' => '5.9',
+    'SWIFT_VERSION' => '6.0',
     'ENABLE_BITCODE' => 'NO'
   }
   
