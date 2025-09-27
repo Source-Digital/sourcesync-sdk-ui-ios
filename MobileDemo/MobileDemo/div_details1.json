@@ -1,661 +1,171 @@
 {
   "templates": {},
-    "card": {
-      "log_id": "tokyo_trip_details_horizontal",
-      "states": [
-        {
-          "state_id": 0,
-          "div": {
-            "type": "container",
-            "width": {
-              "type": "match_parent"
-            },
-            "height": {
-              "type": "match_parent"
-            },
-            "orientation": "vertical",
-            "background": [
-              {
-                "type": "solid",
-                "color": "#FAFAFA"
+  "card": {
+    "log_id": "onlyfans_sponsor_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "orientation": "vertical",
+          "width": {
+            "type": "match_parent",
+            "value": 500
+          },
+          "height": {
+            "type": "match_parent"
+          },
+          "background": [
+            {
+              "type": "solid",
+              "color": "#FFFFFF"
+            }
+          ],
+          "border": {
+            "corner_radius": 20,
+            "stroke": {
+              "color": "#E5E7EB",
+              "width": 1
+            }
+          },
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://api2-dev.sourcesync.io/assets/54f9294c-bbf0-482f-8850-dd53ed9383e7",
+              "scale": "fit",
+              "width": {
+                "type": "match_parent"
+              },
+              "height": {
+                "type": "fixed",
+                "value": 160
+              },
+              "border": {
+                "corner_radius": 20
               }
-            ],
-            "items": [
-              {
-                "type": "gallery",
-                "orientation": "horizontal",
-                "alignment_horizontal": "right",
-                "width": {
-                  "type": "wrap_content"
-                },
-                "height": {
-                  "type": "match_parent"
-                },
-                "item_spacing": 16,
-                "items": [
-                  {
-                    "type": "container",
-                    "orientation": "vertical",
-                    "width": {
-                      "type": "fixed",
-                      "value": 400
-                    },
-                    "height": {
-                      "type": "wrap_content"
-                    },
-                    "paddings": {
-                      "left": 16,
-                      "right": 16,
-                      "top": 16,
-                      "bottom": 16
-                    },
-                    "background": [
-                      {
-                        "type": "solid",
-                        "color": "#FFFFFF"
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "container",
-                        "orientation": "horizontal",
-                        "width": {
-                          "type": "match_parent"
-                        },
-                        "height": {
-                          "type": "wrap_content"
-                        },
-                        
-                        "alignment_horizontal": "center",
-                        "alignment_vertical": "center",
-                        "paddings": {
-                          "left": 16,
-                          "right": 16,
-                          "top": 16,
-                          "bottom": 16
-                        },
-                        "background": [
-                          {
-                            "type": "solid",
-                            "color": "#FFFFFF"
-                          }
-                        ],
-                        "items": [
-                          {
-                            "type": "container",
-                            "width": {
-                              "type": "fixed",
-                              "value": 32
-                            },
-                            "height": {
-                              "type": "fixed",
-                              "value": 32
-                            },
-                            "alignment_horizontal": "center",
-                            "alignment_vertical": "center",
-                            "background": [
-                              {
-                                "type": "solid",
-                                "color": "#000000",
-                                "alpha": 0.1
-                              }
-                            ],
-                            "border": {
-                              "corner_radius": 16
-                            },
-                            "items": [
-                              {
-                                "type": "text",
-                                "text": "✕",
-                                "font_size": 16,
-                                "font_weight": "bold",
-                                "text_color": "#FFFFFF",
-                                "text_alignment_horizontal": "center",
-                                "text_alignment_vertical": "center"
-                              }
-                            ],
-                            "action": {
-                              "log_id": "close_tokyo_details",
-                              "url": "div-action://close"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "Discover Tokyo",
-                            "font_size": 18,
-                            "font_weight": "bold",
-                            "text_alignment_horizontal": "center",
-                            "text_color": "#2C2C2C",
-                            "width": {
-                              "type": "match_parent"
-                            },
-                            "margins": {
-                              "left": 16,
-                              "right": 16
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "orientation": "vertical",
-                        "width": {
-                          "type": "match_parent"
-                        },
-                        "height": {
-                          "type": "match_parent",
-                          "weight": 1
-                        },
-                        "items": [
-                          {
-                            "type": "gallery",
-                            "orientation": "horizontal",
-                            "item_spacing": 12,
-                            "margins": {
-                              "left": 16,
-                              "right": 16,
-                              "top": 16,
-                              "bottom": 16
-                            },
-                            "items": [
-                              {
-                                "type": "image",
-                                "image_url": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 160
-                                },
-                                "height": {
-                                  "type": "fixed",
-                                  "value": 100
-                                },
-                                "scale": "fill",
-                                "border": {
-                                  "corner_radius": 16
-                                }
-                              },
-                              {
-                                "type": "image",
-                                "image_url": "https://images.unsplash.com/photo-1444723121867-7a241cacace9",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 160
-                                },
-                                "height": {
-                                  "type": "fixed",
-                                  "value": 100
-                                },
-                                "scale": "fill",
-                                "border": {
-                                  "corner_radius": 16
-                                }
-                              },
-                              {
-                                "type": "container",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 160
-                                },
-                                "height": {
-                                  "type": "fixed",
-                                  "value": 100
-                                },
-                                "background": [
-                                  {
-                                    "type": "solid",
-                                    "color": "#FF6B35",
-                                    "alpha": 0.1
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 16,
-                                  "stroke": {
-                                    "color": "#FF6B35",
-                                    "width": 2
-                                  }
-                                },
-                                "alignment_horizontal": "center",
-                                "alignment_vertical": "center",
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "📸\nView More\nPhotos",
-                                    "font_size": 16,
-                                    "font_weight": "medium",
-                                    "text_color": "#FFFFFF",
-                                    "text_alignment_horizontal": "center",
-                                    "text_alignment_vertical": "center"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "container",
-                            "orientation": "vertical",
-                            "paddings": {
-                              "left": 16,
-                              "right": 16
-                            },
-                            "items": [
-                              {
-                                "type": "container",
-                                "orientation": "horizontal",
-                                "content_alignment_horizontal": "space-between",
-                                "margins": {
-                                  "bottom": 16
-                                },
-                                "items": [
-                                  {
-                                    "type": "container",
-                                    "orientation": "horizontal",
-                                    "background": [
-                                      {
-                                        "type": "solid",
-                                        "color": "#FF6B35",
-                                        "alpha": 0.9
-                                      }
-                                    ],
-                                    "border": {
-                                      "corner_radius": 12
-                                    },
-                                    "paddings": {
-                                      "left": 12,
-                                      "right": 12,
-                                      "top": 6,
-                                      "bottom": 6
-                                    },
-                                    "items": [
-                                      {
-                                        "type": "text",
-                                        "text": "🔥 LIMITED",
-                                        "font_size": 11,
-                                        "font_weight": "bold",
-                                        "text_color": "#FFFFFF"
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "type": "container",
-                                    "orientation": "horizontal",
-                                    "items": [
-                                      {
-                                        "type": "text",
-                                        "text": "⭐ 4.8",
-                                        "font_size": 14,
-                                        "font_weight": "bold",
-                                        "text_color": "#FFD700",
-                                        "margins": {
-                                          "right": 4
-                                        }
-                                      },
-                                      {
-                                        "type": "text",
-                                        "text": "(2.8K)",
-                                        "font_size": 12,
-                                        "text_color": "#666666"
-                                      }
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "text",
-                                "text": "7-Day Tokyo Adventure",
-                                "font_size": 20,
-                                "font_weight": "bold",
-                                "text_color": "#2C2C2C",
-                                "margins": {
-                                  "bottom": 8
-                                }
-                              },
-                              {
-                                "type": "text",
-                                "text": "Experience the perfect blend of ancient traditions and cutting-edge technology. From serene temples to neon-lit districts.",
-                                "font_size": 14,
-                                "text_color": "#555555",
-                                "margins": {
-                                  "bottom": 20
-                                },
-                                "max_lines": 3
-                              }
-                            ]
-                          },
-                          {
-                            "type": "gallery",
-                            "orientation": "horizontal",
-                            "item_spacing": 16,
-                            "margins": {
-                              "left": 16,
-                              "right": 16,
-                              "bottom": 20
-                            },
-                            "items": [
-                              {
-                                "type": "container",
-                                "orientation": "vertical",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 120
-                                },
-                                "background": [
-                                  {
-                                    "type": "solid",
-                                    "color": "#FFFFFF"
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 12,
-                                  "stroke": {
-                                    "color": "#E0E0E0",
-                                    "width": 1
-                                  }
-                                },
-                                "paddings": {
-                                  "left": 12,
-                                  "right": 12,
-                                  "top": 16,
-                                  "bottom": 16
-                                },
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "⏰",
-                                    "font_size": 24,
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 8
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "Duration",
-                                    "font_size": 12,
-                                    "text_color": "#888888",
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 4
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "7 Days",
-                                    "font_size": 14,
-                                    "font_weight": "bold",
-                                    "text_color": "#2C2C2C",
-                                    "text_alignment_horizontal": "center"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "container",
-                                "orientation": "vertical",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 120
-                                },
-                                "background": [
-                                  {
-                                    "type": "solid",
-                                    "color": "#FFFFFF"
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 12,
-                                  "stroke": {
-                                    "color": "#E0E0E0",
-                                    "width": 1
-                                  }
-                                },
-                                "paddings": {
-                                  "left": 12,
-                                  "right": 12,
-                                  "top": 16,
-                                  "bottom": 16
-                                },
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "👥",
-                                    "font_size": 24,
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 8
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "Group Size",
-                                    "font_size": 12,
-                                    "text_color": "#888888",
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 4
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "2-12",
-                                    "font_size": 14,
-                                    "font_weight": "bold",
-                                    "text_color": "#2C2C2C",
-                                    "text_alignment_horizontal": "center"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "container",
-                                "orientation": "vertical",
-                                "width": {
-                                  "type": "fixed",
-                                  "value": 120
-                                },
-                                "background": [
-                                  {
-                                    "type": "solid",
-                                    "color": "#FFFFFF"
-                                  }
-                                ],
-                                "border": {
-                                  "corner_radius": 12,
-                                  "stroke": {
-                                    "color": "#E0E0E0",
-                                    "width": 1
-                                  }
-                                },
-                                "paddings": {
-                                  "left": 12,
-                                  "right": 12,
-                                  "top": 16,
-                                  "bottom": 16
-                                },
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "🌸",
-                                    "font_size": 24,
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 8
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "Best Time",
-                                    "font_size": 12,
-                                    "text_color": "#888888",
-                                    "text_alignment_horizontal": "center",
-                                    "margins": {
-                                      "bottom": 4
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "Mar-May",
-                                    "font_size": 14,
-                                    "font_weight": "bold",
-                                    "text_color": "#2C2C2C",
-                                    "text_alignment_horizontal": "center"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "container",
-                            "orientation": "vertical",
-                            "background": [
-                              {
-                                "type": "solid",
-                                "color": "#FFFFFF"
-                              }
-                            ],
-                            "border": {
-                              "corner_radius": 12,
-                              "stroke": {
-                                "color": "#E0E0E0",
-                                "width": 1
-                              }
-                            },
-                            "margins": {
-                              "left": 16,
-                              "right": 16,
-                              "bottom": 20
-                            },
-                            "paddings": {
-                              "left": 16,
-                              "right": 16,
-                              "top": 16,
-                              "bottom": 16
-                            },
-                            "items": [
-                              {
-                                "type": "text",
-                                "text": "What's Included:",
-                                "font_size": 16,
-                                "font_weight": "bold",
-                                "text_color": "#2C2C2C",
-                                "margins": {
-                                  "bottom": 12
-                                }
-                              },
-                              {
-                                "type": "text",
-                                "text": "✈️ Round-trip flights\n🏨 4-star hotel stays\n🍱 Traditional dining\n🚅 JR Pass included\n👘 Cultural activities\n📱 Pocket WiFi device",
-                                "font_size": 14,
-                                "text_color": "#555555",
-                                "line_height": 22
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "container",
-                        "orientation": "horizontal",
-                        "content_alignment_horizontal": "space-between",
-                        "background": [
-                          {
-                            "type": "solid",
-                            "color": "#FFFFFF"
-                          }
-                        ],
-                        "border": {
-                          "stroke": {
-                            "color": "#E0E0E0",
-                            "width": 1
-                          }
-                        },
-                        "paddings": {
-                          "left": 16,
-                          "right": 16,
-                          "top": 16,
-                          "bottom": 16
-                        },
-                        "items": [
-                          {
-                            "type": "container",
-                            "orientation": "vertical",
-                            "items": [
-                              {
-                                "type": "container",
-                                "orientation": "horizontal",
-                                "items": [
-                                  {
-                                    "type": "text",
-                                    "text": "$899",
-                                    "font_size": 14,
-                                    "text_color": "#888888",
-                                    "strike": "single",
-                                    "margins": {
-                                      "right": 8
-                                    }
-                                  },
-                                  {
-                                    "type": "text",
-                                    "text": "Save $200",
-                                    "font_size": 12,
-                                    "font_weight": "bold",
-                                    "text_color": "#FF6B35"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "text",
-                                "text": "$699",
-                                "font_size": 24,
-                                "font_weight": "bold",
-                                "text_color": "#2C2C2C"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "container",
-                            "width": {
-                              "type": "fixed",
-                              "value": 140
-                            },
-                            "height": {
-                              "type": "fixed",
-                              "value": 48
-                            },
-                            "alignment_vertical": "center",
-                            "alignment_horizontal": "center",
-                            "background": [
-                              {
-                                "type": "gradient",
-                                "colors": ["#FF6B35", "#F7931E"],
-                                "angle": 45
-                              }
-                            ],
-                            "border": {
-                              "corner_radius": 24
-                            },
-                            "items": [
-                              {
-                                "type": "text",
-                                "text": "Book Now",
-                                "font_size": 16,
-                                "font_weight": "bold",
-                                "text_color": "#FFFFFF",
-                                "text_alignment_horizontal": "center",
-                                "text_alignment_vertical": "center"
-                              }
-                            ],
-                            "action": {
-                              "log_id": "book_tokyo_package_mobile",
-                              "url": "div-action://book_package?destination=tokyo&price=699&duration=7"
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+            },
+            {
+              "type": "text",
+              "text": "The BKFC Creators You Love",
+              "font_size": 22,
+              "font_weight": "bold",
+              "text_color": "#009DE0",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "top": 16,
+                "bottom": 8
               }
-            ]
-          }
+            },
+            {
+              "type": "text",
+              "text": "Exclusive posts • Direct access • Secure platform",
+              "font_size": 14,
+              "text_color": "#555555",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 20
+              }
+            },
+            {
+              "type": "container",
+              "orientation": "vertical",
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#F9FAFB"
+                }
+              ],
+              "border": {
+                "corner_radius": 12,
+                "stroke": {
+                  "color": "#E0E0E0",
+                  "width": 1
+                }
+              },
+              "paddings": {
+                "left": 16,
+                "right": 16,
+                "top": 12,
+                "bottom": 12
+              },
+              "margins": {
+                "left": 20,
+                "right": 20,
+                "bottom": 20
+              },
+              "items": [
+                {
+                  "type": "text",
+                  "text": "✨ Exclusive media\n💬 Direct creator messaging\n🔒 Secure payments",
+                  "font_size": 14,
+                  "text_color": "#333333",
+                  "line_height": 20
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "orientation": "horizontal",
+              "width": {
+                "type": "match_parent"
+              },
+              "paddings": {
+                "left": 20,
+                "right": 20,
+                "bottom": 20
+              },
+              "content_alignment_horizontal": "center",
+              "items": [
+                {
+                  "type": "container",
+                  "width": {
+                    "type": "fixed",
+                    "value": 228
+                  },
+                  "height": {
+                    "type": "fixed",
+                    "value": 48
+                  },
+                  "alignment_horizontal": "center",
+                  "alignment_vertical": "center",
+                  "background": [
+                    {
+                      "type": "gradient",
+                      "colors": [
+                        "#00AEEF",
+                        "#006F8E"
+                      ],
+                      "angle": 45
+                    }
+                  ],
+                  "border": {
+                    "corner_radius": 24
+                  },
+                  "items": [
+                    {
+                      "type": "text",
+                      "text": "Visit OnlyFans Now",
+                      "font_size": 16,
+                      "font_weight": "bold",
+                      "text_color": "#FFFFFF",
+                      "alignment_horizontal": "center",
+                      "alignment_vertical": "center",
+                      "text_alignment_horizontal": "center",
+                      "text_alignment_vertical": "center"
+                    }
+                  ],
+                  "action": {
+                    "log_id": "visit_onlyfans",
+                    "url": "https://onlyfans.com/"
+                  },
+                  "content_alignment_horizontal": "center",
+                  "content_alignment_vertical": "center"
+                }
+              ]
+            }
+          ]
         }
-      ]
-    }
+      }
+    ]
   }
+}
