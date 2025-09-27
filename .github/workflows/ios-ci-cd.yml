@@ -3,16 +3,12 @@ name: Publish to CocoaPods
 run-name: >-
   ${{
     github.event_name == 'push' && format('Publish to CocoaPods - {0}', github.ref_name) ||
-    github.event_name == 'release' && format('Publish to CocoaPods - {0}', github.ref_name) ||
     format('Publish to CocoaPods - {0}', inputs.tag_version)
   }}
-
 on:
   push:
     tags:
-      - '*'
-  release:
-    types: [published]
+      - 'v*'
   workflow_dispatch:
     inputs:
       tag_version:
@@ -32,34 +28,20 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
-      is_test: ${{ steps.get_version.outputs.is_test }}
     steps:
       - name: Get Version
         id: get_version
         run: |
-          if [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            # Tag push - production release
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Extract version from tag for push events
             VERSION=${GITHUB_REF#refs/tags/v}
-            echo "Using tag version: $VERSION"
-            echo "is_test=false" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "release" ]; then
-            # GitHub release - production release
-            VERSION=${GITHUB_REF#refs/tags/v}
-            echo "Using release version: $VERSION"
-            echo "is_test=false" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Manual dispatch - production release
-            VERSION="${{ inputs.tag_version }}"
-            VERSION=${VERSION#v}
-            echo "Using manual dispatch version: $VERSION"
-            echo "is_test=false" >> $GITHUB_OUTPUT
           else
-            # Should not happen with current triggers
-            VERSION="unknown"
-            echo "Unknown trigger event"
-            echo "is_test=true" >> $GITHUB_OUTPUT
+            # Use provided tag version for manual dispatch
+            VERSION="${{ inputs.tag_version }}"
+            VERSION=${VERSION#v}  # Remove 'v' prefix if present
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
 
   validate-and-publish:
     needs: [get-version]
@@ -93,16 +75,8 @@ jobs:
         echo ""
         echo "Looking for SourceSyncSDK directory:"
         find . -name "SourceSyncSDK" -type d
-        echo ""
-        echo "Looking in sourcesync-sdk-ui-ios directory:"
-        if [ -d "sourcesync-sdk-ui-ios" ]; then
-          ls -la sourcesync-sdk-ui-ios/
-        else
-          echo "sourcesync-sdk-ui-ios directory not found"
-        fi
         
     - name: Find and Update Podspec Version
-      if: needs.get-version.outputs.is_test != 'true'
       run: |
         VERSION=${{ needs.get-version.outputs.version }}
         echo "Updating podspec version to $VERSION"
@@ -156,7 +130,6 @@ jobs:
         
     - name: Validate Podspec
       run: |
-        # Use the podspec file found in previous step or find it again
         PODSPEC_FILE="${PODSPEC_FILE:-}"
         
         if [ -z "$PODSPEC_FILE" ]; then
@@ -191,14 +164,13 @@ jobs:
         echo "Current podspec version:"
         grep "spec.version" "$PODSPEC_FILE"
         
-        echo "🚀 Production validation - full validation enabled"
+        echo "🚀 Validating podspec with full validation"
         pod spec lint "$PODSPEC_FILE" --allow-warnings --verbose
         
         # Save for next step
         echo "PODSPEC_FILE=$PODSPEC_FILE" >> $GITHUB_ENV
         
     - name: Setup CocoaPods Trunk Authentication
-      if: needs.get-version.outputs.is_test != 'true'
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
@@ -211,11 +183,9 @@ jobs:
         fi
         
     - name: Publish to CocoaPods
-      if: needs.get-version.outputs.is_test != 'true'
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
-        # Use the podspec file found in previous steps or find it again
         PODSPEC_FILE="${PODSPEC_FILE:-}"
         
         if [ -z "$PODSPEC_FILE" ]; then
@@ -249,8 +219,7 @@ jobs:
         echo "Publishing podspec: $PODSPEC_FILE"
         pod trunk push "$PODSPEC_FILE" --allow-warnings --verbose
         
-    - name: Create GitHub Release (for tag pushes only)
-      if: needs.get-version.outputs.is_test != 'true' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -258,37 +227,47 @@ jobs:
         
         # Check if release already exists
         if gh release view v$VERSION >/dev/null 2>&1; then
-          echo "Release v$VERSION already exists, skipping release creation"
+          echo "Release v$VERSION already exists, updating it"
+          gh release edit v$VERSION \
+            --title "v$VERSION" \
+            --notes "## v$VERSION
+        ### Changes
+        - Updated iOS framework with latest features and improvements
+        - Compatible with iOS 13.0+ and tvOS 13.0+
+        
+        ### Installation
+        #### CocoaPods
+        \`\`\`ruby
+        pod 'SourceSyncSDK', '~> $VERSION'
+        \`\`\`
+        
+        ### Support
+        For technical support and documentation, visit our main repository."
         else
           echo "Creating GitHub release for v$VERSION"
           gh release create v$VERSION \
             --title "v$VERSION" \
             --notes "## v$VERSION
-
         ### Changes
         - Updated iOS framework with latest features and improvements
         - Compatible with iOS 13.0+ and tvOS 13.0+
-
+        
         ### Installation
-
         #### CocoaPods
         \`\`\`ruby
         pod 'SourceSyncSDK', '~> $VERSION'
         \`\`\`
-
+        
         ### Support
         For technical support and documentation, visit our main repository."
         fi
         
     - name: Verify Publication
-      if: needs.get-version.outputs.is_test != 'true'
       run: |
         echo "Publication workflow completed successfully!"
         echo ""
         echo "📦 v${{ needs.get-version.outputs.version }} published to:"
         echo "• CocoaPods: https://cocoapods.org/pods/SourceSyncSDK"
-        if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
-          echo "• GitHub Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.get-version.outputs.version }}"
-        fi
+        echo "• GitHub Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.get-version.outputs.version }}"
         echo ""
         echo "⏳ Note: It may take a few minutes for the CocoaPods publication to be fully processed and searchable."
