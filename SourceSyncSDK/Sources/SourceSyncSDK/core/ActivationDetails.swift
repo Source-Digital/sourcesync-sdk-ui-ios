@@ -102,7 +102,6 @@ class ActivationDetails: UIView {
      */
     private func makeDivKitComponents() -> DivKitComponents {
         
-        let customBlockFactory = SampleDivCustomBlockFactory()
         // Create a custom action handler that will handle the close action
         let urlHandler = EnhancedDivUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
@@ -119,7 +118,6 @@ class ActivationDetails: UIView {
         
         // Create a proper component with all required parameters
         return DivKitComponents(
-            divCustomBlockFactory: customBlockFactory,
             urlHandler: urlHandler
         )
     }

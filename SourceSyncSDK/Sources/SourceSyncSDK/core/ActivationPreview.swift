@@ -82,9 +82,7 @@ class ActivationPreview: UIView {
      * required configurations. It can be extended to include additional configurations
      */
     private func makeDivKitComponents() -> DivKitComponents {
-        let customBlockFactory = SampleDivCustomBlockFactory()
         return DivKitComponents(
-            divCustomBlockFactory: customBlockFactory
         )
     }
 }
