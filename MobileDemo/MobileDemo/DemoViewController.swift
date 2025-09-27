@@ -17,7 +17,7 @@ class DemoViewController: UIViewController {
     
     private var activation2Preview: Activation2Preview?
     private var activation2Details: Activation2Details?
-    private var activationConfig: ActivationConfig?
+    private var activationConfig: ActivationConfig?
     
     private let TAG = "DemoViewController"
     

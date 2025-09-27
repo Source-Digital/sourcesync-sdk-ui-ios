@@ -44,10 +44,12 @@ class ActivationDetails: UIView {
      */
     
     init(detailsData: Data, widthPercentage: CGFloat, onClose: @escaping () -> Void, errorHandler: CustomDivReporter) {
-        super.init(frame: .zero)
+        // Initialize all stored properties BEFORE calling super.init()
         self.onCloseHandler = onClose
         self.widthPercentage = widthPercentage
         self.errorHandler = errorHandler
+        
+        super.init(frame: .zero)
         
         let urlHandler = EnhancedDivUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
@@ -89,7 +91,6 @@ class ActivationDetails: UIView {
             await configureDivView(detailsData: detailsData)
         }
     }
-    
     override var intrinsicContentSize: CGSize {
         let screenSize = UIScreen.main.bounds.size
         return CGSize(
