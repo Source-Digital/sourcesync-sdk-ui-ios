@@ -15,7 +15,7 @@ struct MobileDemoApp: App {
     
     struct ActivationDemoViewControllerWrapper: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> some UIViewController {
-            return ActivationDemoViewController()
+            return DemoViewController()
         }
         
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {

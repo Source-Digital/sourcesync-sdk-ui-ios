@@ -31,8 +31,8 @@ class ActivationDetails: UIView {
     private var onCloseHandler: (() -> Void)?
     
     private var widthPercentage:CGFloat = 0.5
-    
-    private var errorHandler: CustomDivReporter!
+
+    private var errorHandler: CustomDivReporter
     /**
      *
      * Creates an ActivationDetails view with the specified template data.
@@ -44,10 +44,12 @@ class ActivationDetails: UIView {
      */
     
     init(detailsData: Data, widthPercentage: CGFloat, onClose: @escaping () -> Void, errorHandler: CustomDivReporter) {
-        super.init(frame: .zero)
+        // Initialize all stored properties BEFORE calling super.init()
         self.onCloseHandler = onClose
         self.widthPercentage = widthPercentage
         self.errorHandler = errorHandler
+        
+        super.init(frame: .zero)
         
         let urlHandler = EnhancedDivUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
@@ -89,7 +91,6 @@ class ActivationDetails: UIView {
             await configureDivView(detailsData: detailsData)
         }
     }
-    
     override var intrinsicContentSize: CGSize {
         let screenSize = UIScreen.main.bounds.size
         return CGSize(
@@ -114,6 +115,36 @@ class ActivationDetails: UIView {
         await divView!.setSource(
             .init(kind: .data(detailsData), cardId: "div_detail"),
             debugParams: DebugParams(isDebugInfoEnabled: true)
+        )
+    }
+    
+    /**
+     * Creates a configured instance of DivKitComponents.
+     *
+     * @return A configured DivKitComponents instance for rendering DivKit templates.
+     *
+     * This method sets up the DivKit components with a custom block factory and other
+     * required configurations. It can be extended to include additional configurations
+     */
+    private func makeDivKitComponents() -> DivKitComponents {
+        
+        // Create a custom action handler that will handle the close action
+        let urlHandler = EnhancedDivUrlHandler(
+            onCloseAction: {[weak self] in self?.onCloseHandler?()},
+            onExternalUrlAction: { url in
+                // Optional: Custom handling for external URLs
+                // For example, open in in-app browser instead of Safari
+                print("Opening external URL: \(url)")
+            },
+            onCustomSchemeAction: { url in
+                // Optional: Handle custom schemes not covered by default implementation
+                print("Handling custom scheme: \(url)")
+            }
+        )
+        
+        // Create a proper component with all required parameters
+        return DivKitComponents(
+            urlHandler: urlHandler
         )
     }
 }
