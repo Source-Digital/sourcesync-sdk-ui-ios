@@ -1,5 +1,5 @@
 //
-//  ActivationPreview.swift
+//  LegacyActivationPreview.swift
 //  sourcesync-sdk-ui-ios
 //
 
@@ -9,18 +9,18 @@ import DivKit
 import DivKitExtensions
 
 /**
- * ActivationPreview
+ * LegacyActivationPreview
  *
  * A UIView that renders the initial preview content for activations using the DivKit templating system.
  * This view takes JSON template data and uses DivKit to render a customizable preview that can be shown
  * to users during media playback or other interactions.
  *
- * The ActivationPreview is typically the first stage of the activation flow, showing a compact
+ * The LegacyActivationPreview is typically the first stage of the activation flow, showing a compact
  * representation that can be tapped to reveal more detailed content.
  */
-class ActivationPreview: UIView {
+class LegacyActivationPreview: UIView {
     /// Tag for logging purposes
-    private static let TAG = "ActivationPreview"
+    private static let TAG = "LegacyActivationPreview"
     
     /// The DivKit components used to render the template
     lazy var divKitComponents = makeDivKitComponents()
@@ -29,7 +29,7 @@ class ActivationPreview: UIView {
     lazy var divView = DivView(divKitComponents: divKitComponents)
     
     /**
-     * Creates an ActivationPreview view with the specified template data.
+     * Creates an LegacyActivationPreview view with the specified template data.
      *
      * @param previewData The JSON data containing the DivKit template for the preview.
      *

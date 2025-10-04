@@ -1,5 +1,5 @@
 //
-//  EnhancedDivUrlHandler.swift
+//  CustomUrlHandler.swift
 //  Pods
 //
 //  Created by ayman badawy on 22/07/2025.
@@ -10,7 +10,7 @@ import UIKit
 import DivKit
 
 /**
- * EnhancedDivUrlHandler
+ * CustomUrlHandler
  *
  * A comprehensive DivKit URL handler that manages all URL types including:
  * - Close actions (div-action://close)
@@ -18,7 +18,7 @@ import DivKit
  * - Custom scheme URLs
  * - Deep link handling
  */
-class EnhancedDivUrlHandler: DivUrlHandler {
+class CustomUrlHandler: DivUrlHandler {
     var onCloseAction: (() -> Void)?
     var onExternalUrlAction: ((URL) -> Void)?
     var onCustomSchemeAction: ((URL) -> Void)?

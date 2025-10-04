@@ -1,5 +1,5 @@
 //
-//  Activation2Details.swift
+//  ActivationDetails.swift
 //  
 //
 //  Created by ayman badawy on 25/09/2025.
@@ -11,9 +11,9 @@ import DivKitExtensions
 /**
  * Standalone details component for activations
  */
-public class Activation2Details: UIView {
+public class ActivationDetails: UIView {
     
-    private static let TAG = "Activation2Details"
+    private static let TAG = "ActivationDetails"
     
     private var divView: DivView?
     private var config: ActivationConfig?
@@ -30,7 +30,6 @@ public class Activation2Details: UIView {
         setupOutsideClickOverlay()
     }
     
-    // MARK: - Factory Methods
     
     /**
      * Factory method to create details from JSON
@@ -39,8 +38,8 @@ public class Activation2Details: UIView {
         context: UIViewController,
         detailsJson: [String: Any],
         config: ActivationConfig
-    ) -> Activation2Details {
-        let details = Activation2Details()
+    ) -> ActivationDetails {
+        let details = ActivationDetails()
         details.setConfig(config)
         details.setDataFromJson(detailsJson)
         return details
@@ -53,14 +52,13 @@ public class Activation2Details: UIView {
         context: UIViewController,
         detailsData: Data,
         config: ActivationConfig
-    ) -> Activation2Details {
-        let details = Activation2Details()
+    ) -> ActivationDetails {
+        let details = ActivationDetails()
         details.setConfig(config)
         details.setData(detailsData)
         return details
     }
-    
-    // MARK: - Configuration
+
     
     public func setConfig(_ config: ActivationConfig) {
         self.config = config
@@ -78,11 +76,10 @@ public class Activation2Details: UIView {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
             setData(jsonData)
         } catch {
-            print("\(Activation2Details.TAG): Error parsing JSON data: \(error)")
+            print("\(ActivationDetails.TAG): Error parsing JSON data: \(error)")
         }
     }
     
-    // MARK: - Private Methods
     
     private func initializeView(detailsData: Data, config: ActivationConfig) {
         cleanup()
@@ -102,7 +99,7 @@ public class Activation2Details: UIView {
         // Set DivKit data
         Task {
             await divView.setSource(
-                .init(kind: .data(detailsData), cardId: "SourceSync-Activation2Details"),
+                .init(kind: .data(detailsData), cardId: "SourceSync-ActivationDetails"),
                 debugParams: DebugParams(isDebugInfoEnabled: config.visualErrorsEnabled)
             )
         }

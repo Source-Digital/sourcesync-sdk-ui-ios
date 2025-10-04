@@ -72,7 +72,6 @@ class DemoViewController: UIViewController {
         showActivationPreview()
     }
     
-    // MARK: - Activation Management
     
     private func showActivationPreview() {
         guard let previewData = previewData,
@@ -149,7 +148,6 @@ class DemoViewController: UIViewController {
         activation2Details = nil
     }
     
-    // MARK: - Event Handlers
     private func handlePreviewClick() {
         print("\(TAG): Preview clicked - showing details")
         showActivationDetails()
