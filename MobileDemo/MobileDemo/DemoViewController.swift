@@ -15,8 +15,8 @@ import UIKit
  */
 class DemoViewController: UIViewController {
     
-    private var activation2Preview: Activation2Preview?
-    private var activation2Details: Activation2Details?
+    private var activationPreview: ActivationPreview?
+    private var activationDetails: ActivationDetails?
     private var activationConfig: ActivationConfig?
     
     private let TAG = "DemoViewController"
@@ -81,13 +81,13 @@ class DemoViewController: UIViewController {
         cleanupActivationViews()
         
         // Create preview using factory method
-        activation2Preview = Activation2Preview.createFromData(
+        activationPreview = ActivationPreview.createFromData(
             context: self,
             previewData: previewData,
             config: config
         )
         
-        guard let preview = activation2Preview else { return }
+        guard let preview = activationPreview else { return }
         
         // Add to view hierarchy
         view.addSubview(preview)
@@ -113,13 +113,12 @@ class DemoViewController: UIViewController {
         cleanupActivationViews()
         
         // Create details using factory method
-        activation2Details = Activation2Details.createFromData(
-            context: self,
+        activationDetails = ActivationDetails.createFromData(
             detailsData: detailsData,
             config: config
         )
         
-        guard let details = activation2Details else { return }
+        guard let details = activationDetails else { return }
         
         // Add to view hierarchy
         view.addSubview(details)
@@ -138,14 +137,14 @@ class DemoViewController: UIViewController {
     
     private func cleanupActivationViews() {
         // Clean up preview
-        activation2Preview?.cleanup()
-        activation2Preview?.removeFromSuperview()
-        activation2Preview = nil
+        activationPreview?.cleanup()
+        activationPreview?.removeFromSuperview()
+        activationPreview = nil
         
         // Clean up details
-        activation2Details?.cleanup()
-        activation2Details?.removeFromSuperview()
-        activation2Details = nil
+        activationDetails?.cleanup()
+        activationDetails?.removeFromSuperview()
+        activationDetails = nil
     }
     
     private func handlePreviewClick() {
@@ -171,9 +170,9 @@ class DemoViewController: UIViewController {
     
     private func hideActivationDetails() {
         // Remove details and restore preview
-        activation2Details?.cleanup()
-        activation2Details?.removeFromSuperview()
-        activation2Details = nil
+        activationDetails?.cleanup()
+        activationDetails?.removeFromSuperview()
+        activationDetails = nil
         
         // Show preview again
         showActivationPreview()

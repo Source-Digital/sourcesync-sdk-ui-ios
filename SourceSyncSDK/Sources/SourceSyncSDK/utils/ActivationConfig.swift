@@ -92,7 +92,7 @@ public class ActivationConfig {
             let screenSize = UIScreen.main.bounds.size
             
             // Create URL handler
-            let urlHandler = EnhancedDivUrlHandler(
+            let urlHandler = CustomUrlHandler(
                 onCloseAction: { [weak self] in
                     self?.onDetailsCloseHandler?()
                 },
@@ -125,8 +125,6 @@ public class ActivationConfig {
         }
     }
 }
-
-// MARK: - Supporting Types
 
 public enum Alignment {
     case topLeading, topTrailing, bottomLeading, bottomTrailing, center

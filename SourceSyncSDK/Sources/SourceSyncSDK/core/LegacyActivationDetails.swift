@@ -51,7 +51,7 @@ class LegacyActivationDetails: UIView {
         
         super.init(frame: .zero)
         
-        let urlHandler = EnhancedDivUrlHandler(
+        let urlHandler = CustomUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
             onExternalUrlAction: { url in
                 // Optional: Custom handling for external URLs
@@ -129,7 +129,7 @@ class LegacyActivationDetails: UIView {
     private func makeDivKitComponents() -> DivKitComponents {
         
         // Create a custom action handler that will handle the close action
-        let urlHandler = EnhancedDivUrlHandler(
+        let urlHandler = CustomUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
             onExternalUrlAction: { url in
                 // Optional: Custom handling for external URLs

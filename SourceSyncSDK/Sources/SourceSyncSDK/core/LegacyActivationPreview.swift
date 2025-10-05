@@ -19,13 +19,13 @@ import DivKitExtensions
  * representation that can be tapped to reveal more detailed content.
  */
 class LegacyActivationPreview: UIView {
-    /// Tag for logging purposes
+    // Tag for logging purposes
     private static let TAG = "LegacyActivationPreview"
     
-    /// The DivKit components used to render the template
+    // The DivKit components used to render the template
     lazy var divKitComponents = makeDivKitComponents()
     
-    /// The DivKit view that renders the template
+    // The DivKit view that renders the template
     lazy var divView = DivView(divKitComponents: divKitComponents)
     
     /**

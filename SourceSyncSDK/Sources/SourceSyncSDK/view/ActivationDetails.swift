@@ -35,7 +35,6 @@ public class ActivationDetails: UIView {
      * Factory method to create details from JSON
      */
     public static func createFromJson(
-        context: UIViewController,
         detailsJson: [String: Any],
         config: ActivationConfig
     ) -> ActivationDetails {
@@ -49,7 +48,6 @@ public class ActivationDetails: UIView {
      * Factory method to create details with Data
      */
     public static func createFromData(
-        context: UIViewController,
         detailsData: Data,
         config: ActivationConfig
     ) -> ActivationDetails {

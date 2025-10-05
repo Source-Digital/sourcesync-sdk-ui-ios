@@ -56,9 +56,7 @@ public class ActivationPreview: UIView {
         preview.setData(previewData)
         return preview
     }
-    
-    // MARK: - Configuration
-    
+        
     public func setConfig(_ config: ActivationConfig?) {
         self.config = config
     }
@@ -78,9 +76,7 @@ public class ActivationPreview: UIView {
             print("\(ActivationPreview.TAG): Error parsing JSON data: \(error)")
         }
     }
-    
-    // MARK: - Private Methods
-    
+        
     private func initializeView(previewData: Data, config: ActivationConfig) {
         cleanup()
         
