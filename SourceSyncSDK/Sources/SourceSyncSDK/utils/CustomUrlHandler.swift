@@ -24,7 +24,7 @@ class CustomUrlHandler: DivUrlHandler {
     var onCustomSchemeAction: ((URL) -> Void)?
     
     init(
-        onCloseAction: @escaping () -> Void,
+        onCloseAction: (() -> Void)? = nil,
         onExternalUrlAction: ((URL) -> Void)? = nil,
         onCustomSchemeAction: ((URL) -> Void)? = nil
     ) {

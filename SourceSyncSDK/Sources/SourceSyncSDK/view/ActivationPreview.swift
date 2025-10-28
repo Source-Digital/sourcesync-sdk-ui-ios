@@ -1,6 +1,6 @@
 //
 //  ActivationPreview.swift
-//  
+//
 //
 //  Created by ayman badawy on 25/09/2025.
 //
@@ -27,13 +27,10 @@ public class ActivationPreview: UIView {
         super.init(coder: coder)
     }
     
-    // MARK: - Factory Methods
-    
     /**
      * Factory method to create preview from JSON
      */
     public static func createFromJson(
-        context: UIViewController,
         previewJson: [String: Any],
         config: ActivationConfig?
     ) -> ActivationPreview {
@@ -47,7 +44,6 @@ public class ActivationPreview: UIView {
      * Factory method to create preview with Data
      */
     public static func createFromData(
-        context: UIViewController,
         previewData: Data,
         config: ActivationConfig?
     ) -> ActivationPreview {

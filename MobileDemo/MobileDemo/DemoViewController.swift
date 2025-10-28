@@ -51,7 +51,7 @@ class DemoViewController: UIViewController {
         }
         
         // Create activation configuration using builder pattern
-        activationConfig = ActivationConfig.Builder(context: self)
+        activationConfig = ActivationConfig.Builder()
             .setPreviewClickHandler { [weak self] in
                 self?.handlePreviewClick()
             }
@@ -82,7 +82,6 @@ class DemoViewController: UIViewController {
         
         // Create preview using factory method
         activationPreview = ActivationPreview.createFromData(
-            context: self,
             previewData: previewData,
             config: config
         )

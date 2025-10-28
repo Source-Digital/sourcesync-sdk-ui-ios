@@ -40,7 +40,6 @@ public class ActivationConfig {
     }
     
     public class Builder {
-        private let context: UIViewController
         private var visualErrorsEnabled = true
         private var onPreviewClickHandler: (() -> Void)?
         private var onUrlActionHandler: (() -> Void)?
@@ -48,8 +47,7 @@ public class ActivationConfig {
         private var onOutsideClickHandler: (() -> Void)?
         private var positionAlignment: Alignment?
         
-        public init(context: UIViewController) {
-            self.context = context
+        public init() {
         }
         
         @discardableResult
@@ -93,9 +91,7 @@ public class ActivationConfig {
             
             // Create URL handler
             let urlHandler = CustomUrlHandler(
-                onCloseAction: { [weak self] in
-                    self?.onDetailsCloseHandler?()
-                },
+                onCloseAction: self.onDetailsCloseHandler,
                 onExternalUrlAction: { [weak self] url in
                     self?.onUrlActionHandler?()
                 },
