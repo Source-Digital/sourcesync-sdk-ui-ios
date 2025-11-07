@@ -1,6 +1,6 @@
 //
-//  Activation2Details.swift
-//  
+//  ActivationDetails.swift
+//
 //
 //  Created by ayman badawy on 25/09/2025.
 //
@@ -11,36 +11,31 @@ import DivKitExtensions
 /**
  * Standalone details component for activations
  */
-public class Activation2Details: UIView {
+public class ActivationDetails: UIView {
     
-    private static let TAG = "Activation2Details"
+    private static let TAG = "ActivationDetails"
     
     private var divView: DivView?
     private var config: ActivationConfig?
     private var layoutConstraints: [NSLayoutConstraint] = []
-    private var touchOutsideView: UIView?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        setupOutsideClickOverlay()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupOutsideClickOverlay()
     }
     
-    // MARK: - Factory Methods
     
     /**
      * Factory method to create details from JSON
      */
     public static func createFromJson(
-        context: UIViewController,
         detailsJson: [String: Any],
         config: ActivationConfig
-    ) -> Activation2Details {
-        let details = Activation2Details()
+    ) -> ActivationDetails {
+        let details = ActivationDetails()
         details.setConfig(config)
         details.setDataFromJson(detailsJson)
         return details
@@ -50,17 +45,15 @@ public class Activation2Details: UIView {
      * Factory method to create details with Data
      */
     public static func createFromData(
-        context: UIViewController,
         detailsData: Data,
         config: ActivationConfig
-    ) -> Activation2Details {
-        let details = Activation2Details()
+    ) -> ActivationDetails {
+        let details = ActivationDetails()
         details.setConfig(config)
         details.setData(detailsData)
         return details
     }
-    
-    // MARK: - Configuration
+
     
     public func setConfig(_ config: ActivationConfig) {
         self.config = config
@@ -78,11 +71,10 @@ public class Activation2Details: UIView {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
             setData(jsonData)
         } catch {
-            print("\(Activation2Details.TAG): Error parsing JSON data: \(error)")
+            print("\(ActivationDetails.TAG): Error parsing JSON data: \(error)")
         }
     }
     
-    // MARK: - Private Methods
     
     private func initializeView(detailsData: Data, config: ActivationConfig) {
         cleanup()
@@ -102,7 +94,7 @@ public class Activation2Details: UIView {
         // Set DivKit data
         Task {
             await divView.setSource(
-                .init(kind: .data(detailsData), cardId: "SourceSync-Activation2Details"),
+                .init(kind: .data(detailsData), cardId: "SourceSync-ActivationDetails"),
                 debugParams: DebugParams(isDebugInfoEnabled: config.visualErrorsEnabled)
             )
         }
@@ -141,46 +133,42 @@ public class Activation2Details: UIView {
         }
     }
     
-    private func setupOutsideClickOverlay() {
-        // This will be called when the view is added to a parent
-        DispatchQueue.main.async { [weak self] in
-            self?.addOutsideClickDetection()
-        }
-    }
-    
-    private func addOutsideClickDetection() {
-        guard let parentView = superview else { return }
-        
-        touchOutsideView = UIView(frame: parentView.bounds)
-        touchOutsideView?.backgroundColor = UIColor.clear
-        touchOutsideView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleOutsideTap(_:)))
-        touchOutsideView?.addGestureRecognizer(tapGesture)
-        
-        parentView.insertSubview(touchOutsideView!, belowSubview: self)
-    }
-    
-    @objc private func handleOutsideTap(_ gesture: UITapGestureRecognizer) {
-        let touchPoint = gesture.location(in: self)
-        
-        // Check if touch is outside our bounds
-        if !bounds.contains(touchPoint) {
-            // Check if this touch would interfere with video controls
-            if !isVideoControlArea(point: touchPoint) {
-                config?.onOutsideClickHandler?()
+    // Override hitTest to detect outside clicks
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+            
+        if let divView = self.divView{
+            // Check if the touch point is within the view
+            let pointInDetail = convert(point, to: divView)
+            if !divView.bounds.contains(pointInDetail) {
+                // Touch is outside detail view
+                print("\(Self.TAG): Touch detected outside detail view")
+                
+                // Don't trigger for video control area
+                if !isVideoControlArea(location: point) {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.config?.onOutsideClickHandler?()
+                    }
+                }
+                return nil // Consume the touch
             }
         }
+
+        return hitView
     }
     
-    private func isVideoControlArea(point: CGPoint) -> Bool {
+    private func isVideoControlArea(location: CGPoint) -> Bool {
         // Define video control areas (bottom area typically)
-        let controlHeight: CGFloat = 100
-        let parentHeight = superview?.bounds.height ?? bounds.height
-        let bottomControlArea = parentHeight - controlHeight
+        let controlHeight: CGFloat = 100 // points
         
-        // If touch is in control area, let it pass through
-        return point.y > bottomControlArea
+        // Get the parent view bounds
+        if let parentView = superview {
+            let pointInParent = convert(location, to: parentView)
+            let bottomControlArea = parentView.bounds.height - controlHeight
+            return pointInParent.y > bottomControlArea
+        }
+        
+        return false
     }
     
     public func cleanup() {
@@ -189,9 +177,6 @@ public class Activation2Details: UIView {
         
         divView?.removeFromSuperview()
         divView = nil
-        
-        touchOutsideView?.removeFromSuperview()
-        touchOutsideView = nil
         
         gestureRecognizers?.forEach { removeGestureRecognizer($0) }
     }

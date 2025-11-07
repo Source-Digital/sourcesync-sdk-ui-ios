@@ -8,18 +8,18 @@ import DivKit
 import DivKitExtensions
 
 /**
- * ActivationDetails
+ * LegacyActivationDetails
  *
  * A UIView that renders interactive detail content for activations using DivKit templating system.
  * This view takes JSON template data and uses DivKit to render rich, interactive content.
  *
- * The ActivationDetails view is typically shown after a user interacts with an activation preview,
+ * The LegacyActivationDetails view is typically shown after a user interacts with an activation preview,
  * providing more detailed information or interactive elements.
  *
  **/
-class ActivationDetails: UIView {
+class LegacyActivationDetails: UIView {
     // Tag for logging purposes
-    private static let TAG = "ActivationDetails"
+    private static let TAG = "LegacyActivationDetails"
     var divView: DivView?
 //    // The DivKit components used to render the template
 //    lazy var divKitComponents = makeDivKitComponents()
@@ -35,7 +35,7 @@ class ActivationDetails: UIView {
     private var errorHandler: CustomDivReporter
     /**
      *
-     * Creates an ActivationDetails view with the specified template data.
+     * Creates an LegacyActivationDetails view with the specified template data.
      *
      * @param detailsData The JSON data containing the DivKit template for the details view.
      * @param onClose Closure to execute when the close action is triggered.
@@ -51,7 +51,7 @@ class ActivationDetails: UIView {
         
         super.init(frame: .zero)
         
-        let urlHandler = EnhancedDivUrlHandler(
+        let urlHandler = CustomUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
             onExternalUrlAction: { url in
                 // Optional: Custom handling for external URLs
@@ -129,7 +129,7 @@ class ActivationDetails: UIView {
     private func makeDivKitComponents() -> DivKitComponents {
         
         // Create a custom action handler that will handle the close action
-        let urlHandler = EnhancedDivUrlHandler(
+        let urlHandler = CustomUrlHandler(
             onCloseAction: {[weak self] in self?.onCloseHandler?()},
             onExternalUrlAction: { url in
                 // Optional: Custom handling for external URLs

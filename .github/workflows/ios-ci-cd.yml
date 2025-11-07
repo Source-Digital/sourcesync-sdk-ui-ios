@@ -34,7 +34,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             # Extract version from tag for push events
-            VERSION=${GITHUB_REF#refs/tags/v}
+            VERSION="${GITHUB_REF#refs/tags/}"
+            VERSION="${VERSION#v}"
           else
             # Use provided tag version for manual dispatch
             VERSION="${{ inputs.tag_version }}"

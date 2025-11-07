@@ -1,6 +1,6 @@
 //
-//  Activation2Preview.swift
-//  
+//  ActivationPreview.swift
+//
 //
 //  Created by ayman badawy on 25/09/2025.
 //
@@ -11,9 +11,9 @@ import DivKitExtensions
 /**
  * Standalone preview component for activations
  */
-public class Activation2Preview: UIView {
+public class ActivationPreview: UIView {
     
-    private static let TAG = "Activation2Preview"
+    private static let TAG = "ActivationPreview"
     
     private var divView: DivView?
     private var config: ActivationConfig?
@@ -27,17 +27,14 @@ public class Activation2Preview: UIView {
         super.init(coder: coder)
     }
     
-    // MARK: - Factory Methods
-    
     /**
      * Factory method to create preview from JSON
      */
     public static func createFromJson(
-        context: UIViewController,
         previewJson: [String: Any],
         config: ActivationConfig?
-    ) -> Activation2Preview {
-        let preview = Activation2Preview()
+    ) -> ActivationPreview {
+        let preview = ActivationPreview()
         preview.setConfig(config)
         preview.setDataFromJson(previewJson)
         return preview
@@ -47,18 +44,15 @@ public class Activation2Preview: UIView {
      * Factory method to create preview with Data
      */
     public static func createFromData(
-        context: UIViewController,
         previewData: Data,
         config: ActivationConfig?
-    ) -> Activation2Preview {
-        let preview = Activation2Preview()
+    ) -> ActivationPreview {
+        let preview = ActivationPreview()
         preview.setConfig(config)
         preview.setData(previewData)
         return preview
     }
-    
-    // MARK: - Configuration
-    
+        
     public func setConfig(_ config: ActivationConfig?) {
         self.config = config
     }
@@ -75,12 +69,10 @@ public class Activation2Preview: UIView {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
             setData(jsonData)
         } catch {
-            print("\(Activation2Preview.TAG): Error parsing JSON data: \(error)")
+            print("\(ActivationPreview.TAG): Error parsing JSON data: \(error)")
         }
     }
-    
-    // MARK: - Private Methods
-    
+        
     private func initializeView(previewData: Data, config: ActivationConfig) {
         cleanup()
         
@@ -109,7 +101,7 @@ public class Activation2Preview: UIView {
         // Set DivKit data
         Task {
             await divView.setSource(
-                .init(kind: .data(previewData), cardId: "SourceSync-Activation2Preview"),
+                .init(kind: .data(previewData), cardId: "SourceSync-ActivationPreview"),
                 debugParams: DebugParams(isDebugInfoEnabled: config.visualErrorsEnabled)
             )
         }

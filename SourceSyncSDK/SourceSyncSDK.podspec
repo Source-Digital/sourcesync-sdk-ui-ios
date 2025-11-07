@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "SourceSyncSDK"
-  spec.version      = "0.3.25-1"
+  spec.version      = "0.3.25-3"
   spec.summary      = "A framework for handling activation details in iOS apps."
   spec.homepage     = "https://github.com/Source-Digital/sourcesync-sdk-ui-ios"
   spec.license      = { :type => "MIT", :file => "LICENSE.md" }
@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "17.0"
   spec.swift_version = "5.9"
 
-  spec.source = { :git => "https://github.com/Source-Digital/sourcesync-sdk-ui-ios.git", :tag => "#{spec.version}" }
+  spec.source = { :git => "https://github.com/Source-Digital/sourcesync-sdk-ui-ios.git", :tag => "v#{spec.version}" }
   
   # Source files
   spec.source_files = "Sources/**/*.{h,m,swift}", "SourceSyncSDK/Sources/**/*.{h,m,swift}"

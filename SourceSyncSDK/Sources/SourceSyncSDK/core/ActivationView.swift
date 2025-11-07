@@ -12,8 +12,8 @@ public class ActivationView: UIView {
     private static let TAG = "SDK:ActivationView"
     
     private var onDetailsCloseClicked: (() -> Void)?
-    private var previewView: ActivationPreview?
-    private var detailView: ActivationDetails?
+    private var previewView: LegacyActivationPreview?
+    private var detailView: LegacyActivationDetails?
     private var onPreviewClickHandler: (() -> Void)?
     private var onDetailsActionTriggered: (() -> Void)?
     private var onDetailsOutsideClicked: (() -> Void)?
@@ -106,7 +106,7 @@ public class ActivationView: UIView {
         self.currentPreviewWidthPercentage = widthPercentage
         self.currentPreviewHeightPercentage = heightPercentage
         
-        previewView = ActivationPreview(previewData: previewData)
+        previewView = LegacyActivationPreview(previewData: previewData)
         
         if let previewView = previewView {
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(previewTapped))
@@ -149,7 +149,7 @@ public class ActivationView: UIView {
         self.onDetailsOutsideClicked = onOutsideClicked
         self.onDetailsActionTriggered = onActionTriggered
         
-        detailView = ActivationDetails(
+        detailView = LegacyActivationDetails(
             detailsData: detailsData,
             widthPercentage: widthPercentage,
             onClose: { [weak self] in
@@ -280,7 +280,6 @@ public class ActivationView: UIView {
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
 extension ActivationView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // Allow gesture to be received for outside detection
@@ -326,15 +325,15 @@ extension ActivationView: DivKitErrorDelegate {
     }
 }
 
-// MARK: - Helper extensions for cleanup
-extension ActivationPreview {
+
+extension LegacyActivationPreview {
     func safeCleanup() {
         // Add any cleanup logic specific to ActivationPreview
         removeFromSuperview()
     }
 }
 
-extension ActivationDetails {
+extension LegacyActivationDetails {
     func safeCleanup() {
         // Add any cleanup logic specific to ActivationDetails
         removeFromSuperview()

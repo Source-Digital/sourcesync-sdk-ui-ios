@@ -40,7 +40,6 @@ public class ActivationConfig {
     }
     
     public class Builder {
-        private let context: UIViewController
         private var visualErrorsEnabled = true
         private var onPreviewClickHandler: (() -> Void)?
         private var onUrlActionHandler: (() -> Void)?
@@ -48,8 +47,7 @@ public class ActivationConfig {
         private var onOutsideClickHandler: (() -> Void)?
         private var positionAlignment: Alignment?
         
-        public init(context: UIViewController) {
-            self.context = context
+        public init() {
         }
         
         @discardableResult
@@ -92,10 +90,8 @@ public class ActivationConfig {
             let screenSize = UIScreen.main.bounds.size
             
             // Create URL handler
-            let urlHandler = EnhancedDivUrlHandler(
-                onCloseAction: { [weak self] in
-                    self?.onDetailsCloseHandler?()
-                },
+            let urlHandler = CustomUrlHandler(
+                onCloseAction: self.onDetailsCloseHandler,
                 onExternalUrlAction: { [weak self] url in
                     self?.onUrlActionHandler?()
                 },
@@ -125,8 +121,6 @@ public class ActivationConfig {
         }
     }
 }
-
-// MARK: - Supporting Types
 
 public enum Alignment {
     case topLeading, topTrailing, bottomLeading, bottomTrailing, center
