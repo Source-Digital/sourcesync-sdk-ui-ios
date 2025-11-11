@@ -1,6 +1,6 @@
 //
 //  ActivationConfig.swift
-//  
+//
 //
 //  Created by ayman badawy on 25/09/2025.
 //
@@ -18,7 +18,7 @@ public class ActivationConfig {
     let onOutsideClickHandler: (() -> Void)?
     let onDetailsCloseHandler: (() -> Void)?
     let onUrlActionHandler: (() -> Void)?
-    let activationPosition: ActivationPosition
+    let activationPosition: ActivationPosition?
     let visualErrorsEnabled: Bool
     
     private init(
@@ -27,7 +27,7 @@ public class ActivationConfig {
         onOutsideClickHandler: (() -> Void)?,
         onDetailsCloseHandler: (() -> Void)?,
         onUrlActionHandler: (() -> Void)?,
-        activationPosition: ActivationPosition,
+        activationPosition: ActivationPosition?,
         visualErrorsEnabled: Bool
     ) {
         self.divKitComponents = divKitComponents
@@ -45,7 +45,7 @@ public class ActivationConfig {
         private var onUrlActionHandler: (() -> Void)?
         private var onDetailsCloseHandler: (() -> Void)?
         private var onOutsideClickHandler: (() -> Void)?
-        private var positionAlignment: Alignment?
+        private var activationPosition: ActivationPosition?
         
         public init() {
         }
@@ -75,18 +75,19 @@ public class ActivationConfig {
         }
         
         @discardableResult
-        public func setPositionAlignment(_ alignment: Alignment) -> Builder {
-            self.positionAlignment = alignment
-            return self
-        }
-        
-        @discardableResult
         public func setVisualErrorsEnabled(_ enabled: Bool) -> Builder {
             self.visualErrorsEnabled = enabled
             return self
         }
         
-        public func build() -> ActivationConfig {
+        @discardableResult
+        public func setActivationPosition(_ activationPosition: ActivationPosition) -> Builder {
+            self.activationPosition = activationPosition
+            return self
+        }
+        
+        public func build() throws -> ActivationConfig {
+            
             let screenSize = UIScreen.main.bounds.size
             
             // Create URL handler
@@ -101,9 +102,7 @@ public class ActivationConfig {
             )
             
             // Create DivKit components
-            let divKitComponents = DivKitComponents(
-                urlHandler: urlHandler
-            )
+            let divKitComponents = DivKitComponents(urlHandler: urlHandler)
             
             return ActivationConfig(
                 divKitComponents: divKitComponents,
@@ -111,11 +110,7 @@ public class ActivationConfig {
                 onOutsideClickHandler: onOutsideClickHandler,
                 onDetailsCloseHandler: onDetailsCloseHandler,
                 onUrlActionHandler: onUrlActionHandler,
-                activationPosition: ActivationPosition(
-                    screenWidth: screenSize.width,
-                    screenHeight: screenSize.height,
-                    alignment: positionAlignment ?? .topTrailing
-                ),
+                activationPosition: activationPosition,
                 visualErrorsEnabled: visualErrorsEnabled
             )
         }

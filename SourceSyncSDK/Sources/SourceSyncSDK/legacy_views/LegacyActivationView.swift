@@ -7,7 +7,7 @@
 import UIKit
 import DivKit
 
-public class ActivationView: UIView {
+public class LegacyActivationView: UIView {
     
     private static let TAG = "SDK:ActivationView"
     
@@ -280,14 +280,14 @@ public class ActivationView: UIView {
     }
 }
 
-extension ActivationView: UIGestureRecognizerDelegate {
+extension LegacyActivationView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // Allow gesture to be received for outside detection
         return true
     }
 }
 
-extension ActivationView: DivKitErrorDelegate {
+extension LegacyActivationView: DivKitErrorDelegate {
     func handleDivKitError(_ error: any DivKit.DivError, cardId: DivKit.DivCardID) {
         
         DispatchQueue.main.async { [weak self] in

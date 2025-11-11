@@ -27,7 +27,6 @@ public class ActivationDetails: UIView {
         super.init(coder: coder)
     }
     
-    
     /**
      * Factory method to create details from JSON
      */
@@ -101,7 +100,7 @@ public class ActivationDetails: UIView {
     }
     
     private func setupConstraintsForPosition(divView: DivView, config: ActivationConfig) -> [NSLayoutConstraint] {
-        switch config.activationPosition.alignment {
+        switch config.activationPosition?.alignment {
         case .topTrailing:
             return [
                 divView.topAnchor.constraint(equalTo: topAnchor),
