@@ -86,9 +86,9 @@ public class ActivationConfig {
             return self
         }
         
-        public func build() throws -> ActivationConfig {
+        public func build() -> ActivationConfig {
             
-            let screenSize = UIScreen.main.bounds.size
+            let _ = UIScreen.main.bounds.size
             
             // Create URL handler
             let urlHandler = CustomUrlHandler(
