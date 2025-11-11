@@ -1,5 +1,5 @@
 //
-//  ActivationView.swift
+//  UnifiedActivationView.swift
 //
 //
 //  Created by ayman badawy on 10/11/2025.
@@ -13,9 +13,9 @@ import DivKitExtensions
  * Unified activation view that can display both preview and detail modes
  * Replaces separate ActivationPreview and ActivationDetails components
  */
-public class ActivationView: UIView {
+public class UnifiedActivationView: UIView {
     
-    private static let TAG = "ActivationView"
+    private static let TAG = "UnifiedActivationView"
     
     private var divView: DivView?
     private var config: ActivationConfig?
@@ -33,35 +33,35 @@ public class ActivationView: UIView {
     }
     
     /**
-     * Creates ActivationView from DivData with configuration
+     * Creates UnifiedActivationView from DivData with configuration
      * @param divData DivData for rendering
      * @param config ActivationConfig with handlers and positioning
-     * @return Configured ActivationView instance
+     * @return Configured UnifiedActivationView instance
      */
     public static func createFromDivData(
         divData: Data,
         config: ActivationConfig
-    ) -> ActivationView {
-        let activationView = ActivationView()
-        activationView.setConfig(config)
-        activationView.setViewData(divData)
-        return activationView
+    ) -> UnifiedActivationView {
+        let UnifiedActivationView = UnifiedActivationView()
+        UnifiedActivationView.setConfig(config)
+        UnifiedActivationView.setViewData(divData)
+        return UnifiedActivationView
     }
     
     /**
-     * Creates ActivationView from JSON with configuration
+     * Creates UnifiedActivationView from JSON with configuration
      * @param json Dictionary containing view data
      * @param config ActivationConfig with handlers and positioning
-     * @return Configured ActivationView instance
+     * @return Configured UnifiedActivationView instance
      */
     public static func createFromJson(
         json: [String: Any],
         config: ActivationConfig
-    ) -> ActivationView {
-        let activationView = ActivationView()
-        activationView.setConfig(config)
-        activationView.setViewDataFromJson(json)
-        return activationView
+    ) -> UnifiedActivationView {
+        let unifiedActivationView = UnifiedActivationView()
+        unifiedActivationView.setConfig(config)
+        unifiedActivationView.setViewDataFromJson(json)
+        return unifiedActivationView
     }
     
     /**
@@ -127,7 +127,7 @@ public class ActivationView: UIView {
         // Set DivKit data asynchronously
         Task { @MainActor in
             await divView.setSource(
-                .init(kind: .data(viewData), cardId: "SourceSync-ActivationView"),
+                .init(kind: .data(viewData), cardId: "SourceSync-UnifiedActivationView"),
                 debugParams: DebugParams(isDebugInfoEnabled: config.visualErrorsEnabled)
             )
         }
@@ -282,6 +282,6 @@ public class ActivationView: UIView {
     
     deinit {
         cleanup()
-        print("\(Self.TAG): ActivationView deallocated")
+        print("\(Self.TAG): UnifiedActivationView deallocated")
     }
 }

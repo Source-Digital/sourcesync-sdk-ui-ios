@@ -15,8 +15,8 @@ import UIKit
  */
 class DemoViewController: UIViewController {
     
-    private var activationPreview: ActivationView?
-    private var activationDetails: ActivationView?
+    private var activationPreview: UnifiedActivationView?
+    private var activationDetails: UnifiedActivationView?
     private var activationConfig: ActivationConfig?
     
     private let TAG = "DemoViewController"
@@ -80,7 +80,7 @@ class DemoViewController: UIViewController {
         // Clean up any existing views
         cleanupActivationViews()
         // Create preview using factory method
-        activationPreview = ActivationView.createFromDivData(divData: previewData, config: config)
+        activationPreview = UnifiedActivationView.createFromDivData(divData: previewData, config: config)
         
         guard let preview = activationPreview else { return }
         
@@ -108,7 +108,7 @@ class DemoViewController: UIViewController {
         cleanupActivationViews()
         
         // Create details using factory method
-        activationDetails = ActivationView.createFromDivData(divData: detailsData, config: config)
+        activationDetails = UnifiedActivationView.createFromDivData(divData: detailsData, config: config)
         
         guard let details = activationDetails else { return }
         
