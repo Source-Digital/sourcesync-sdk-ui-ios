@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "SourceSyncSDK"
-  spec.version      = "0.3.25-3"
+  spec.version      = "0.3.27-2"
   spec.summary      = "A framework for handling activation details in iOS apps."
   spec.homepage     = "https://github.com/Source-Digital/sourcesync-sdk-ui-ios"
   spec.license      = { :type => "MIT", :file => "LICENSE.md" }

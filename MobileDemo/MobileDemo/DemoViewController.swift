@@ -15,8 +15,8 @@ import UIKit
  */
 class DemoViewController: UIViewController {
     
-    private var activationPreview: ActivationPreview?
-    private var activationDetails: ActivationDetails?
+    private var activationPreview: UnifiedActivationView?
+    private var activationDetails: UnifiedActivationView?
     private var activationConfig: ActivationConfig?
     
     private let TAG = "DemoViewController"
@@ -64,7 +64,7 @@ class DemoViewController: UIViewController {
             .setUrlActionHandler { [weak self] in
                 self?.handleUrlAction()
             }
-            .setPositionAlignment(.topTrailing)
+            .setActivationPosition(ActivationPosition.init(screenWidth: 0, screenHeight: 0, alignment: Alignment.topTrailing))
             .setVisualErrorsEnabled(false) // Set to true for debugging
             .build()
         
@@ -79,12 +79,8 @@ class DemoViewController: UIViewController {
         
         // Clean up any existing views
         cleanupActivationViews()
-        
         // Create preview using factory method
-        activationPreview = ActivationPreview.createFromData(
-            previewData: previewData,
-            config: config
-        )
+        activationPreview = UnifiedActivationView.createFromDivData(divData: previewData, config: config)
         
         guard let preview = activationPreview else { return }
         
@@ -97,7 +93,7 @@ class DemoViewController: UIViewController {
             preview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             preview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             // Let the preview size itself based on content
-            preview.widthAnchor.constraint(lessThanOrEqualToConstant: 200),
+            preview.widthAnchor.constraint(lessThanOrEqualToConstant: 750),
             preview.heightAnchor.constraint(lessThanOrEqualToConstant: 150)
         ])
         
@@ -112,10 +108,7 @@ class DemoViewController: UIViewController {
         cleanupActivationViews()
         
         // Create details using factory method
-        activationDetails = ActivationDetails.createFromData(
-            detailsData: detailsData,
-            config: config
-        )
+        activationDetails = UnifiedActivationView.createFromDivData(divData: detailsData, config: config)
         
         guard let details = activationDetails else { return }
         
