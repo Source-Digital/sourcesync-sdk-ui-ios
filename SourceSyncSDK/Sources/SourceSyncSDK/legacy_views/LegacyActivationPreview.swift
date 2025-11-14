@@ -1,8 +1,3 @@
-//
-//  LegacyActivationPreview.swift
-//  sourcesync-sdk-ui-ios
-//
-
 
 import UIKit
 import DivKit

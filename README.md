@@ -1,234 +1,585 @@
 # SourceSync SDK UI iOS
 
-A flexible and modular iOS SDK for rendering dynamic UI components from JSON templates. This SDK provides a powerful way to create and manage UI elements programmatically, with support for various segment types and customizable layouts.
+A lightweight iOS library for rendering interactive content overlays using DivKit's flexible JSON-based rendering system.
 
-## Features
+## Overview
 
-- Dynamic UI rendering from JSON templates
-- Modular segment processor architecture
-- Support for multiple UI components:
-  - Text segments with rich text formatting
-  - Image segments with remote image loading
-  - Button segments with customizable styles
-  - Row and Column layouts for complex arrangements
-- Flexible attribute system for styling
-- Percentage-based layout calculations
-- Responsive design support
-- Built-in hex color support
-- Density-independent pixel (DP) calculations
+SourceSync SDK UI iOS provides production-ready UI components for displaying interactive content in your iOS applications. The library offers:
 
-## Architecture
-
-The SDK follows a processor-based architecture pattern with the following key components:
-
-### Core Components
-
-- `Activation`: Main container view managing preview and detail states
-- `ActivationPreview`: Preview view with customizable template
-- `ActivationDetail`: Detailed view with scrollable content
-- `ActivationHeader`: Header component with close button
-
-### Segment System
-
-- `SegmentProcessor`: Protocol defining the interface for segment processing
-- `SegmentProcessorFactory`: Factory class managing different segment processors
-- `SegmentAttributes`: Class handling UI attribute parsing and management
-
-### Segment Processors
-
-- `TextSegmentProcessor`: Handles text rendering with rich formatting
-- `ImageSegmentProcessor`: Manages image loading and display
-- `ButtonSegmentProcessor`: Creates interactive buttons
-- `RowSegmentProcessor`: Handles horizontal layouts
-- `ColumnSegmentProcessor`: Manages vertical layouts
-
-### Utilities
-
-- `LayoutUtils`: Helper functions for layout calculations
-- `Extensions`: UIColor extensions for hex color support
-
-## Usage
-
-### Basic Implementation
-
-```swift
-let activation = Activation()
-
-// Show preview
-let previewData: [String: Any] = [
-    "backgroundColor": "#000000",
-    "backgroundOpacity": 0.66,
-    "title": "Preview Title",
-    "subtitle": "Preview Subtitle"
-]
-
-activation.showPreview(previewData: previewData) {
-    // Handle preview tap
-}
-
-// Show detail
-let detailTemplate: [[String: Any]] = [
-    [
-        "type": "text",
-        "content": "Hello World",
-        "attributes": [
-            "size": "lg",
-            "color": "#FFFFFF",
-            "weight": "bold"
-        ]
-    ]
-]
-
-let detailData: [String: Any] = ["template": detailTemplate]
-
-activation.showDetail(detailData: detailData) {
-    // Handle close action
-}
-```
-
-### Creating Custom Segments
-
-1. Create a new class implementing the `SegmentProcessor` protocol:
-
-```swift
-class CustomSegmentProcessor: SegmentProcessor {
-    func processSegment(segment: [String: Any]) throws -> UIView {
-        // Process segment data and return UIView
-    }
-    
-    func getSegmentType() -> String {
-        return "custom"
-    }
-}
-```
-
-2. Register the processor with the factory:
-
-```swift
-let factory = SegmentProcessorFactory(parentContainer: view)
-factory.registerProcessor(CustomSegmentProcessor())
-```
-
-## Styling
-
-### Supported Attributes
-
-- Font properties: `font`, `fontSize`, `weight`, `style`
-- Colors: `color`, `backgroundColor`, `textColor`
-- Layout: `width`, `height`, `spacing`, `alignment`
-- Text decoration: `underline`
-- Content display: `contentMode`
-
-### Size Values
-
-Font sizes can be specified using predefined values:
-- `xxs`: 6dp
-- `xs`: 10dp
-- `sm`: 14dp
-- `md`: 16dp
-- `lg`: 20dp
-- `xl`: 24dp
-- `xxl`: 32dp
-
-### Alignment Options
-
-Supported alignment values:
-- `left`
-- `right`
-- `center`
-- `justified` (text only)
-
-## Requirements
-
-- iOS 16.0+
-- Xcode 14.0+
-- Swift 5.0+
+- **Unified content display** with flexible rendering modes
+- **DivKit-powered rendering** for flexible JSON-based layouts
+- **Configurable positioning** with alignment options
+- **Smart interaction handling** with outside-tap detection
+- **Efficient resource management** and memory cleanup
+- **Custom URL handling** for deep links and external actions
 
 ## Installation
 
-1. Add the SDK to your Xcode project
-2. Import the required frameworks
-3. Initialize the SDK components as needed
+### CocoaPods (Recommended)
+
+Add the dependency to your `Podfile`:
+
+```ruby
+pod 'SourceSyncSDK', '~> 0.3.27'
+```
+
+Then run:
+```bash
+pod install
+```
+
+## Quick Start
+
+### Basic Integration
+
+```swift
+import SourceSyncSDK
+
+class ViewController: UIViewController {
+    private var activationView: UnifiedActivationView?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        showContent()
+    }
+    
+    private func showContent() {
+        // Create JSON data for your content
+        let contentData: [String: Any] = createContentJson()
+        
+        // Configure the view
+        let config = ActivationConfig.Builder()
+            .setActivationPosition(ActivationPosition(
+                screenWidth: view.bounds.width,
+                screenHeight: view.bounds.height,
+                alignment: .center
+            ))
+            .build()
+        
+        // Create and display the view
+        activationView = UnifiedActivationView.createFromJson(
+            json: contentData,
+            config: config
+        )
+        
+        guard let activationView = activationView else { return }
+        
+        view.addSubview(activationView)
+        activationView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            activationView.topAnchor.constraint(equalTo: view.topAnchor),
+            activationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            activationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            activationView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    private func createContentJson() -> [String: Any] {
+        // Create your DivKit card structure
+        return [
+            "card": [
+                "log_id": "content_card",
+                "states": [
+                    [
+                        "state_id": 0,
+                        "div": [
+                            "type": "text",
+                            "text": "Hello World",
+                            "font_size": 24,
+                            "text_color": "#000000"
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    }
+    
+    deinit {
+        activationView?.cleanup()
+    }
+}
+```
+
+### Displaying Content with Click Handlers
+
+```swift
+private func showPreviewContent() {
+    let previewData = loadJsonFromAssets("preview.json")
+    let detailData = loadJsonFromAssets("details.json")
+    
+    // Configure with click handler
+    let config = ActivationConfig.Builder()
+        .setPreviewClickHandler { [weak self] in
+            self?.showDetailContent(detailData)
+        }
+        .setActivationPosition(ActivationPosition(
+            screenWidth: view.bounds.width,
+            screenHeight: view.bounds.height,
+            alignment: .bottomTrailing
+        ))
+        .build()
+    
+    // Create and display preview
+    activationView = UnifiedActivationView.createFromJson(
+        json: previewData,
+        config: config
+    )
+    
+    guard let activationView = activationView else { return }
+    view.addSubview(activationView)
+    setupConstraints(for: activationView)
+}
+
+private func showDetailContent(_ detailData: [String: Any]) {
+    // Clean up preview
+    activationView?.cleanup()
+    activationView?.removeFromSuperview()
+    
+    // Configure details with close handlers
+    let config = ActivationConfig.Builder()
+        .setDetailsCloseHandler { [weak self] in
+            self?.hideContent()
+        }
+        .setOutsideClickHandler { [weak self] in
+            self?.hideContent()
+        }
+        .setUrlActionHandler {
+            print("URL action triggered")
+        }
+        .setActivationPosition(ActivationPosition(
+            screenWidth: view.bounds.width,
+            screenHeight: view.bounds.height,
+            alignment: .center
+        ))
+        .build()
+    
+    // Create and display details
+    activationView = UnifiedActivationView.createFromJson(
+        json: detailData,
+        config: config
+    )
+    
+    guard let activationView = activationView else { return }
+    view.addSubview(activationView)
+    setupConstraints(for: activationView)
+}
+
+private func hideContent() {
+    activationView?.cleanup()
+    activationView?.removeFromSuperview()
+    activationView = nil
+}
+
+private func setupConstraints(for view: UIView) {
+    view.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        view.topAnchor.constraint(equalTo: self.view.topAnchor),
+        view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+    ])
+}
+```
+
+## Core Components
+
+### UnifiedActivationView
+
+The primary UI component for displaying content overlays.
+
+```swift
+// Create from JSON
+let view = UnifiedActivationView.createFromJson(
+    json: jsonData,
+    config: config
+)
+
+// Create from Data
+let view = UnifiedActivationView.createFromDivData(
+    divData: data,
+    config: config
+)
+
+// Clean up resources
+view.cleanup()
+```
+
+### ActivationConfig
+
+Configuration builder for activation behavior and appearance.
+
+```swift
+let config = ActivationConfig.Builder()
+    // Set click handler for preview
+    .setPreviewClickHandler {
+        showDetails()
+    }
+    
+    // Handle URL actions (links, deep links)
+    .setUrlActionHandler {
+        trackAction()
+    }
+    
+    // Handle details close button
+    .setDetailsCloseHandler {
+        hideDetails()
+    }
+    
+    // Handle outside taps (dismiss)
+    .setOutsideClickHandler {
+        hideDetails()
+    }
+    
+    // Set positioning
+    .setActivationPosition(ActivationPosition(
+        screenWidth: screenWidth,
+        screenHeight: screenHeight,
+        alignment: .bottomTrailing
+    ))
+    
+    // Enable/disable visual error indicators
+    .setVisualErrorsEnabled(false)
+    
+    .build()
+```
+
+## Positioning & Alignment
+
+### Alignment Options
+
+```swift
+public enum Alignment {
+    case topLeading      // Top-left corner
+    case topTrailing     // Top-right corner
+    case bottomLeading   // Bottom-left corner
+    case bottomTrailing  // Bottom-right corner
+    case center          // Center of screen
+}
+```
+
+### Example: Bottom-Right Positioning
+
+```swift
+let position = ActivationPosition(
+    screenWidth: UIScreen.main.bounds.width,
+    screenHeight: UIScreen.main.bounds.height,
+    alignment: .bottomTrailing
+)
+
+let config = ActivationConfig.Builder()
+    .setActivationPosition(position)
+    .build()
+```
+
+## JSON Template Structure
+
+### Preview Template
+
+```json
+{
+  "card": {
+    "log_id": "preview_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "items": [
+            {
+              "type": "text",
+              "text": "Tap to learn more",
+              "font_size": 16,
+              "text_color": "#FFFFFF"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+### Details Template
+
+```json
+{
+  "card": {
+    "log_id": "details_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "orientation": "vertical",
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://example.com/image.jpg",
+              "width": {
+                "type": "match_parent"
+              }
+            },
+            {
+              "type": "text",
+              "text": "Detailed content here",
+              "font_size": 18
+            },
+            {
+              "type": "text",
+              "text": "Close",
+              "actions": [
+                {
+                  "log_id": "close_action",
+                  "url": "div-action://close"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+## Advanced Features
+
+### Custom URL Handling
+
+The SDK automatically handles various URL schemes:
+
+- `div-action://close` - Closes details view
+- `http://` / `https://` - Opens in Safari
+- `mailto:` - Opens Mail app
+- `tel:` - Opens Phone app
+- `sms:` - Opens Messages app
+- Custom schemes - Triggers URL action handler
+
+### Outside Tap Detection
+
+Automatically detects taps outside the activation view while preserving video control functionality:
+
+```swift
+let config = ActivationConfig.Builder()
+    .setOutsideClickHandler { [weak self] in
+        // User tapped outside - dismiss details
+        self?.hideActivationDetails()
+    }
+    .build()
+```
+
+The SDK intelligently ignores taps in the bottom 100pt area to preserve video controls.
+
+### Resource Management
+
+Always clean up resources to prevent memory leaks:
+
+```swift
+deinit {
+    // Clean up activation view
+    activationView?.cleanup()
+}
+```
+
+## Complete Example
+
+Here's a complete example showing preview-to-details flow:
+
+```swift
+import UIKit
+import SourceSyncSDK
+
+class ContentViewController: UIViewController {
+    private var currentView: UnifiedActivationView?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Show preview after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.showPreview()
+        }
+    }
+    
+    private func showPreview() {
+        guard let previewJson = loadJsonFromAssets("preview_template.json") else { return }
+        
+        let config = ActivationConfig.Builder()
+            .setPreviewClickHandler { [weak self] in
+                print("Preview tapped")
+                self?.showDetails()
+            }
+            .setActivationPosition(ActivationPosition(
+                screenWidth: view.bounds.width,
+                screenHeight: view.bounds.height,
+                alignment: .bottomTrailing
+            ))
+            .build()
+        
+        currentView = UnifiedActivationView.createFromJson(
+            json: previewJson,
+            config: config
+        )
+        
+        guard let currentView = currentView else { return }
+        view.addSubview(currentView)
+        setupFullScreenConstraints(for: currentView)
+    }
+    
+    private func showDetails() {
+        // Clean up preview
+        currentView?.cleanup()
+        currentView?.removeFromSuperview()
+        
+        guard let detailJson = loadJsonFromAssets("detail_template.json") else { return }
+        
+        let config = ActivationConfig.Builder()
+            .setDetailsCloseHandler { [weak self] in
+                self?.hideContent()
+            }
+            .setOutsideClickHandler { [weak self] in
+                self?.hideContent()
+            }
+            .setUrlActionHandler {
+                print("URL action triggered")
+            }
+            .setActivationPosition(ActivationPosition(
+                screenWidth: view.bounds.width,
+                screenHeight: view.bounds.height,
+                alignment: .center
+            ))
+            .build()
+        
+        currentView = UnifiedActivationView.createFromJson(
+            json: detailJson,
+            config: config
+        )
+        
+        guard let currentView = currentView else { return }
+        view.addSubview(currentView)
+        setupFullScreenConstraints(for: currentView)
+    }
+    
+    private func hideContent() {
+        currentView?.cleanup()
+        currentView?.removeFromSuperview()
+        currentView = nil
+    }
+    
+    private func setupFullScreenConstraints(for activationView: UIView) {
+        activationView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            activationView.topAnchor.constraint(equalTo: view.topAnchor),
+            activationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            activationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            activationView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    private func loadJsonFromAssets(_ fileName: String) -> [String: Any]? {
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: nil),
+              let data = try? Data(contentsOf: url),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+        return json
+    }
+    
+    deinit {
+        hideContent()
+    }
+}
+```
+
+## Troubleshooting
+
+### Content Not Showing
+
+1. **Verify JSON structure**
+   ```swift
+   let config = ActivationConfig.Builder()
+       .setVisualErrorsEnabled(true)  // Shows DivKit errors
+       .build()
+   ```
+
+2. **Check container setup**
+   ```swift
+   guard let activationView = activationView else {
+       print("ActivationView is nil")
+       return
+   }
+   ```
+
+3. **Validate JSON format**
+   - Ensure `card` and `states` objects are present
+   - Check for valid DivKit syntax
+
+### Memory Leaks
+
+Always call `cleanup()` on UnifiedActivationView instances:
+
+```swift
+deinit {
+    activationView?.cleanup()
+}
+```
+
+### Layout Issues
+
+Ensure proper constraint setup:
+
+```swift
+activationView.translatesAutoresizingMaskIntoConstraints = false
+NSLayoutConstraint.activate([
+    // Your constraints
+])
+```
+
+## Requirements
+
+- **iOS**: 17.0+
+- **Swift**: 5.9+
+- **Xcode**: 16.0+
+
+## Dependencies
+
+The SDK automatically includes:
+
+- DivKit (~> 31.13.0)
+- DivKitExtensions (~> 31.13.0)
+
+## Demo Applications
+
+Explore the example app for complete integration examples:
+
+```bash
+cd MobileDemo
+pod install
+open MobileDemo.xcworkspace
+```
+
+## Best Practices
+
+1. **Always clean up resources** - Call `cleanup()` in deinit
+2. **Use weak references** - Prevent retain cycles in closures
+3. **Handle optionals safely** - Use guard/if let patterns
+4. **Test on real devices** - Simulators may behave differently
+5. **Cache templates** - Load JSON once and reuse
+6. **Enable debugging** - Use visual errors during development
+
+## Support & Documentation
+
+- **Issues**: [GitHub Issues](https://github.com/Source-Digital/sourcesync-sdk-ui-ios/issues)
+- **Documentation**: [docs/](./docs/)
+- **Setup Guide**: [docs/setup.md](./docs/setup.md)
+- **Architecture**: [docs/architecture.md](./docs/architecture.md)
+- **UI Guidelines**: [docs/ui-guidelines.md](./docs/ui-guidelines.md)
+- **Dependencies**: [docs/dependencies.md](./docs/dependencies.md)
+- **CI/CD**: [docs/cicd.md](./docs/cicd.md)
 
 ## License
 
-Copyright 2025 Source Digital
+Copyright © 2025 Source Digital, Inc.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-## Contributing
-
-We welcome contributions to improve the SourceSync SDK UI iOS! Please follow these guidelines:
-
-### Getting Started
-
-1. Fork the repository
-2. Create a new branch for your feature or bugfix: `git checkout -b feature/your-feature-name`
-3. Make your changes
-4. Test your changes thoroughly
-5. Create a pull request
-
-### Code Style
-
-- Follow Apple's [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- Use clear, descriptive variable and function names
-- Add comments for complex logic or non-obvious implementations
-- Maintain consistent spacing and indentation
-- Keep functions focused and concise
-
-### Documentation
-
-- Update the README.md if you're adding or modifying features
-- Include inline documentation for public interfaces
-- Add code examples for new functionality
-- Update any affected documentation
-
-### Testing
-
-- Add unit tests for new functionality
-- Ensure all existing tests pass
-- Test on different iOS versions if making UI changes
-- Include test cases for edge cases and error conditions
-
-### Pull Request Process
-
-1. Update the CHANGELOG.md with your changes
-2. Ensure your code follows our style guidelines
-3. Include relevant tests for your changes
-4. Update documentation as needed
-5. Ensure your branch is up to date with the main branch
-6. Submit your pull request with a clear description of the changes
-
-### Commit Messages
-
-- Use clear, descriptive commit messages
-- Start with a verb in the present tense
-- Keep the first line under 72 characters
-- Include more detailed explanation in the commit body if needed
-
-Example:
-```
-Add image caching to ImageSegmentProcessor
-
-- Implement LRU cache for downloaded images
-- Add cache size limit configuration
-- Include cache clearing mechanism
-```
-
-### Questions or Issues?
-
-If you have questions or run into issues, please:
-1. Check existing issues and pull requests
-2. Create a new issue with a clear description
-3. Use issue templates if available
-4. Include relevant code samples and error messages
+Licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.

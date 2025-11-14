@@ -1,7 +1,3 @@
-//
-//  ActivationView.swift
-//  sourcesync-sdk-ui-ios
-//
 
 // iOS-specific code
 import UIKit
