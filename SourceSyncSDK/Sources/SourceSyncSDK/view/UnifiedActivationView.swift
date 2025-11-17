@@ -1,7 +1,3 @@
-//
-//  UnifiedActivationView.swift
-//
-//
 //  Created by ayman badawy on 10/11/2025.
 //
 
