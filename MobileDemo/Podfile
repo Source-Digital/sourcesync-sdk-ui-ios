@@ -1,0 +1,28 @@
+platform :ios, '17.0'
+use_frameworks!
+
+target 'MobileDemo' do
+  pod 'SourceSyncSDK', :path => '../SourceSyncSDK'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.0'
+      
+      # Universal binary support - no exclusions
+      config.build_settings['ARCHS'] = '$(ARCHS_STANDARD)'
+      config.build_settings['VALID_ARCHS'] = 'arm64 x86_64 arm64e'
+      config.build_settings['EXCLUDED_ARCHS'] = ''
+      config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
+      
+      # Debug optimization
+      if config.name == 'Debug'
+        config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Onone'
+        config.build_settings['GCC_OPTIMIZATION_LEVEL'] = '0'
+      end
+    end
+  end
+  
+  puts "✅ Universal binary development environment configured"
+end

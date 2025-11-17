@@ -1,0 +1,274 @@
+name: Publish to CocoaPods
+
+run-name: >-
+  ${{
+    github.event_name == 'push' && format('Publish to CocoaPods - {0}', github.ref_name) ||
+    format('Publish to CocoaPods - {0}', inputs.tag_version)
+  }}
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: 'Tag version to build (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Get Version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Extract version from tag for push events
+            VERSION="${GITHUB_REF#refs/tags/}"
+            VERSION="${VERSION#v}"
+          else
+            # Use provided tag version for manual dispatch
+            VERSION="${{ inputs.tag_version }}"
+            VERSION=${VERSION#v}  # Remove 'v' prefix if present
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+
+  validate-and-publish:
+    needs: [get-version]
+    name: Validate and Publish to CocoaPods
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', needs.get-version.outputs.version) || github.ref }}
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '16.2.0'
+        
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        pod --version
+        
+    - name: Debug - Show Repository Structure
+      run: |
+        echo "Repository root contents:"
+        ls -la
+        echo ""
+        echo "Looking for podspec files:"
+        find . -name "*.podspec" -type f
+        echo ""
+        echo "Looking for SourceSyncSDK directory:"
+        find . -name "SourceSyncSDK" -type d
+        
+    - name: Find and Update Podspec Version
+      run: |
+        VERSION=${{ needs.get-version.outputs.version }}
+        echo "Updating podspec version to $VERSION"
+        
+        # Find the podspec file using comprehensive search
+        PODSPEC_FILE=""
+        
+        # Search in common locations
+        SEARCH_PATHS=(
+          "SourceSyncSDK/SourceSyncSDK.podspec"
+          "sourcesync-sdk-ui-ios/SourceSyncSDK.podspec"
+          "SourceSyncSDK.podspec"
+        )
+        
+        for file in "${SEARCH_PATHS[@]}"; do
+          echo "Checking: $file"
+          if [ -f "$file" ]; then
+            PODSPEC_FILE="$file"
+            echo "Found podspec at: $file"
+            break
+          fi
+        done
+        
+        # If not found in expected locations, search recursively
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "Searching recursively for SourceSyncSDK.podspec..."
+          FOUND_FILE=$(find . -name "SourceSyncSDK.podspec" -type f | head -1)
+          if [ -n "$FOUND_FILE" ]; then
+            PODSPEC_FILE="$FOUND_FILE"
+            echo "Found podspec at: $PODSPEC_FILE"
+          fi
+        fi
+        
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "Error: SourceSyncSDK.podspec not found"
+          echo "Available podspec files:"
+          find . -name "*.podspec" -type f
+          exit 1
+        fi
+        
+        echo "Using podspec file: $PODSPEC_FILE"
+        
+        # Update version in podspec
+        sed -i '' "s/spec\.version[[:space:]]*=[[:space:]]*['\"][^'\"]*['\"]/spec.version = \"$VERSION\"/" "$PODSPEC_FILE"
+        
+        echo "Updated podspec content:"
+        grep "spec.version" "$PODSPEC_FILE"
+        
+        # Save the podspec path for later steps
+        echo "PODSPEC_FILE=$PODSPEC_FILE" >> $GITHUB_ENV
+        
+    - name: Validate Podspec
+      run: |
+        PODSPEC_FILE="${PODSPEC_FILE:-}"
+        
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "PODSPEC_FILE not set, searching again..."
+          
+          # Search in common locations
+          SEARCH_PATHS=(
+            "SourceSyncSDK/SourceSyncSDK.podspec"
+            "sourcesync-sdk-ui-ios/SourceSyncSDK.podspec"
+            "SourceSyncSDK.podspec"
+          )
+          
+          for file in "${SEARCH_PATHS[@]}"; do
+            if [ -f "$file" ]; then
+              PODSPEC_FILE="$file"
+              break
+            fi
+          done
+          
+          # Recursive search as fallback
+          if [ -z "$PODSPEC_FILE" ]; then
+            PODSPEC_FILE=$(find . -name "SourceSyncSDK.podspec" -type f | head -1)
+          fi
+        fi
+        
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "Error: SourceSyncSDK.podspec not found"
+          exit 1
+        fi
+        
+        echo "Using podspec file: $PODSPEC_FILE"
+        echo "Current podspec version:"
+        grep "spec.version" "$PODSPEC_FILE"
+        
+        echo "🚀 Validating podspec with full validation"
+        pod spec lint "$PODSPEC_FILE" --allow-warnings --verbose
+        
+        # Save for next step
+        echo "PODSPEC_FILE=$PODSPEC_FILE" >> $GITHUB_ENV
+        
+    - name: Setup CocoaPods Trunk Authentication
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        echo "Setting up CocoaPods trunk authentication..."
+        if [ -n "$COCOAPODS_TRUNK_TOKEN" ]; then
+          echo "COCOAPODS_TRUNK_TOKEN is available"
+        else
+          echo "Error: COCOAPODS_TRUNK_TOKEN not found"
+          exit 1
+        fi
+        
+    - name: Publish to CocoaPods
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        PODSPEC_FILE="${PODSPEC_FILE:-}"
+        
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "PODSPEC_FILE not set, searching again..."
+          
+          # Search in common locations
+          SEARCH_PATHS=(
+            "SourceSyncSDK/SourceSyncSDK.podspec"
+            "sourcesync-sdk-ui-ios/SourceSyncSDK.podspec"
+            "SourceSyncSDK.podspec"
+          )
+          
+          for file in "${SEARCH_PATHS[@]}"; do
+            if [ -f "$file" ]; then
+              PODSPEC_FILE="$file"
+              break
+            fi
+          done
+          
+          # Recursive search as fallback
+          if [ -z "$PODSPEC_FILE" ]; then
+            PODSPEC_FILE=$(find . -name "SourceSyncSDK.podspec" -type f | head -1)
+          fi
+        fi
+        
+        if [ -z "$PODSPEC_FILE" ]; then
+          echo "Error: SourceSyncSDK.podspec not found for publishing"
+          exit 1
+        fi
+        
+        echo "Publishing podspec: $PODSPEC_FILE"
+        pod trunk push "$PODSPEC_FILE" --allow-warnings --verbose
+        
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        VERSION=${{ needs.get-version.outputs.version }}
+        
+        # Check if release already exists
+        if gh release view v$VERSION >/dev/null 2>&1; then
+          echo "Release v$VERSION already exists, updating it"
+          gh release edit v$VERSION \
+            --title "v$VERSION" \
+            --notes "## v$VERSION
+        ### Changes
+        - Updated iOS framework with latest features and improvements
+        - Compatible with iOS 13.0+ and tvOS 13.0+
+        
+        ### Installation
+        #### CocoaPods
+        \`\`\`ruby
+        pod 'SourceSyncSDK', '~> $VERSION'
+        \`\`\`
+        
+        ### Support
+        For technical support and documentation, visit our main repository."
+        else
+          echo "Creating GitHub release for v$VERSION"
+          gh release create v$VERSION \
+            --title "v$VERSION" \
+            --notes "## v$VERSION
+        ### Changes
+        - Updated iOS framework with latest features and improvements
+        - Compatible with iOS 13.0+ and tvOS 13.0+
+        
+        ### Installation
+        #### CocoaPods
+        \`\`\`ruby
+        pod 'SourceSyncSDK', '~> $VERSION'
+        \`\`\`
+        
+        ### Support
+        For technical support and documentation, visit our main repository."
+        fi
+        
+    - name: Verify Publication
+      run: |
+        echo "Publication workflow completed successfully!"
+        echo ""
+        echo "📦 v${{ needs.get-version.outputs.version }} published to:"
+        echo "• CocoaPods: https://cocoapods.org/pods/SourceSyncSDK"
+        echo "• GitHub Release: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.get-version.outputs.version }}"
+        echo ""
+        echo "⏳ Note: It may take a few minutes for the CocoaPods publication to be fully processed and searchable."

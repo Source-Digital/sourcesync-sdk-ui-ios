@@ -1,0 +1,14 @@
+{
+            "template": [
+              {
+                "type": "text",
+                "content": "WebView Layout Component",
+                "attributes": {
+                  "font": "system",
+                  "size": "lg",
+                  "color": "#FFFFFF",
+                  "weight": "bold"
+                }
+              }
+      ]
+    }

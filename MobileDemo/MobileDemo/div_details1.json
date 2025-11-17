@@ -1,0 +1,171 @@
+{
+  "templates": {},
+  "card": {
+    "log_id": "onlyfans_sponsor_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "orientation": "vertical",
+          "width": {
+            "type": "match_parent",
+            "value": 500
+          },
+          "height": {
+            "type": "match_parent"
+          },
+          "background": [
+            {
+              "type": "solid",
+              "color": "#FFFFFF"
+            }
+          ],
+          "border": {
+            "corner_radius": 20,
+            "stroke": {
+              "color": "#E5E7EB",
+              "width": 1
+            }
+          },
+          "items": [
+            {
+              "type": "image",
+              "image_url": "https://api2-dev.sourcesync.io/assets/54f9294c-bbf0-482f-8850-dd53ed9383e7",
+              "scale": "fit",
+              "width": {
+                "type": "match_parent"
+              },
+              "height": {
+                "type": "fixed",
+                "value": 160
+              },
+              "border": {
+                "corner_radius": 20
+              }
+            },
+            {
+              "type": "text",
+              "text": "The BKFC Creators You Love",
+              "font_size": 22,
+              "font_weight": "bold",
+              "text_color": "#009DE0",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "top": 16,
+                "bottom": 8
+              }
+            },
+            {
+              "type": "text",
+              "text": "Exclusive posts • Direct access • Secure platform",
+              "font_size": 14,
+              "text_color": "#555555",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 20
+              }
+            },
+            {
+              "type": "container",
+              "orientation": "vertical",
+              "background": [
+                {
+                  "type": "solid",
+                  "color": "#F9FAFB"
+                }
+              ],
+              "border": {
+                "corner_radius": 12,
+                "stroke": {
+                  "color": "#E0E0E0",
+                  "width": 1
+                }
+              },
+              "paddings": {
+                "left": 16,
+                "right": 16,
+                "top": 12,
+                "bottom": 12
+              },
+              "margins": {
+                "left": 20,
+                "right": 20,
+                "bottom": 20
+              },
+              "items": [
+                {
+                  "type": "text",
+                  "text": "✨ Exclusive media\n💬 Direct creator messaging\n🔒 Secure payments",
+                  "font_size": 14,
+                  "text_color": "#333333",
+                  "line_height": 20
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "orientation": "horizontal",
+              "width": {
+                "type": "match_parent"
+              },
+              "paddings": {
+                "left": 20,
+                "right": 20,
+                "bottom": 20
+              },
+              "content_alignment_horizontal": "center",
+              "items": [
+                {
+                  "type": "container",
+                  "width": {
+                    "type": "fixed",
+                    "value": 228
+                  },
+                  "height": {
+                    "type": "fixed",
+                    "value": 48
+                  },
+                  "alignment_horizontal": "center",
+                  "alignment_vertical": "center",
+                  "background": [
+                    {
+                      "type": "gradient",
+                      "colors": [
+                        "#00AEEF",
+                        "#006F8E"
+                      ],
+                      "angle": 45
+                    }
+                  ],
+                  "border": {
+                    "corner_radius": 24
+                  },
+                  "items": [
+                    {
+                      "type": "text",
+                      "text": "Visit OnlyFans Now",
+                      "font_size": 16,
+                      "font_weight": "bold",
+                      "text_color": "#FFFFFF",
+                      "alignment_horizontal": "center",
+                      "alignment_vertical": "center",
+                      "text_alignment_horizontal": "center",
+                      "text_alignment_vertical": "center"
+                    }
+                  ],
+                  "action": {
+                    "log_id": "visit_onlyfans",
+                    "url": "https://onlyfans.com/"
+                  },
+                  "content_alignment_horizontal": "center",
+                  "content_alignment_vertical": "center"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

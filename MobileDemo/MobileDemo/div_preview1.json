@@ -1,0 +1,70 @@
+{
+  "templates": {},
+  "card": {
+    "log_id": "onlyfans_preview_card",
+    "states": [
+      {
+        "state_id": 0,
+        "div": {
+          "type": "container",
+          "orientation": "vertical",
+          "width": {
+            "type": "fixed",
+            "value":350
+          },
+          "height": {
+            "type": "fixed",
+            "value": 180
+          },
+          "border": {
+            "corner_radius": 20
+          },
+          "background": [
+            {
+              "type": "image",
+              "image_url": "https://api2-dev.sourcesync.io/assets/54f9294c-bbf0-482f-8850-dd53ed9383e7",
+              "scale": "fill"
+            },
+            {
+              "type": "solid",
+              "color": "#9c000000"
+            }
+          ],
+          "content_alignment_vertical": "center",
+          "content_alignment_horizontal": "center",
+          "items": [
+            {
+              "type": "text",
+              "text": "Inside access to BKFC Creators",
+              "font_size": 28,
+              "font_weight": "bold",
+              "text_color": "#00AEEF",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 8
+              }
+            },
+            {
+              "type": "text",
+              "text": "Exclusive posts • Direct access",
+              "font_size": 14,
+              "text_color": "#FFFFFF",
+              "text_alignment_horizontal": "center",
+              "margins": {
+                "bottom": 12
+              }
+            },
+            {
+              "type": "text",
+              "text": "ONLYFANS.COM",
+              "font_size": 16,
+              "font_weight": "bold",
+              "text_color": "#00AEEF",
+              "text_alignment_horizontal": "center"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
